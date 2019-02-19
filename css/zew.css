@@ -1,0 +1,78 @@
+.remark-slide-content h1 {
+  font-size: 35px;
+}
+
+.remark-slide-content h2 {
+  font-size: 30px;
+}
+
+.remark-slide-content h3 {
+  font-size: 30px;
+}
+
+
+h1, h2, h3 {
+  font-weight: normal;
+  color: #562457;
+}
+
+a, a > code {
+  color: #4b42f4;
+}
+.remark-code-line-highlighted { background-color: rgba(136, 57, 138, 0.3); }
+
+.inverse, .inverse h1, .inverse h2, .inverse h3, .inverse a, inverse a > code {
+  color: #fff;
+}
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 5px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #46b6fc;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.caption {
+  font-size: 90%;
+}
+
+.inverse2 {
+  background-color: #9b989b;
+  color: #000000;
+  text-shadow: 0 0 20px #ffffff;
+}
+
+.title-slide {
+  /*background-image: url(https://www.uab.cat/web/coneix-la-uab/itineraris/identitat-i-imatge-corporativa/uab.cat/servlet/BlobServer?blobkey=id&blobnocache=true&blobwhere=1345725428694&blobheader=application&blobcol=urlimg&blobtable=Imatge);*/
+  background-position: 100% 110%;
+  background-size: 500px;
+  background-color: #272822;
+  padding-left: 100px;  /* delete this for 4:3 aspect ratio */
+}
+
+li, p {
+  line-height: 1.5;
+}
+
+
+.title-slide .remark-slide-number {
+  display: none;
+}

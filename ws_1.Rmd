@@ -1,20 +1,127 @@
 ---
-title: "Data science with R"
-subtitle: "Session 1"
+title: "Workshop: Datascience with R"
+subtitle: "ZEW - Session #1"
 author: "Obryan Poyser"
 date: "2019/02/19 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
-      highlightStyle: github
+      highlightStyle: solarized-dark
       highlightLines: true
       countIncrementalSlides: false
+      ratio: "16:9"
+      slideNumberFormat:  |
+            <div class="progress-bar-container">
+              <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+              </div>
+            </div>`
 ---
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 ```
+
+
+# What's R?
+
+- R is a programming language and free software environment for statistical computing and graphics supported by the R Foundation for Statistical Computing.
+--
+
+- Is an implementation of the S programming language combined with lexical scoping semantics, inspired by Scheme.
+--
+
+- Created by Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand, and currently developed by the R Development Core Team. <sup>1</sup>
+
+--
+- The most common integrated development environment (IDE) is RStudio. The one we are going to use
+
+.footnote[
+[1] Wikipedia
+]
+
+---
+
+# Installing R and RStudio IDE
+
+## Install R base
+
+1. Go to [The R Project for Statistical Computing](https://www.r-project.org/) official website
+1. Search for the **download R** link
+1. Select the closest Comprehensive R Archive Network (CRAN) mirror (it won't make much difference if you choose another one)
+1. Select the file according to your OS
+
+## Install IDE
+
+1. Go to [RStudio](https://www.rstudio.com/)
+1. Choose the RStudio Desktop Open Source License
+1. Then again, the option for your specific OS
+1. Execute both
+
+---
+
+# R Console
+
+.pull-left[
+```{r, out.width="100%", echo=F}
+knitr::include_graphics("img/s1i1.png")
+```
+]
+
+.pull-right[
+Here it is possible to execute all kind of build-in functions. Give it a try
+```{r}
+1+1
+log(0)
+"Hello World"
+TRUE*TRUE
+```
+]
+
+---
+
+# RStudio interface
+
+```{r, out.width="100%", echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("img/s1i2.png")
+```
+
+One can change the layout by following (among other things): `Tools-> Global options -> Panel layout`
+---
+
+#### Basic features
+
+.pull-left[
+Getting help
+```{r}
+?glm
+```
+
+Install a package
+```{r, eval=FALSE}
+install.packages("plm")
+```
+
+Load a package
+```{r, eval=FALSE}
+# Into the session
+require("plm")
+library("plm")
+# An specific function
+plm::vcovHC()
+```
+
+Load a build-in dataset
+```{r}
+data(mtcars)
+```
+
+
+]
+
+
+
+
 
 
 
