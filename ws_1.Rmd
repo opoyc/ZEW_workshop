@@ -1,8 +1,8 @@
 ---
-title: "Workshop: t with R"
+title: "Workshop: Data science with R"
 subtitle: "ZEW - Session #1"
 author: "Obryan Poyser"
-date: "2019/02/19 (updated: `r Sys.Date()`)"
+date: "2019/02/19"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -30,19 +30,22 @@ require(tidyverse)
 
 # What's R?
 
+.pl[
 - R is a programming language and free software environment for statistical computing and graphics supported by the R Foundation for Statistical Computing.
---
-
 - Is an implementation of the S programming language combined with lexical scoping semantics, inspired by Scheme.
---
-
 - Created by Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand, and currently developed by the R Development Core Team. <sup>1</sup>
-
---
 - The most common integrated development environment (IDE) is RStudio. The one we are going to use
 
 .footnote[
 [1] Wikipedia
+]
+]
+
+.pr[
+```{r, echo=F, out.width="60%"}
+knitr::include_graphics("https://www.r-project.org/logo/Rlogo.png")
+```
+
 ]
 
 ---
@@ -94,7 +97,23 @@ knitr::include_graphics("img/s1i2.png")
 One can change the layout by following (among other things): `Tools-> Global options -> Panel layout`
 ---
 
-### Basic commands
+# Creating a project
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("https://media.giphy.com/media/109fP7pua6Osgw/giphy.gif")
+```
+
+RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents.<sup>1</sup>
+
+.footnote[
+[1] [Rstudio](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects)
+]
+
+
+---
+
+
+# Basic commands
 
 .pl[
 Getting help
@@ -190,6 +209,39 @@ Note: There are rules for naming, for example, one can not create an object with
 
 ]
 
+---
+# Functions and classes
+
+Functions have named arguments, some can have default values. Other unnamed arguments such as `...` can be passed to the function too. Arguments can be see with `args()`
+
+```{r}
+args(glm)
+```
+
+Creating a function is easy, one has to create arguments then passed to the statement.
+
+```{r}
+own_function <- function(x, y=10){
+  z <- x+y
+  return(z)
+}
+```
+
+If y is not specified explicitly, then the default is passed to the function
+```{r}
+own_function(x = 100)
+```
+
+
+---
+# Functions and classes
+
+Note we can change the position of the arguments as long as they are specified.
+```{r}
+own_function(y=100, x=100)
+```
+
+We will examine functions in detail once control structures and looping is introduced
 
 ---
 
@@ -284,24 +336,6 @@ mat_1[1:2, 3] # Rows 1:2, 3rd column
 mat_1[1:3, 2:3] # Rows 1:3, columns 2:3
 ```
 ]
-
----
-
-# Practice
-
-Calculate the `mean()` statistic of a $3 \times 3$ matrix composed by the sequence 2 to 10 organized as a matrix. Is it the same as calculating a vector integrated by those numbers? 
-
---
-
-```{r}
-mat_exc <- matrix(2:10, nrow = 3, ncol = 3)
-(mat_exc_mean <- mean(mat_exc))
-
-vec_exc <- 2:10
-(vec_exc_mean <- mean(vec_exc))
-
-mat_exc_mean==vec_exc_mean
-```
 
 ---
 # Lists
@@ -432,17 +466,65 @@ iris[,1:3] %>% as.matrix() %>% plot_ly(, z=.) %>% add_surface()
 ```
 ]
 
-
 ---
+# Useful functions
 
+.pl[
+
+Environment
+
+```{r, eval=F}
+summary(x) # Main function of R, shows object results. Varies across classes
+rm() # Removes a given object
+ls() # List of every object in the environment
+list.files() # List of files into the working directory
+rm(list = ls()) # Eliminates every object inside the environment
+View() # Visualize dataframes
+dim() # Dimensions
+nrow() # Number of rows in a matrix/dataframe
+ncol() # Number of cols in a matrix/dataframe
+length() # Number of elements in a vector
+head() # Top elements in a matrix/dataframe
+tail() # Bottom elements in a matrix/dataframe
+```
+
+Character or factor
+```{r, eval=F}
+unique() # Show unique values
+sort() # Sort the elements inside a vector, work alphabetically on character
+table() # Counts of elements
+levels() # Shows the unique values in a factor variable
+```
+]
+
+.pr[
+Numeric
+```{r, eval=F}
+
+log(x) # Natural logarithm
+exp(x) # Exponential
+max(x) # Maximum value
+min(x) # Minimum value
+mean(x) # Mean
+var(x) # Variance
+sd(x) # Standard deviation
+quantile(x) # Quantiles
+median(x) # Median value
+round(x, digits) # Round numeric values
+cor(x, y) # Correlation
+rank(x) # Creates a ranking given the elements in a vectors
+```
+]
 
 ---
 # Practice
 
-What about the mean of a vector composed by strings and numbers? Or a `NA` value?
+1. What about the mean of a vector composed by strings and numbers? Or a `NA` value?
+1. Calculate the `mean()` statistic of a $3 \times 3$ matrix composed by the sequence 2 to 10 organized as a matrix. Is it the same as calculating a vector integrated by those numbers? 
 
 --
 
+.pl[
 ```{r}
 vec_exc1 <- c(2:9, "a")
 mean(vec_exc1)
@@ -450,10 +532,18 @@ vec_exc2 <- c(2:9, NA)
 mean(vec_exc2)
 mean(vec_exc2, na.rm = TRUE)
 ```
+]
 
+.pr[
+```{r}
+mat_exc <- matrix(2:10, nrow = 3, ncol = 3)
+(mat_exc_mean <- mean(mat_exc))
 
+vec_exc <- 2:10
+(vec_exc_mean <- mean(vec_exc))
 
-
-
+mat_exc_mean==vec_exc_mean
+```
+]
 
 
