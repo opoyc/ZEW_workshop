@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Workshop: Datascience with R</title>
+    <title>Workshop: t with R</title>
     <meta charset="utf-8">
     <meta name="author" content="Obryan Poyser" />
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="css/zew-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/zew.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Workshop: Datascience with R
+# Workshop: t with R
 ## ZEW - Session #1
 ### Obryan Poyser
-### 2019/02/19 (updated: 2019-02-19)
+### 2019/02/19 (updated: 2019-02-20)
 
 ---
 
@@ -61,11 +74,11 @@ class: center, middle, inverse, title-slide
 
 # R Console
 
-.pull-left[
+.pl[
 &lt;img src="img/s1i1.png" width="100%" /&gt;
 ]
 
-.pull-right[
+.pr[
 Here it is possible to execute all kind of build-in functions. Give it a try
 
 ```r
@@ -110,9 +123,9 @@ TRUE*TRUE
 One can change the layout by following (among other things): `Tools-&gt; Global options -&gt; Panel layout`
 ---
 
-#### Basic features
+### Basic commands
 
-.pull-left[
+.pl[
 Getting help
 
 ```r
@@ -140,17 +153,652 @@ Load a build-in dataset
 ```r
 data(mtcars)
 ```
+]
 
+
+.pr[
+Current working directory
+
+```r
+getwd()
+```
+
+
+Change current WD
+
+```r
+setwd()
+```
+]
+
+
+---
+
+
+# Functions and classes
+
+.pl[
+- R is an object oriented programming language. That is, simple things such a number `5` can be a object when is assigned to `x`. `x` can also be an image, model, dataset, function, etc.
+- There are three types of assiggment operadors
+  - `&lt;-` which is the same as `=`
+  - `&lt;&lt;-` and `-&gt;&gt;` mostly used inside functions to assign values to objects in the environment.
+  
+
+```r
+x_0 &lt;- 5
+x_1 = 5
+```
+
+It is possible to visualize the object either with the function `print()` or only naming it.
+
+
+```r
+print(x_0)
+```
+
+```
+## [1] 5
+```
+
+```r
+x_1
+```
+
+```
+## [1] 5
+```
+]
+
+.pr[
+- Each object is identified with a class. The basic classes are:
+  - Logical
+  - Numeric
+  - Character or string
+  - Factor
+
+
+```r
+obj_1 &lt;- 5
+obj_2 &lt;- "5" # Note that character elements are in between double quotes
+obj_3 &lt;- TRUE
+obj_4 &lt;- gl(1, k = 1)
+```
+
+Then using `class()` on every object above:
+
+
+```
+## [1] "numeric"   "character" "logical"   "factor"
+```
+
+Note: There are rules for naming, for example, one can not create an object with the name `8`. Try it!
+
+
+```r
+8 &lt;- 9
+```
 
 ]
+
+
+---
+
+# Vectors
+
+.pl[
+Creating vectors is easy. The function `c()` stands for concatenate, and is used for aggregating elements into a single object.
+
+
+```r
+vec_1 &lt;- c(1, 1, 2, 3, 5)
+vec_2 &lt;- 1:5
+class(vec_1)
+```
+
+```
+## [1] "numeric"
+```
+
+Vectors can only have one type of class. If a given vector is initialy composed by a mixture of elements, R automatically apply coercion rules to homogenize the vector.
+
+
+```r
+vec_3 &lt;- c(TRUE, F, 1)
+vec_4 &lt;- c("A", T, 2)
+class(vec_3)
+```
+
+```
+## [1] "numeric"
+```
+
+```r
+class(vec_4)
+```
+
+```
+## [1] "character"
+```
+]
+
+
+.pr[
+## Mathematical operations
+
+
+```r
+vec_1/vec_2
+```
+
+```
+## [1] 1.0000000 0.5000000 0.6666667 0.7500000 1.0000000
+```
+
+```r
+vec_1*vec_2
+```
+
+```
+## [1]  1  2  6 12 25
+```
+
+```r
+vec_1+vec_2
+```
+
+```
+## [1]  2  3  5  7 10
+```
+
+```r
+vec_1-1
+```
+
+```
+## [1] 0 0 1 2 4
+```
+
+```r
+vec_1^2
+```
+
+```
+## [1]  1  1  4  9 25
+```
+]
+
+---
+
+# Selecting elements (subsetting) vectors
+
+.pl[
+By position
+
+```r
+vec_1
+```
+
+```
+## [1] 1 1 2 3 5
+```
+
+```r
+vec_2[2] # 2nd element of vector vec_2
+```
+
+```
+## [1] 2
+```
+
+```r
+vec_2[-1] # Every element of vector vec_2 except the 1st
+```
+
+```
+## [1] 2 3 4 5
+```
+
+```r
+vec_2[c(2:4)] # Elements between 2nd and 4th (inclusive)
+```
+
+```
+## [1] 2 3 4
+```
+]
+
+
+.pr[
+By coincidence. For this, we have to take into account logical conditions
+- `a == b`
+- `a != b`
+- `a &gt; b`
+- `a &lt; b`
+- `a &gt;= b`
+- `a &lt;= b`
+
+
+```r
+vec_1==1
+```
+
+```
+## [1]  TRUE  TRUE FALSE FALSE FALSE
+```
+
+```r
+vec_1[vec_1==1]
+```
+
+```
+## [1] 1 1
+```
+
+```r
+vec_1[vec_1 %in% c(2, 3)]
+```
+
+```
+## [1] 2 3
+```
+]
+
+
+---
+
+# Matrices
+
+.pl[
+Vectors are one dimensional array, while matrices are two-dimensional. A matrix can be created as:
+
+
+```r
+mat_1 &lt;- matrix(c(1:7, "A", NA), nrow = 3, ncol = 3
+                , dimnames = list(c("row_1", "row_2", "row_3")
+                                  , c("col_1", "col_2", "col_3")))
+mat_1
+```
+
+```
+##       col_1 col_2 col_3
+## row_1 "1"   "4"   "7"  
+## row_2 "2"   "5"   "A"  
+## row_3 "3"   "6"   NA
+```
+ 
+As any matrix, in R a matrix has a size `\(m \times n\)`, where `\(m\)` is the number of rows and `\(n\)` the number of columns. Subsetting a matrix is fairly simple, one can only has to index a second element of interest divided by a comma inside the squared bracket.
+]
+
+.pr[
+
+
+```r
+mat_1[1,3] # 1st row, 3rd column
+```
+
+```
+## [1] "7"
+```
+
+```r
+mat_1[1:2, 3] # Rows 1:2, 3rd column
+```
+
+```
+## row_1 row_2 
+##   "7"   "A"
+```
+
+```r
+mat_1[1:3, 2:3] # Rows 1:3, columns 2:3
+```
+
+```
+##       col_2 col_3
+## row_1 "4"   "7"  
+## row_2 "5"   "A"  
+## row_3 "6"   NA
+```
+]
+
+---
+
+# Practice
+
+Calculate the `mean()` statistic of a `\(3 \times 3\)` matrix composed by the sequence 2 to 10 organized as a matrix. Is it the same as calculating a vector integrated by those numbers? 
+
+--
+
+
+```r
+mat_exc &lt;- matrix(2:10, nrow = 3, ncol = 3)
+(mat_exc_mean &lt;- mean(mat_exc))
+```
+
+```
+## [1] 6
+```
+
+```r
+vec_exc &lt;- 2:10
+(vec_exc_mean &lt;- mean(vec_exc))
+```
+
+```
+## [1] 6
+```
+
+```r
+mat_exc_mean==vec_exc_mean
+```
+
+```
+## [1] TRUE
+```
+
+---
+# Lists
+
+.pl[
+A list is a set of elements which can be of different types.
+
+Empty list
+
+```r
+(list_1 &lt;- list())
+```
+
+```
+## list()
+```
+
+List of one element
+
+```r
+(list_2 &lt;- list(5))
+```
+
+```
+## [[1]]
+## [1] 5
+```
+]
+
+.pr[
+List of several elements (unnamed)
+
+```r
+(list_3 &lt;- list(F, "string", factor("factor"), 8))
+```
+
+```
+## [[1]]
+## [1] FALSE
+## 
+## [[2]]
+## [1] "string"
+## 
+## [[3]]
+## [1] factor
+## Levels: factor
+## 
+## [[4]]
+## [1] 8
+```
+]
+
+---
+# Lists
+
+.pl[
+Since lists admit various types of types or even objects, it is possible to name them.
+
+
+```r
+(list_4 &lt;- list(logical=F
+                , string="string"
+                , factor=factor("factor"), numeric=8))
+```
+
+```
+## $logical
+## [1] FALSE
+## 
+## $string
+## [1] "string"
+## 
+## $factor
+## [1] factor
+## Levels: factor
+## 
+## $numeric
+## [1] 8
+```
+
+
+```r
+names(list_4)
+```
+
+```
+## [1] "logical" "string"  "factor"  "numeric"
+```
+]
+
+.pr[
+Subsetting of list can be performed by several ways. It will depend on the structure, for instance, list can be nested into other lists. The function `str()` shows the structure of the objects.
+
+
+```r
+str(list_4)
+```
+
+```
+## List of 4
+##  $ logical: logi FALSE
+##  $ string : chr "string"
+##  $ factor : Factor w/ 1 level "factor": 1
+##  $ numeric: num 8
+```
+]
+
+---
+# Lists
+
+.pl[
+Understanding lists can be a pain in the arse. Mainly because complex nested configurations and their first order internal structure.
+
+For instance, a list can allocate a `list_4` from the past slide and a dataset
+
+
+```r
+nested_list &lt;- list(list=list_4, dataframe=mtcars[1:10, 1:5])
+str(nested_list)
+```
+
+```
+## List of 2
+##  $ list     :List of 4
+##   ..$ logical: logi FALSE
+##   ..$ string : chr "string"
+##   ..$ factor : Factor w/ 1 level "factor": 1
+##   ..$ numeric: num 8
+##  $ dataframe:'data.frame':	10 obs. of  5 variables:
+##   ..$ mpg : num [1:10] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2
+##   ..$ cyl : num [1:10] 6 6 4 6 8 6 8 4 4 6
+##   ..$ disp: num [1:10] 160 160 108 258 360 ...
+##   ..$ hp  : num [1:10] 110 110 93 110 175 105 245 62 95 123
+##   ..$ drat: num [1:10] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92
+```
+]
+
+--
+
+.pr[
+![](https://media.giphy.com/media/90F8aUepslB84/giphy.gif)&lt;!-- --&gt;
+
+]
+
+
+---
+# Subsetting lists
+
+
+.pl[
+Option #1 with `[[]]`
+
+```r
+nested_list[[1]]
+```
+
+```
+## $logical
+## [1] FALSE
+## 
+## $string
+## [1] "string"
+## 
+## $factor
+## [1] factor
+## Levels: factor
+## 
+## $numeric
+## [1] 8
+```
+]
+
+.pr[
+Option #2 with a `$` (💡 lists need to be named in order to use this alternative)
+
+```r
+nested_list$list
+```
+
+```
+## $logical
+## [1] FALSE
+## 
+## $string
+## [1] "string"
+## 
+## $factor
+## [1] factor
+## Levels: factor
+## 
+## $numeric
+## [1] 8
+```
+]
+
+---
+# Subsetting lists
+
+Option #3
+.pl[
+
+```r
+nested_list["dataframe"]
+```
+
+```
+## $dataframe
+##                    mpg cyl  disp  hp drat
+## Mazda RX4         21.0   6 160.0 110 3.90
+## Mazda RX4 Wag     21.0   6 160.0 110 3.90
+## Datsun 710        22.8   4 108.0  93 3.85
+## Hornet 4 Drive    21.4   6 258.0 110 3.08
+## Hornet Sportabout 18.7   8 360.0 175 3.15
+## Valiant           18.1   6 225.0 105 2.76
+## Duster 360        14.3   8 360.0 245 3.21
+## Merc 240D         24.4   4 146.7  62 3.69
+## Merc 230          22.8   4 140.8  95 3.92
+## Merc 280          19.2   6 167.6 123 3.92
+```
+]
+
+.pr[
+For example, in order to access to the first column of the dataset `mtcars` one could write
+
+
+```r
+nested_list["dataframe"]$dataframe$mpg
+```
+
+```
+##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2
+```
+
+]
+---
+# Dataframes
+
+.pl[
+Dataframes are a special type of list in which each column represents a vector of elements associated with a row, they resemble the typical dataset that we use in Stata.
+
+
+```r
+data("iris") # build-in dataframe
+DT::datatable(iris, fillContainer = FALSE, options = list(pageLength = 6))
+```
+
+<div id="htmlwidget-942460c6117849117c7b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-942460c6117849117c7b">{"x":{"filter":"none","fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150"],[5.1,4.9,4.7,4.6,5,5.4,4.6,5,4.4,4.9,5.4,4.8,4.8,4.3,5.8,5.7,5.4,5.1,5.7,5.1,5.4,5.1,4.6,5.1,4.8,5,5,5.2,5.2,4.7,4.8,5.4,5.2,5.5,4.9,5,5.5,4.9,4.4,5.1,5,4.5,4.4,5,5.1,4.8,5.1,4.6,5.3,5,7,6.4,6.9,5.5,6.5,5.7,6.3,4.9,6.6,5.2,5,5.9,6,6.1,5.6,6.7,5.6,5.8,6.2,5.6,5.9,6.1,6.3,6.1,6.4,6.6,6.8,6.7,6,5.7,5.5,5.5,5.8,6,5.4,6,6.7,6.3,5.6,5.5,5.5,6.1,5.8,5,5.6,5.7,5.7,6.2,5.1,5.7,6.3,5.8,7.1,6.3,6.5,7.6,4.9,7.3,6.7,7.2,6.5,6.4,6.8,5.7,5.8,6.4,6.5,7.7,7.7,6,6.9,5.6,7.7,6.3,6.7,7.2,6.2,6.1,6.4,7.2,7.4,7.9,6.4,6.3,6.1,7.7,6.3,6.4,6,6.9,6.7,6.9,5.8,6.8,6.7,6.7,6.3,6.5,6.2,5.9],[3.5,3,3.2,3.1,3.6,3.9,3.4,3.4,2.9,3.1,3.7,3.4,3,3,4,4.4,3.9,3.5,3.8,3.8,3.4,3.7,3.6,3.3,3.4,3,3.4,3.5,3.4,3.2,3.1,3.4,4.1,4.2,3.1,3.2,3.5,3.6,3,3.4,3.5,2.3,3.2,3.5,3.8,3,3.8,3.2,3.7,3.3,3.2,3.2,3.1,2.3,2.8,2.8,3.3,2.4,2.9,2.7,2,3,2.2,2.9,2.9,3.1,3,2.7,2.2,2.5,3.2,2.8,2.5,2.8,2.9,3,2.8,3,2.9,2.6,2.4,2.4,2.7,2.7,3,3.4,3.1,2.3,3,2.5,2.6,3,2.6,2.3,2.7,3,2.9,2.9,2.5,2.8,3.3,2.7,3,2.9,3,3,2.5,2.9,2.5,3.6,3.2,2.7,3,2.5,2.8,3.2,3,3.8,2.6,2.2,3.2,2.8,2.8,2.7,3.3,3.2,2.8,3,2.8,3,2.8,3.8,2.8,2.8,2.6,3,3.4,3.1,3,3.1,3.1,3.1,2.7,3.2,3.3,3,2.5,3,3.4,3],[1.4,1.4,1.3,1.5,1.4,1.7,1.4,1.5,1.4,1.5,1.5,1.6,1.4,1.1,1.2,1.5,1.3,1.4,1.7,1.5,1.7,1.5,1,1.7,1.9,1.6,1.6,1.5,1.4,1.6,1.6,1.5,1.5,1.4,1.5,1.2,1.3,1.4,1.3,1.5,1.3,1.3,1.3,1.6,1.9,1.4,1.6,1.4,1.5,1.4,4.7,4.5,4.9,4,4.6,4.5,4.7,3.3,4.6,3.9,3.5,4.2,4,4.7,3.6,4.4,4.5,4.1,4.5,3.9,4.8,4,4.9,4.7,4.3,4.4,4.8,5,4.5,3.5,3.8,3.7,3.9,5.1,4.5,4.5,4.7,4.4,4.1,4,4.4,4.6,4,3.3,4.2,4.2,4.2,4.3,3,4.1,6,5.1,5.9,5.6,5.8,6.6,4.5,6.3,5.8,6.1,5.1,5.3,5.5,5,5.1,5.3,5.5,6.7,6.9,5,5.7,4.9,6.7,4.9,5.7,6,4.8,4.9,5.6,5.8,6.1,6.4,5.6,5.1,5.6,6.1,5.6,5.5,4.8,5.4,5.6,5.1,5.1,5.9,5.7,5.2,5,5.2,5.4,5.1],[0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.1,0.2,0.2,0.1,0.1,0.2,0.4,0.4,0.3,0.3,0.3,0.2,0.4,0.2,0.5,0.2,0.2,0.4,0.2,0.2,0.2,0.2,0.4,0.1,0.2,0.2,0.2,0.2,0.1,0.2,0.2,0.3,0.3,0.2,0.6,0.4,0.3,0.2,0.2,0.2,0.2,1.4,1.5,1.5,1.3,1.5,1.3,1.6,1,1.3,1.4,1,1.5,1,1.4,1.3,1.4,1.5,1,1.5,1.1,1.8,1.3,1.5,1.2,1.3,1.4,1.4,1.7,1.5,1,1.1,1,1.2,1.6,1.5,1.6,1.5,1.3,1.3,1.3,1.2,1.4,1.2,1,1.3,1.2,1.3,1.3,1.1,1.3,2.5,1.9,2.1,1.8,2.2,2.1,1.7,1.8,1.8,2.5,2,1.9,2.1,2,2.4,2.3,1.8,2.2,2.3,1.5,2.3,2,2,1.8,2.1,1.8,1.8,1.8,2.1,1.6,1.9,2,2.2,1.5,1.4,2.3,2.4,1.8,1.8,2.1,2.4,2.3,1.9,2.3,2.5,2.3,1.9,2,2.3,1.8],["setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Sepal.Length<\/th>\n      <th>Sepal.Width<\/th>\n      <th>Petal.Length<\/th>\n      <th>Petal.Width<\/th>\n      <th>Species<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+]
+
+.pr[
+&lt;div class="figure" style="text-align: center"&gt;
+<div id="htmlwidget-8bba73fb36a7338eca4d" style="width:504px;height:504px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8bba73fb36a7338eca4d">{"x":{"visdat":{"3af7225bf471":["function () ","plotlyVisDat"]},"cur_data":"3af7225bf471","attrs":{"3af7225bf471":{"z":[[5.1,3.5,1.4],[4.9,3,1.4],[4.7,3.2,1.3],[4.6,3.1,1.5],[5,3.6,1.4],[5.4,3.9,1.7],[4.6,3.4,1.4],[5,3.4,1.5],[4.4,2.9,1.4],[4.9,3.1,1.5],[5.4,3.7,1.5],[4.8,3.4,1.6],[4.8,3,1.4],[4.3,3,1.1],[5.8,4,1.2],[5.7,4.4,1.5],[5.4,3.9,1.3],[5.1,3.5,1.4],[5.7,3.8,1.7],[5.1,3.8,1.5],[5.4,3.4,1.7],[5.1,3.7,1.5],[4.6,3.6,1],[5.1,3.3,1.7],[4.8,3.4,1.9],[5,3,1.6],[5,3.4,1.6],[5.2,3.5,1.5],[5.2,3.4,1.4],[4.7,3.2,1.6],[4.8,3.1,1.6],[5.4,3.4,1.5],[5.2,4.1,1.5],[5.5,4.2,1.4],[4.9,3.1,1.5],[5,3.2,1.2],[5.5,3.5,1.3],[4.9,3.6,1.4],[4.4,3,1.3],[5.1,3.4,1.5],[5,3.5,1.3],[4.5,2.3,1.3],[4.4,3.2,1.3],[5,3.5,1.6],[5.1,3.8,1.9],[4.8,3,1.4],[5.1,3.8,1.6],[4.6,3.2,1.4],[5.3,3.7,1.5],[5,3.3,1.4],[7,3.2,4.7],[6.4,3.2,4.5],[6.9,3.1,4.9],[5.5,2.3,4],[6.5,2.8,4.6],[5.7,2.8,4.5],[6.3,3.3,4.7],[4.9,2.4,3.3],[6.6,2.9,4.6],[5.2,2.7,3.9],[5,2,3.5],[5.9,3,4.2],[6,2.2,4],[6.1,2.9,4.7],[5.6,2.9,3.6],[6.7,3.1,4.4],[5.6,3,4.5],[5.8,2.7,4.1],[6.2,2.2,4.5],[5.6,2.5,3.9],[5.9,3.2,4.8],[6.1,2.8,4],[6.3,2.5,4.9],[6.1,2.8,4.7],[6.4,2.9,4.3],[6.6,3,4.4],[6.8,2.8,4.8],[6.7,3,5],[6,2.9,4.5],[5.7,2.6,3.5],[5.5,2.4,3.8],[5.5,2.4,3.7],[5.8,2.7,3.9],[6,2.7,5.1],[5.4,3,4.5],[6,3.4,4.5],[6.7,3.1,4.7],[6.3,2.3,4.4],[5.6,3,4.1],[5.5,2.5,4],[5.5,2.6,4.4],[6.1,3,4.6],[5.8,2.6,4],[5,2.3,3.3],[5.6,2.7,4.2],[5.7,3,4.2],[5.7,2.9,4.2],[6.2,2.9,4.3],[5.1,2.5,3],[5.7,2.8,4.1],[6.3,3.3,6],[5.8,2.7,5.1],[7.1,3,5.9],[6.3,2.9,5.6],[6.5,3,5.8],[7.6,3,6.6],[4.9,2.5,4.5],[7.3,2.9,6.3],[6.7,2.5,5.8],[7.2,3.6,6.1],[6.5,3.2,5.1],[6.4,2.7,5.3],[6.8,3,5.5],[5.7,2.5,5],[5.8,2.8,5.1],[6.4,3.2,5.3],[6.5,3,5.5],[7.7,3.8,6.7],[7.7,2.6,6.9],[6,2.2,5],[6.9,3.2,5.7],[5.6,2.8,4.9],[7.7,2.8,6.7],[6.3,2.7,4.9],[6.7,3.3,5.7],[7.2,3.2,6],[6.2,2.8,4.8],[6.1,3,4.9],[6.4,2.8,5.6],[7.2,3,5.8],[7.4,2.8,6.1],[7.9,3.8,6.4],[6.4,2.8,5.6],[6.3,2.8,5.1],[6.1,2.6,5.6],[7.7,3,6.1],[6.3,3.4,5.6],[6.4,3.1,5.5],[6,3,4.8],[6.9,3.1,5.4],[6.7,3.1,5.6],[6.9,3.1,5.1],[5.8,2.7,5.1],[6.8,3.2,5.9],[6.7,3.3,5.7],[6.7,3,5.2],[6.3,2.5,5],[6.5,3,5.2],[6.2,3.4,5.4],[5.9,3,5.1]],"name":"Dimentions","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"surface","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0579710144927536","rgba(71,24,102,1)"],["0.0869565217391304","rgba(72,33,112,1)"],["0.188405797101449","rgba(66,64,132,1)"],["0.246376811594203","rgba(60,81,138,1)"],["0.260869565217391","rgba(59,85,139,1)"],["0.289855072463768","rgba(56,92,140,1)"],["0.289855072463768","rgba(56,92,140,1)"],["0.318840579710145","rgba(52,100,141,1)"],["0.347826086956522","rgba(48,107,142,1)"],["0.376811594202899","rgba(46,114,142,1)"],["0.420289855072464","rgba(42,124,142,1)"],["0.485507246376812","rgba(37,140,140,1)"],["0.521739130434782","rgba(35,149,139,1)"],["0.550724637681159","rgba(32,157,137,1)"],["0.579710144927536","rgba(38,163,134,1)"],["0.594202898550725","rgba(41,167,132,1)"],["0.63768115942029","rgba(49,176,125,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.681159420289855","rgba(63,186,117,1)"],["0.72463768115942","rgba(87,194,105,1)"],["0.766304347826087","rgba(105,203,93,1)"],["0.797101449275362","rgba(123,208,83,1)"],["0.840579710144927","rgba(152,215,67,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[5.1,3.5,1.4],[4.9,3,1.4],[4.7,3.2,1.3],[4.6,3.1,1.5],[5,3.6,1.4],[5.4,3.9,1.7],[4.6,3.4,1.4],[5,3.4,1.5],[4.4,2.9,1.4],[4.9,3.1,1.5],[5.4,3.7,1.5],[4.8,3.4,1.6],[4.8,3,1.4],[4.3,3,1.1],[5.8,4,1.2],[5.7,4.4,1.5],[5.4,3.9,1.3],[5.1,3.5,1.4],[5.7,3.8,1.7],[5.1,3.8,1.5],[5.4,3.4,1.7],[5.1,3.7,1.5],[4.6,3.6,1],[5.1,3.3,1.7],[4.8,3.4,1.9],[5,3,1.6],[5,3.4,1.6],[5.2,3.5,1.5],[5.2,3.4,1.4],[4.7,3.2,1.6],[4.8,3.1,1.6],[5.4,3.4,1.5],[5.2,4.1,1.5],[5.5,4.2,1.4],[4.9,3.1,1.5],[5,3.2,1.2],[5.5,3.5,1.3],[4.9,3.6,1.4],[4.4,3,1.3],[5.1,3.4,1.5],[5,3.5,1.3],[4.5,2.3,1.3],[4.4,3.2,1.3],[5,3.5,1.6],[5.1,3.8,1.9],[4.8,3,1.4],[5.1,3.8,1.6],[4.6,3.2,1.4],[5.3,3.7,1.5],[5,3.3,1.4],[7,3.2,4.7],[6.4,3.2,4.5],[6.9,3.1,4.9],[5.5,2.3,4],[6.5,2.8,4.6],[5.7,2.8,4.5],[6.3,3.3,4.7],[4.9,2.4,3.3],[6.6,2.9,4.6],[5.2,2.7,3.9],[5,2,3.5],[5.9,3,4.2],[6,2.2,4],[6.1,2.9,4.7],[5.6,2.9,3.6],[6.7,3.1,4.4],[5.6,3,4.5],[5.8,2.7,4.1],[6.2,2.2,4.5],[5.6,2.5,3.9],[5.9,3.2,4.8],[6.1,2.8,4],[6.3,2.5,4.9],[6.1,2.8,4.7],[6.4,2.9,4.3],[6.6,3,4.4],[6.8,2.8,4.8],[6.7,3,5],[6,2.9,4.5],[5.7,2.6,3.5],[5.5,2.4,3.8],[5.5,2.4,3.7],[5.8,2.7,3.9],[6,2.7,5.1],[5.4,3,4.5],[6,3.4,4.5],[6.7,3.1,4.7],[6.3,2.3,4.4],[5.6,3,4.1],[5.5,2.5,4],[5.5,2.6,4.4],[6.1,3,4.6],[5.8,2.6,4],[5,2.3,3.3],[5.6,2.7,4.2],[5.7,3,4.2],[5.7,2.9,4.2],[6.2,2.9,4.3],[5.1,2.5,3],[5.7,2.8,4.1],[6.3,3.3,6],[5.8,2.7,5.1],[7.1,3,5.9],[6.3,2.9,5.6],[6.5,3,5.8],[7.6,3,6.6],[4.9,2.5,4.5],[7.3,2.9,6.3],[6.7,2.5,5.8],[7.2,3.6,6.1],[6.5,3.2,5.1],[6.4,2.7,5.3],[6.8,3,5.5],[5.7,2.5,5],[5.8,2.8,5.1],[6.4,3.2,5.3],[6.5,3,5.5],[7.7,3.8,6.7],[7.7,2.6,6.9],[6,2.2,5],[6.9,3.2,5.7],[5.6,2.8,4.9],[7.7,2.8,6.7],[6.3,2.7,4.9],[6.7,3.3,5.7],[7.2,3.2,6],[6.2,2.8,4.8],[6.1,3,4.9],[6.4,2.8,5.6],[7.2,3,5.8],[7.4,2.8,6.1],[7.9,3.8,6.4],[6.4,2.8,5.6],[6.3,2.8,5.1],[6.1,2.6,5.6],[7.7,3,6.1],[6.3,3.4,5.6],[6.4,3.1,5.5],[6,3,4.8],[6.9,3.1,5.4],[6.7,3.1,5.6],[6.9,3.1,5.1],[5.8,2.7,5.1],[6.8,3.2,5.9],[6.7,3.3,5.7],[6.7,3,5.2],[6.3,2.5,5],[6.5,3,5.2],[6.2,3.4,5.4],[5.9,3,5.1]],"name":"Dimentions","type":"surface","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+&lt;p class="caption"&gt;Flower dimentions&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+# Practice
+
+What about the mean of a vector composed by strings and numbers? Or a `NA` value?
+
+--
+
+
+```r
+vec_exc1 &lt;- c(2:9, "a")
+mean(vec_exc1)
+```
+
+```
+## Warning in mean.default(vec_exc1): argument is not numeric or logical:
+## returning NA
+```
+
+```
+## [1] NA
+```
+
+```r
+vec_exc2 &lt;- c(2:9, NA)
+mean(vec_exc2)
+```
+
+```
+## [1] NA
+```
+
+```r
+mean(vec_exc2, na.rm = TRUE)
+```
+
+```
+## [1] 5.5
+```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "solarized-dark",
+"highlightStyle": "monokai",
 "highlightLines": true,
 "countIncrementalSlides": false,
 "ratio": "16:9",
-"slideNumberFormat": "<div class=\"progress-bar-container\">   <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">   </div> </div>`"
+"slideNumberFormat": "<div class=\"progress-bar-container\">   <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">   </div> </div>` "
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

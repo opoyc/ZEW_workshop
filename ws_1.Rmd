@@ -1,5 +1,5 @@
 ---
-title: "Workshop: Datascience with R"
+title: "Workshop: t with R"
 subtitle: "ZEW - Session #1"
 author: "Obryan Poyser"
 date: "2019/02/19 (updated: `r Sys.Date()`)"
@@ -7,7 +7,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
-      highlightStyle: solarized-dark
+      highlightStyle: monokai
       highlightLines: true
       countIncrementalSlides: false
       ratio: "16:9"
@@ -16,10 +16,15 @@ output:
               <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
               </div>
             </div>`
+    css: 
+      - "css/zew-fonts.css"
+      - "css/zew.css"
 ---
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
+require(plotly)
+require(tidyverse)
 ```
 
 
@@ -62,13 +67,13 @@ options(htmltools.dir.version = FALSE)
 
 # R Console
 
-.pull-left[
+.pl[
 ```{r, out.width="100%", echo=F}
 knitr::include_graphics("img/s1i1.png")
 ```
 ]
 
-.pull-right[
+.pr[
 Here it is possible to execute all kind of build-in functions. Give it a try
 ```{r}
 1+1
@@ -89,11 +94,11 @@ knitr::include_graphics("img/s1i2.png")
 One can change the layout by following (among other things): `Tools-> Global options -> Panel layout`
 ---
 
-#### Basic features
+### Basic commands
 
-.pull-left[
+.pl[
 Getting help
-```{r}
+```{r, eval=FALSE}
 ?glm
 ```
 
@@ -115,9 +120,336 @@ Load a build-in dataset
 ```{r}
 data(mtcars)
 ```
+]
 
+
+.pr[
+Current working directory
+```{r, eval=FALSE}
+
+getwd()
+```
+
+
+Change current WD
+```{r, eval=FALSE}
+setwd()
+```
+]
+
+
+---
+
+
+# Functions and classes
+
+.pl[
+- R is an object oriented programming language. That is, simple things such a number `5` can be a object when is assigned to `x`. `x` can also be an image, model, dataset, function, etc.
+- There are three types of assiggment operadors
+  - `<-` which is the same as `=`
+  - `<<-` and `->>` mostly used inside functions to assign values to objects in the environment.
+  
+```{r}
+x_0 <- 5
+x_1 = 5
+```
+
+It is possible to visualize the object either with the function `print()` or only naming it.
+
+```{r}
+print(x_0)
+x_1
+```
+]
+
+.pr[
+- Each object is identified with a class. The basic classes are:
+  - Logical
+  - Numeric
+  - Character or string
+  - Factor
+
+```{r}
+obj_1 <- 5
+obj_2 <- "5" # Note that character elements are in between double quotes
+obj_3 <- TRUE
+obj_4 <- gl(1, k = 1)
+```
+
+Then using `class()` on every object above:
+
+```{r, echo=FALSE}
+unlist(lapply(list(obj_1, obj_2, obj_3, obj_4), class))
+```
+
+Note: There are rules for naming, for example, one can not create an object with the name `8`. Try it!
+
+```{r, eval=FALSE}
+8 <- 9
+```
 
 ]
+
+
+---
+
+# Vectors
+
+.pl[
+Creating vectors is easy. The function `c()` stands for concatenate, and is used for aggregating elements into a single object.
+
+```{r}
+vec_1 <- c(1, 1, 2, 3, 5)
+vec_2 <- 1:5
+class(vec_1)
+```
+
+Vectors can only have one type of class. If a given vector is initialy composed by a mixture of elements, R automatically apply coercion rules to homogenize the vector.
+
+```{r}
+vec_3 <- c(TRUE, F, 1)
+vec_4 <- c("A", T, 2)
+class(vec_3)
+class(vec_4)
+```
+]
+
+
+.pr[
+## Mathematical operations
+
+```{r}
+vec_1/vec_2
+vec_1*vec_2
+vec_1+vec_2
+vec_1-1
+vec_1^2
+```
+]
+
+---
+
+# Selecting elements (subsetting) vectors
+
+.pl[
+By position
+```{r}
+vec_1
+vec_2[2] # 2nd element of vector vec_2
+vec_2[-1] # Every element of vector vec_2 except the 1st
+vec_2[c(2:4)] # Elements between 2nd and 4th (inclusive)
+```
+]
+
+
+.pr[
+By coincidence. For this, we have to take into account logical conditions
+- `a == b`
+- `a != b`
+- `a > b`
+- `a < b`
+- `a >= b`
+- `a <= b`
+
+```{r}
+vec_1==1
+vec_1[vec_1==1]
+vec_1[vec_1 %in% c(2, 3)]
+```
+]
+
+
+---
+
+# Matrices
+
+.pl[
+Vectors are one dimensional array, while matrices are two-dimensional. A matrix can be created as:
+
+```{r}
+mat_1 <- matrix(c(1:7, "A", NA), nrow = 3, ncol = 3
+                , dimnames = list(c("row_1", "row_2", "row_3")
+                                  , c("col_1", "col_2", "col_3")))
+mat_1
+```
+ 
+As any matrix, in R a matrix has a size $m \times n$, where $m$ is the number of rows and $n$ the number of columns. Subsetting a matrix is fairly simple, one can only has to index a second element of interest divided by a comma inside the squared bracket.
+]
+
+.pr[
+
+```{r}
+mat_1[1,3] # 1st row, 3rd column
+mat_1[1:2, 3] # Rows 1:2, 3rd column
+mat_1[1:3, 2:3] # Rows 1:3, columns 2:3
+```
+]
+
+---
+
+# Practice
+
+Calculate the `mean()` statistic of a $3 \times 3$ matrix composed by the sequence 2 to 10 organized as a matrix. Is it the same as calculating a vector integrated by those numbers? 
+
+--
+
+```{r}
+mat_exc <- matrix(2:10, nrow = 3, ncol = 3)
+(mat_exc_mean <- mean(mat_exc))
+
+vec_exc <- 2:10
+(vec_exc_mean <- mean(vec_exc))
+
+mat_exc_mean==vec_exc_mean
+```
+
+---
+# Lists
+
+.pl[
+A list is a set of elements which can be of different types.
+
+Empty list
+```{r}
+(list_1 <- list())
+```
+
+List of one element
+```{r}
+(list_2 <- list(5))
+```
+]
+
+.pr[
+List of several elements (unnamed)
+```{r}
+(list_3 <- list(F, "string", factor("factor"), 8))
+```
+]
+
+---
+# Lists
+
+.pl[
+Since lists admit various types of types or even objects, it is possible to name them.
+
+```{r}
+(list_4 <- list(logical=F
+                , string="string"
+                , factor=factor("factor"), numeric=8))
+```
+
+```{r}
+names(list_4)
+```
+]
+
+.pr[
+Subsetting of list can be performed by several ways. It will depend on the structure, for instance, list can be nested into other lists. The function `str()` shows the structure of the objects.
+
+```{r}
+str(list_4)
+```
+]
+
+---
+# Lists
+
+.pl[
+Understanding lists can be a pain in the arse. Mainly because complex nested configurations and their first order internal structure.
+
+For instance, a list can allocate a `list_4` from the past slide and a dataset
+
+```{r}
+nested_list <- list(list=list_4, dataframe=mtcars[1:10, 1:5])
+str(nested_list)
+```
+]
+
+--
+
+.pr[
+```{r, echo=F}
+knitr::include_graphics("https://media.giphy.com/media/90F8aUepslB84/giphy.gif")
+```
+
+]
+
+
+---
+# Subsetting lists
+
+
+.pl[
+Option #1 with `[[]]`
+```{r}
+nested_list[[1]]
+```
+]
+
+.pr[
+Option #2 with a `$` (`r emo::ji("bulb")` lists need to be named in order to use this alternative)
+```{r}
+nested_list$list
+```
+]
+
+---
+# Subsetting lists
+
+Option #3
+.pl[
+```{r}
+nested_list["dataframe"]
+```
+]
+
+.pr[
+For example, in order to access to the first column of the dataset `mtcars` one could write
+
+```{r}
+nested_list["dataframe"]$dataframe$mpg
+```
+
+]
+---
+# Dataframes
+
+.pl[
+Dataframes are a special type of list in which each column represents a vector of elements associated with a row, they resemble the typical dataset that we use in Stata.
+
+```{r}
+data("iris") # build-in dataframe
+DT::datatable(iris, fillContainer = FALSE, options = list(pageLength = 6))
+```
+]
+
+.pr[
+Dataframe and matrix share several features. Depending on the task (graphics or regression) we have to covert one to the other.
+
+```{r, fig.align="center", echo=FALSE, fig.cap="Flower dimentions"}
+iris[,1:3] %>% as.matrix() %>% plot_ly(, z=.) %>% add_surface()
+```
+]
+
+
+---
+
+
+---
+# Practice
+
+What about the mean of a vector composed by strings and numbers? Or a `NA` value?
+
+--
+
+```{r}
+vec_exc1 <- c(2:9, "a")
+mean(vec_exc1)
+vec_exc2 <- c(2:9, NA)
+mean(vec_exc2)
+mean(vec_exc2, na.rm = TRUE)
+```
 
 
 
