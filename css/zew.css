@@ -16,7 +16,7 @@ Grey accent 2:   #AAA59F, PMS 401
 /* Package defaults that we slightly tweak */
 
 a, a > code {
-  color: #97BBD5; /* blue accent 2 */
+  color: #0247dd; /* blue accent 2 */
   text-decoration: none;
 }
 
@@ -26,11 +26,6 @@ a, a > code {
   bottom: 1em;
   padding-right: 4em;
   font-size: 95%;
-}
-
-/* important code slightly blue */
-.remark-code-line-highlighted {
-  background-color: #97BBD5 !important;
 }
 
 /* color tweak */
@@ -349,6 +344,12 @@ midd-blockquote {
   line-height: 1;
 }
 
+
+.large {
+  font-size: 130%:
+}
+
+
 .remark-inline-code {
   color: #f90404
 }
@@ -361,4 +362,34 @@ midd-blockquote {
 .pr {
   float: right;
   width: 49%;
+}
+
+.hljs-solarized-dark .hljs {
+  color: #ffffff;
+  background: #002b36;
+}
+
+.hljs-solarized-dark .hljs-comment {
+  color: #42f4d4;
+}
+
+.hljs-solarized-dark .hljs-string {
+  color: #ffee00;
+}
+
+.hljs-solarized-dark .hljs-keyword {
+  color: #ffffff;
+}
+
+.hljs-solarized-dark .hljs-literal {
+  color: #34A135;
+}
+
+.hljs-solarized-dark .hljs-number {
+  color: #ff7575;
+}
+
+/* important code slightly blue */
+.remark-code-line-highlighted {
+  background-color: #000000 !important;
 }

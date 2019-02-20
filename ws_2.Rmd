@@ -1,0 +1,23 @@
+---
+title: "Workshop: Data science with R"
+subtitle: "ZEW - Session #2"
+author: "Obryan Poyser"
+date: "2019/02/19"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: solarized-dark
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    css: 
+      - "css/zew-fonts.css"
+      - "css/zew.css"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+require(plotly)
+require(tidyverse)
+```

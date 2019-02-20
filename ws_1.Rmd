@@ -7,15 +7,10 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
-      highlightStyle: monokai
+      highlightStyle: solarized-dark
       highlightLines: true
       countIncrementalSlides: false
       ratio: "16:9"
-      slideNumberFormat:  |
-            <div class="progress-bar-container">
-              <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
-              </div>
-            </div>`
     css: 
       - "css/zew-fonts.css"
       - "css/zew.css"
@@ -26,7 +21,6 @@ options(htmltools.dir.version = FALSE)
 require(plotly)
 require(tidyverse)
 ```
-
 
 # What's R?
 
@@ -42,7 +36,7 @@ require(tidyverse)
 ]
 
 .pr[
-```{r, echo=F, out.width="60%"}
+```{r, echo=F, out.width="60%", eval=FALSE}
 knitr::include_graphics("https://www.r-project.org/logo/Rlogo.png")
 ```
 
@@ -112,7 +106,6 @@ RStudio projects make it straightforward to divide your work into multiple conte
 
 ---
 
-
 # Basic commands
 
 .pl[
@@ -141,7 +134,6 @@ data(mtcars)
 ```
 ]
 
-
 .pr[
 Current working directory
 ```{r, eval=FALSE}
@@ -156,13 +148,13 @@ setwd()
 ```
 ]
 
+ 
 
 ---
 
 
-# Functions and classes
+# Assigning values
 
-.pl[
 - R is an object oriented programming language. That is, simple things such a number `5` can be a object when is assigned to `x`. `x` can also be an image, model, dataset, function, etc.
 - There are three types of assiggment operadors
   - `<-` which is the same as `=`
@@ -179,26 +171,32 @@ It is possible to visualize the object either with the function `print()` or onl
 print(x_0)
 x_1
 ```
-]
 
-.pr[
+
+---
+
+# Classes
+
 - Each object is identified with a class. The basic classes are:
-  - Logical
+  - Logical (True or False)
   - Numeric
   - Character or string
   - Factor
+  - Complex
 
 ```{r}
-obj_1 <- 5
+obj_1 <- 5 # Double precision number
+obj_1a <- 5L # Integer
 obj_2 <- "5" # Note that character elements are in between double quotes
-obj_3 <- TRUE
-obj_4 <- gl(1, k = 1)
+obj_3 <- TRUE # Also T in upper case is equal to TRUE, conversely F for FALSE
+obj_4 <- gl(1, k = 1) # Factors are special types of characters
+obj_5 <- 1+1i # Complex numbers are followed by a i (I have never used :/)
 ```
 
 Then using `class()` on every object above:
 
 ```{r, echo=FALSE}
-unlist(lapply(list(obj_1, obj_2, obj_3, obj_4), class))
+unlist(lapply(list(obj_1, obj_1a, obj_2, obj_3, obj_4, obj_5), class))
 ```
 
 Note: There are rules for naming, for example, one can not create an object with the name `8`. Try it!
@@ -207,48 +205,143 @@ Note: There are rules for naming, for example, one can not create an object with
 8 <- 9
 ```
 
-]
+---
+
+# Classes: Missing values
+
+Missing values are denote by `NA` for general use, or `NaN` for undefined numerical operations.
+
+```{r}
+na <- NA
+nan <- NaN
+```
+
+Testing could be performed with the following functions
+
+```{r}
+is.na(na)
+is.na(nan)
+is.nan(na)
+is.nan(nan)
+
+```
 
 ---
-# Functions and classes
 
-Functions have named arguments, some can have default values. Other unnamed arguments such as `...` can be passed to the function too. Arguments can be see with `args()`
+# Classes: Coercion
+
+Objects such as `obj_1` are vectors of length 1. Vectors, as we will see further can only be composed by one type of class. Explicit coercion is achieved as:
+
+```{r}
+as.integer(234.4); as.logical(1); as.logical(0); as.character(5); as.factor(5); as.numeric("string"); as.complex(9)
+```
+
+
+
+
+
+---
+# Functions
+
+Functions have named arguments, some can have default values. Other unnamed arguments such as `...` can be passed to the function too. Arguments can be obtained with `args()`
 
 ```{r}
 args(glm)
 ```
 
-Creating a function is easy, one has to create arguments then passed to the statement.
+Creating a function is easy, one has to create arguments then pass them to the statement.
 
 ```{r}
-own_function <- function(x, y=10){
-  z <- x+y
+divide_function <- function(x, y=10){
+  z <- x/y # See how a variable inside a function is created. Calling z outside won't work
   return(z)
 }
 ```
 
-If y is not specified explicitly, then the default is passed to the function
+If `y` is not specified explicitly, then the default value is passed to the function
 ```{r}
-own_function(x = 100)
+divide_function(x = 100)
 ```
 
 
 ---
-# Functions and classes
+# Functions
 
 Note we can change the position of the arguments as long as they are specified.
 ```{r}
-own_function(y=100, x=100)
+divide_function(y=50, x=100)
 ```
 
-We will examine functions in detail once control structures and looping is introduced
+However, if they are not denoted explicitly, R uses the value according to the order of the arguments
+
+```{r}
+divide_function(50, 100)
+```
+
+---
+
+# Scoping rules
+
+In R functions is possible to define local variables. For instance, `z` does not exist outside the function `divide_function`.
+
+```{r, error=TRUE}
+print(z)
+```
+
+- If a variable at a given run-time:
+  - Avoid renaming of the variables in the environment
+  - All potentical confussions
+- Scoping rules treats about how R manage *unknown* variables, that is, variables that are not defined inside the function.
+
+```{r, error=T}
+sum_function <- function(x){
+  x+y # This is a simple result, since is a single numeric value. But be careful
+}
+
+sum_function(10)
+```
+
+The `sum_function` does not find `y` inside, looks outside, and neither is there. Hence, if we intentionally create a variable `y <- 5`, then:
+
+```{r}
+y <- 5
+sum_function(10)
+```
+
+---
+# Scoping rules
+
+Pro-tip 😎
+
+Using the special assigning symbol `<<-` inside a function makes any variable scale to the environment. For example, `log_x` does not exist in the current environment.
+
+But if we purposely try a second `<` into the following function:
+
+```{r, eval=F}
+some_function <- function(x){
+  log_x <<- log(x)}
+```
+
+```{r, echo=F}
+log_x <- log(10)
+some_function <- function(x){
+  log_x <- log(x)
+  return(log_x)
+}
+```
+
+
+```{r}
+some_function(10)
+log_x
+```
 
 ---
 
 # Vectors
 
 .pl[
-Creating vectors is easy. The function `c()` stands for concatenate, and is used for aggregating elements into a single object.
+Creating vectors is easy with `vector()`. Also, the function `c()` stands for concatenate, and is used for aggregating elements into a single object.
 
 ```{r}
 vec_1 <- c(1, 1, 2, 3, 5)
@@ -256,7 +349,7 @@ vec_2 <- 1:5
 class(vec_1)
 ```
 
-Vectors can only have one type of class. If a given vector is initialy composed by a mixture of elements, R automatically apply coercion rules to homogenize the vector.
+Vectors **can only have one type of class**. If a given vector is initialy composed by a mixture of elements, R automatically apply coercion rules to homogenize the vector.
 
 ```{r}
 vec_3 <- c(TRUE, F, 1)
@@ -295,7 +388,10 @@ vec_2[c(2:4)] # Elements between 2nd and 4th (inclusive)
 
 
 .pr[
-By coincidence. For this, we have to take into account logical conditions
+By coincidence
+
+For this, we have to take into account logical conditions
+
 - `a == b`
 - `a != b`
 - `a > b`
@@ -387,6 +483,8 @@ str(list_4)
 ]
 
 ---
+
+
 # Lists
 
 .pl[
@@ -400,8 +498,6 @@ str(nested_list)
 ```
 ]
 
---
-
 .pr[
 ```{r, echo=F}
 knitr::include_graphics("https://media.giphy.com/media/90F8aUepslB84/giphy.gif")
@@ -411,6 +507,7 @@ knitr::include_graphics("https://media.giphy.com/media/90F8aUepslB84/giphy.gif")
 
 
 ---
+
 # Subsetting lists
 
 
@@ -436,15 +533,21 @@ Option #3
 ```{r}
 nested_list["dataframe"]
 ```
-]
 
-.pr[
 For example, in order to access to the first column of the dataset `mtcars` one could write
 
 ```{r}
 nested_list["dataframe"]$dataframe$mpg
 ```
+]
 
+.pr[
+It is possible to subset a list partially
+
+```{r}
+nested_list[["d"]]
+nested_list[["da", exact=F]]
+```
 ]
 ---
 # Dataframes
@@ -486,6 +589,8 @@ ncol() # Number of cols in a matrix/dataframe
 length() # Number of elements in a vector
 head() # Top elements in a matrix/dataframe
 tail() # Bottom elements in a matrix/dataframe
+names() # Get the name of dataframes, lists, matrices
+dimnames() # Get the rownames and colnames
 ```
 
 Character or factor
@@ -516,34 +621,5 @@ rank(x) # Creates a ranking given the elements in a vectors
 ```
 ]
 
----
-# Practice
-
-1. What about the mean of a vector composed by strings and numbers? Or a `NA` value?
-1. Calculate the `mean()` statistic of a $3 \times 3$ matrix composed by the sequence 2 to 10 organized as a matrix. Is it the same as calculating a vector integrated by those numbers? 
-
---
-
-.pl[
-```{r}
-vec_exc1 <- c(2:9, "a")
-mean(vec_exc1)
-vec_exc2 <- c(2:9, NA)
-mean(vec_exc2)
-mean(vec_exc2, na.rm = TRUE)
-```
-]
-
-.pr[
-```{r}
-mat_exc <- matrix(2:10, nrow = 3, ncol = 3)
-(mat_exc_mean <- mean(mat_exc))
-
-vec_exc <- 2:10
-(vec_exc_mean <- mean(vec_exc))
-
-mat_exc_mean==vec_exc_mean
-```
-]
 
 

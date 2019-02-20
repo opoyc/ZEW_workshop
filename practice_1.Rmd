@@ -1,0 +1,64 @@
+---
+title: 'DSwR Workshop: Practice Session #1'
+author: "Obryan Poyser"
+date: "2/20/2019"
+output:
+    html_document:
+        toc: true
+        toc_float: true
+        number_section: false
+        theme: yeti
+        highlight: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Hello!
+
+This is a RMarkdown document, in here is possible to run the code and write text in a harmonic way. The learning curve is not that steep, but one has to get used to the commands and options. Nonetheless, I believe some things can be learned in parallel.
+
+The chunk below is a mini R console, here is possible to execute any code as a R file. Take into account that I am talking about the .Rmd and not the html.
+
+```{r}
+log(100)
+```
+
+# Practice
+
+## Q1 {.tabset .tabset-fade .tabset-pills}
+
+### Statement
+1. What about the mean of a vector composed by strings and numbers? Or a `NA` value?
+
+### Solution
+
+```{r}
+vec_exc1 <- c(2:9, "a")
+mean(vec_exc1)
+vec_exc2 <- c(2:9, NA)
+mean(vec_exc2)
+mean(vec_exc2, na.rm = TRUE)
+```
+
+## Q2 {.tabset .tabset-fade .tabset-pills}
+
+### Statement
+
+1. Calculate the `mean()` statistic of a $3 \times 3$ matrix composed by the sequence 2 to 10 organized as a matrix. Is it the same as calculating a vector integrated by those numbers? 
+
+### Solution
+
+```{r}
+mat_exc <- matrix(2:10, nrow = 3, ncol = 3)
+(mat_exc_mean <- mean(mat_exc))
+
+vec_exc <- 2:10
+(vec_exc_mean <- mean(vec_exc))
+
+mat_exc_mean==vec_exc_mean
+```
+
+
