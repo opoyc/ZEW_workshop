@@ -626,14 +626,13 @@ rank(x) # Creates a ranking given the elements in a vectors
 class: middle
 # Next session
 
+1. Read and write data
+ frames  1. CSV
+  1. Excel
+  1. Stata, SPSS, etc.
+  
 1. Control structures and loops
   1. If statements
   1. While loop
   1. For loop
-1. Read and write data
-  1. CSV
-  1. Excel
-  1. Stata, SPSS, etc.
-
-1. Intro to dataframes
 
