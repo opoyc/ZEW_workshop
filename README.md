@@ -3,5 +3,5 @@ Welcome to the ZEW workshop on Data Science with R. Most of the material will be
 Likewise, you can find the practice documents on opoyc.gitgub.io/ZEW_workshop/practice_*.html.
 
 - Session 1
-  - [Slides](www.opoyc.gitgub.io/ZEW_workshop/ws_1.html)
-  - [Practice](www.opoyc.gitgub.io/ZEW_workshop/practice_1.html)
+  - [Slides](ws_1.html)
+  - [Practice](practice_1.html)
