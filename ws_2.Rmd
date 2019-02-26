@@ -11,7 +11,7 @@ output:
       highlightLines: true
       countIncrementalSlides: false
       ratio: "16:9"
-    css: 
+    css:
       - "css/zew-fonts.css"
       - "css/zew.css"
 ---
@@ -20,4 +20,194 @@ output:
 options(htmltools.dir.version = FALSE)
 require(plotly)
 require(tidyverse)
+require(ggplot2)
 ```
+
+# Flow control
+
+The simplest flow control is conditional execution `if` which takes a scalar and prompt a statements of if this value is `TRUE`.
+
+```{r}
+if(T==TRUE) print("This is tautological!")
+```
+
+```{r}
+if(T) print("Same as above, but implicitly")
+```
+
+```{r}
+if(FALSE==FALSE) print("Does it even worth mention it?")
+```
+
+```{r}
+if(FALSE) print("This is not going to be printed")
+```
+
+```{r}
+if(5<10) print("5 is less than 10")
+```
+
+Tip: For the sake of keeping good programming practices, it is recommented to employ curly brackets.
+---
+
+# Flow control
+
+Conditional operations have little sense if there is no actions when the initial statement is not meet, is this case we are going to use `else`.
+
+```{r}
+x <- 8
+if(x<=7){
+  print("x is less equal than 7")
+} else { # else MUST appear in the same line were the curly bracket closes
+  print("x is more than 7")
+}
+```
+
+Certainly, more complex conditional operations can be created adding `if` after the `else`. For instance:
+
+```{r}
+if(x<=7){
+  print("x is less equal than 7")
+} else if(x<10) {
+  print("x is more than 7 but less than 10")
+} else {
+  print("x is more than 10")
+}
+```
+
+
+---
+
+# Flow control
+
+The aforementioned statements only accept vectors of length zero, none the less, there are build-in functions that perform the same conditionals that can also be expanded to vectors. **Try it if you want**
+
+The vectorized conditional function is `ifelse`, it is going to be truly useful is the future.
+
+```{r}
+x <- 1:10
+ifelse(test = x<5, yes = "less than 5", no = "more equal than 5")
+```
+
+---
+
+# Loops
+
+Loops are used in programming to perform a specific task recursively. In this section we will learn how to create loops in R.
+
+- There are 3 types of loops in R: `repeat`, `while` and `for`.
+- Normally, loops are initialized with a separated variables.
+- Inside a loop a control variable is specified
+
+---
+
+## `for` loop
+
+- The programmer controls how many times a loop is executed
+- Composed by an *iterator* and a *sequence vector*
+- Given the iterator
+
+```{r}
+x <- letters[1:10]
+
+for(i in 1:length(x)){
+  print(x[i]=="g")
+}
+
+```
+
+---
+
+## `while` loop
+
+.pl[
+- `while` loops check first if a condition is met, if it does, executes, otherwise it does nothing.
+
+```{r}
+temperature <- 10
+while(temperature < 18){
+  print(paste0("If the temperature is "
+               , temperature, " C°: Do not swim"))
+  temperature=temperature+1
+}
+```
+
+- The test expression `temperature < 18` evaluates according the current vector's value.
+- `while` loops have to include a incremental statement, falling to do so will create a...
+]
+
+
+--
+.center[Infinite loop!]
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://media.giphy.com/media/EmMWgjxt6HqXC/giphy.gif")
+```
+
+---
+
+## `repeat` loop
+
+- Executes the same code until the user stops it.
+- Repeating an action infinite number of times is a nonsense, therefore `repeat` is oftenly used jointly with `stop`or `break`
+
+```{r, eval=FALSE}
+repeat{
+  message("This won't stop!!") # It is not evaluated
+}
+```
+
+```{r}
+x <- 1
+repeat{
+  print(x)
+  x <- x+1
+  if(x==5){
+    break
+  }
+}
+```
+
+---
+
+# Loops+
+
+- As might think, loops in are not limited to `repeat` `for` or, `while`.
+- Advance loop functions let you apply a function to lists, matrices or vectors...
+- `rep` and `replicate` represent the basic idea of functions applied to vectors.
+
+```{r}
+set.seed(123)
+rep(x = rnorm(1), 7)
+replicate(n = 7, expr = rnorm(1))
+```
+
+
+---
+
+# The `apply` family
+
+- Part of base functions in R
+- They use input lists and apply a function to each element.
+- Family members differ in the type of object that stems from a execution.
+
+## `apply`
+
+.pl[[
+- Has 3 main arguments `X`, `MARGIN` and `FUN`
+  - X is a vector, list, dataframe, etc.
+  - MARGIN refers to the orientation onto the functions has to be computed
+    - 2 across **rows**
+    - 1 across **columns**
+    
+```{r}
+(mat <- matrix(1:25, nrow = 5))
+```
+]
+
+.pr[
+```{r}
+apply(X = mat, MARGIN = 1, FUN = mean)
+apply(X = mat, MARGIN = 2, FUN = mean)
+```
+
+]

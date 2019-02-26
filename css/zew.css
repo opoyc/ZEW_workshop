@@ -351,7 +351,10 @@ midd-blockquote {
 
 
 .remark-inline-code {
-  color: #f90404
+  color: #000000;
+  background-color: #dddddd;
+  border-radius: 3px;
+  padding: 4px;
 }
 
 .pl {

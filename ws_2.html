@@ -18,7 +18,306 @@ class: center, middle, inverse, title-slide
 
 ---
 
+
+
+
+# Flow control
+
+The simplest flow control is conditional execution `if` which takes a scalar and prompt a statements of if this value is `TRUE`.
+
+
+```r
+if(T==TRUE) print("This is tautological!")
+```
+
+```
+## [1] "This is tautological!"
+```
+
+
+```r
+if(T) print("Same as above, but implicitly")
+```
+
+```
+## [1] "Same as above, but implicitly"
+```
+
+
+```r
+if(FALSE==FALSE) print("Does it even worth mention it?")
+```
+
+```
+## [1] "Does it even worth mention it?"
+```
+
+
+```r
+if(FALSE) print("This is not going to be printed")
+```
+
+
+```r
+if(5&lt;10) print("5 is less than 10")
+```
+
+```
+## [1] "5 is less than 10"
+```
+
+Tip: For the sake of keeping good programming practices, it is recommented to employ curly brackets.
+---
+
+# Flow control
+
+Conditional operations have little sense if there is no actions when the initial statement is not meet, is this case we are going to use `else`.
+
+
+```r
+x &lt;- 8
+if(x&lt;=7){
+  print("x is less equal than 7")
+} else { # else MUST appear in the same line were the curly bracket closes
+  print("x is more than 7")
+}
+```
+
+```
+## [1] "x is more than 7"
+```
+
+Certainly, more complex conditional operations can be created adding `if` after the `else`. For instance:
+
+
+```r
+if(x&lt;=7){
+  print("x is less equal than 7")
+} else if(x&lt;10) {
+  print("x is more than 7 but less than 10")
+} else {
+  print("x is more than 10")
+}
+```
+
+```
+## [1] "x is more than 7 but less than 10"
+```
+
+
+---
+
+# Flow control
+
+The aforementioned statements only accept vectors of length zero, none the less, there are build-in functions that perform the same conditionals that can also be expanded to vectors. **Try it if you want**
+
+The vectorized conditional function is `ifelse`, it is going to be truly useful is the future.
+
+
+```r
+x &lt;- 1:10
+ifelse(test = x&lt;5, yes = "less than 5", no = "more equal than 5")
+```
+
+```
+##  [1] "less than 5"       "less than 5"       "less than 5"      
+##  [4] "less than 5"       "more equal than 5" "more equal than 5"
+##  [7] "more equal than 5" "more equal than 5" "more equal than 5"
+## [10] "more equal than 5"
+```
+
+---
+
+# Loops
+
+Loops are used in programming to perform a specific task recursively. In this section we will learn how to create loops in R.
+
+- There are 3 types of loops in R: `repeat`, `while` and `for`.
+- Normally, loops are initialized with a separated variables.
+- Inside a loop a control variable is specified
+
+---
+
+## `for` loop
+
+- The programmer controls how many times a loop is executed
+- Composed by an *iterator* and a *sequence vector*
+- Given the iterator
+
+
+```r
+x &lt;- letters[1:10]
+
+for(i in 1:length(x)){
+  print(x[i]=="g")
+}
+```
+
+```
+## [1] FALSE
+## [1] FALSE
+## [1] FALSE
+## [1] FALSE
+## [1] FALSE
+## [1] FALSE
+## [1] TRUE
+## [1] FALSE
+## [1] FALSE
+## [1] FALSE
+```
+
+---
+
+## `while` loop
+
+.pl[
+- `while` loops check first if a condition is met, if it does, executes, otherwise it does nothing.
+
+
+```r
+temperature &lt;- 10
+while(temperature &lt; 18){
+  print(paste0("If the temperature is "
+               , temperature, " C°: Do not swim"))
+  temperature=temperature+1
+}
+```
+
+```
+## [1] "If the temperature is 10 C°: Do not swim"
+## [1] "If the temperature is 11 C°: Do not swim"
+## [1] "If the temperature is 12 C°: Do not swim"
+## [1] "If the temperature is 13 C°: Do not swim"
+## [1] "If the temperature is 14 C°: Do not swim"
+## [1] "If the temperature is 15 C°: Do not swim"
+## [1] "If the temperature is 16 C°: Do not swim"
+## [1] "If the temperature is 17 C°: Do not swim"
+```
+
+- The test expression `temperature &lt; 18` evaluates according the current vector's value.
+- `while` loops have to include a incremental statement, falling to do so will create a...
+]
+
+
+--
+.center[Infinite loop!]
+&lt;img src="https://media.giphy.com/media/EmMWgjxt6HqXC/giphy.gif" style="display: block; margin: auto;" /&gt;
+
+---
+
+## `repeat` loop
+
+- Executes the same code until the user stops it.
+- Repeating an action infinite number of times is a nonsense, therefore `repeat` is oftenly used jointly with `stop`or `break`
+
+
+```r
+repeat{
+  message("This won't stop!!") # It is not evaluated
+}
+```
+
+
+```r
+x &lt;- 1
+repeat{
+  print(x)
+  x &lt;- x+1
+  if(x==5){
+    break
+  }
+}
+```
+
+```
+## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+```
+
+---
+
+# Loops+
+
+- As might think, loops in are not limited to `repeat` `for` or, `while`.
+- Advance loop functions let you apply a function to lists, matrices or vectors...
+- `rep` and `replicate` represent the basic idea of functions applied to vectors.
+
+
+```r
+set.seed(123)
+rep(x = rnorm(1), 7)
+```
+
+```
+## [1] -0.5604756 -0.5604756 -0.5604756 -0.5604756 -0.5604756 -0.5604756
+## [7] -0.5604756
+```
+
+```r
+replicate(n = 7, expr = rnorm(1))
+```
+
+```
+## [1] -0.23017749  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621
+## [7] -1.26506123
+```
+
+
+---
+
+# The `apply` family
+
+- Part of base functions in R
+- They use input lists and apply a function to each element.
+- Family members differ in the type of object that stems from a execution.
+
+## `apply`
+
+.pl[[
+- Has 3 main arguments `X`, `MARGIN` and `FUN`
+  - X is a vector, list, dataframe, etc.
+  - MARGIN refers to the orientation onto the functions has to be computed
+    - 2 across **rows**
+    - 1 across **columns**
+    
+
+```r
+(mat &lt;- matrix(1:25, nrow = 5))
+```
+
+```
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    6   11   16   21
+## [2,]    2    7   12   17   22
+## [3,]    3    8   13   18   23
+## [4,]    4    9   14   19   24
+## [5,]    5   10   15   20   25
+```
+]
+
+.pr[
+
+```r
+apply(X = mat, MARGIN = 1, FUN = mean)
+```
+
+```
+## [1] 11 12 13 14 15
+```
+
+```r
+apply(X = mat, MARGIN = 2, FUN = mean)
+```
+
+```
+## [1]  3  8 13 18 23
+```
+
+]
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "solarized-dark",
@@ -29,16 +328,57 @@ class: center, middle, inverse, title-slide
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -52,7 +392,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
