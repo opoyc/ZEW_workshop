@@ -2,7 +2,7 @@
 title: "Workshop: Data science with R"
 subtitle: "ZEW - Session #2"
 author: "Obryan Poyser"
-date: "2019/02/19"
+date: "2019/02/27"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -635,6 +635,8 @@ survey$age %>%
   mean()
 ```
 
+--
+
 - `matrittr` allow us to create a more readable code
   - Structuring sequences of data operations left-to-right (as opposed to from the inside and out)
   - avoiding nested function calls,
@@ -643,14 +645,35 @@ survey$age %>%
 
 Basic pipes
 
-- x %>% f is equivalent to $f(x)$
-- x %>% f(y) is equivalent to $f(x, y)$
-- x %>% f %>% g %>% h is equivalent to $h(g(f(x)))$
+```
+- x %>% f is equivalent to f(x)
+- x %>% f(y) is equivalent to f(x, y)
+- x %>% f %>% g %>% h is equivalent to h(g(f(x)))
+```
 
 Placeholder
+```
+- x %>% f(y, .) is equivalent to f(y, x)
+- x %>% f(y, z = .) is equivalent to f(y, z = x)
+```
 
-- x %>% $f(y, .)$ is equivalent to $f(y, x)$
-- x %>% $f(y, z = .)$ is equivalent to $f(y, z = x)$
+
+---
+# Tibbles
+
+- tibbles are data.frames with steroids
+- Almost all functions in the Tidyverse creates a tibble
+- It never changes the type of the inputs (i.e. string to factor)
+- Nor the names of variables
+- tibbles also have an enhanced print() method which makes them easier to use with large datasets containing complex objects.
+
+```{r}
+(survey_2 <- as_tibble(survey[1:100
+                            , c("sex", "age", "educ", "mast1")]
+                     )
+ ) # Let's create a sample of survey from the SPSS file
+```
+
 
 ---
 # Dplyr
@@ -665,11 +688,197 @@ Placeholder
   - `arrange()` changes the ordering of the rows.
   - `group_by` select and apply the functions above to specific value
 
-#
+---
+
+.pl[
+## `mutate` and `transmute`
+
+- Create new variables in a consistent way
+- `mutate()` adds new variables and preserves existing ones
+- `transmute()` adds new variables and drops existing ones.
+- Both functions preserve the number of rows of the input.
+- New variables overwrite existing variables of the same name.
+
+Old way:
+
+```{r, eval=T}
+survey_2$age_2 <- survey_2$age^2
+survey_2$log_age <- log(survey_2$age)
+survey_2 %>% head(3)
+```
+
+]
+
+.pr[
 
 
+Tidy way:
+
+```{r, eval=T}
+survey_2 <- survey_2 %>%
+  mutate(age_2=age^2
+         , log_age= age %>%
+           log())
+head(survey, 3)
+```
+
+```{r, eval=T}
+survey_2 %>%
+  transmute(age_2=age^2
+         , log_age= age %>%
+           log()) %>%
+  head(3)
+```
+]
+
+---
+
+.pl[
+# `select` and `rename`
+
+- Choose or rename variables from a tbl
+- `select()` keeps only the variables you mention
+- `rename()` keeps all variables.
+- `:` to include ranges of variables
+- `-` to exclude them
+- Associated subfunctions:
+  - `starts_with()`: Starts with a prefix.
+  - `ends_with()`: Ends with a suffix.
+  - `contains()`: Contains a literal string.
+  - `matches()`: Matches a regular expression.
+  - `num_range()`: Matches a numerical range like x01, x02, x03.
+  - `one_of()`: Matches variable names in a character vector.
+  - `everything()`: Matches all variables.
+  - `last_col()`: Select last variable, possibly with an offset.
+
+### Old way
+
+```{r}
+survey_2[,"age"] %>% head(3)
+```
+
+]
+
+--
+
+.pr[
+### Tidy way
+
+```{r}
+survey %>%
+  select(age) %>%
+  head(3)
+
+survey %>%
+  select(edad=age) %>%
+  head(3)
+
+survey %>%
+  select(contains("age")) %>%
+  head(3)
+```
 
 
+]
+
+---
+
+.pl[
+# `filter`
+
+- Use filter() to choose rows/cases where conditions are true. Unlike base subsetting with brackets, rows where the condition evaluates to NA are dropped.
+- Useful functions
+    - `==, >, >= etc`
+    - `&, |, !, xor()`
+    - `is.na()`
+    - `between(), near()`
+    
+### Old way
+
+```{r}
+survey_2[survey_2$sex=="FEMALES",] %>% head(3)
+```
+
+]
+
+.pr[
+### Tidy way
+
+```{r}
+survey_2 %>%
+  filter(sex=="FEMALES") %>%
+  head(3)
+```
+
+```{r}
+survey_2 %>%
+  filter(sex=="FEMALES" & age_2==576) %>% head(3)
+```
+
+]
 
 
+---
+
+.pl[
+# `summarise` and `group_by`
+
+- Create one or more scalar variables summarizing the variables of an existing tbl.
+- Tbls with groups created by `group_by()` will result in one row in the output for each group.
+- Tbls with no groups will result in one row.
+- Also `summarize` with *z* works
+- Useful functions: `mean(), median()`, `sd()`, `IQR()`, `mad()`, `min()`, `max()`, `quantile()`
+  ,`first()`, `last()`, `nth()`, `n()`, `n_distinct()`, `any()`, `all()`
+
+### Old way (The struggle was real!)
+
+```{r}
+aggregate(survey_2$age, by=list(survey_2$educ, survey_2$sex), FUN=mean)
+```
+]
+
+.pr[
+### Tidy way
+
+```{r}
+survey_2 %>%
+  group_by(educ, sex) %>%
+  summarise(mean_age=mean(age))
+```
+]
+
+- Note that tibble "remember" the last grouping variable, therefore, any further transformation will be indexed by such variable. Use `ungroup()` to clear.
+
+---
+
+.pl[
+# `arrange`
+
+- Order tbl rows by an expression involving its variables.
+
+### Old way
+
+```{r}
+head(survey_2)[order(head(survey_2$age)),]
+```
+
+]
+
+.pr
+
+
+```{r}
+head(survey_2) %>%
+  arrange(age)
+```
+]
+
+---
+class: inverse
+
+Next session:
+
+1. Combining and separating DFs `tidyr`
+1. Reshaping DFs `tidyr`
+1. Advance functional programming `purrr`
 

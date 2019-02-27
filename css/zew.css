@@ -360,11 +360,13 @@ midd-blockquote {
 .pl {
   float: left;
   width: 49%;
+  height: 98%;
 }
 
 .pr {
   float: right;
   width: 49%;
+  height: 98%;
 }
 
 .hljs-solarized-dark .hljs {
