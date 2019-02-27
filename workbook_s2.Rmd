@@ -1,0 +1,712 @@
+---
+title: "Workshop: Data science with R"
+subtitle: "ZEW - Session #2"
+author: "Obryan Poyser"
+date: "2019-02-27"
+output:
+    html_document:
+      toc: true
+      toc_depth: 3
+      toc_float: true
+      number_sections: true
+      highlight: pygments
+      theme: yeti
+      css: "css/zew.css"
+      df_print: paged
+      code_folding: show
+      toc_include: true
+---
+
+```{r setup, include=FALSE}
+#require(plotly)
+require(tidyverse)
+#require(ggplot2)
+```
+
+# Flow control and loops
+
+## Flow control
+
+The simplest flow control is conditional execution `if`. It takes a vector of length 1 and executes the statement if the conditional `TRUE`.
+
+```{r}
+if(T==TRUE) print("This is tautological!")
+```
+
+```{r}
+if(T) print("Same as above, but implicitly")
+```
+
+```{r}
+if(FALSE==FALSE) print("Does it even worth mention it?")
+```
+
+```{r}
+if(FALSE) print("This is not going to be printed")
+```
+
+```{r}
+if(5<10) print("5 is less than 10")
+```
+
+Tip: For the sake of keeping good programming practices, it is recommended to employ curly brackets.
+
+Conditional operations have little sense if there are no actions when the initial statement is not met, in this case we are going to use `else`.
+
+```{r}
+x <- 8
+if(x<=7){
+  print("x is less equal than 7")
+} else { # else MUST appear in the same line were the curly bracket closes
+  print("x is more than 7")
+}
+```
+
+Certainly, more complex conditional operations can be created adding `if` after the `else`. For instance:
+
+```{r}
+if(x<=7){
+  print("x is less equal than 7")
+} else if(x<10) {
+  print("x is more than 7 but less than 10")
+} else {
+  print("x is more than 10")
+}
+```
+
+The aforementioned statements only accept vectors of length zero, nonetheless, there are built-in functions that perform the same conditionals that can also be expanded to vectors. **Try it if you want**
+
+The vectorized conditional function is `ifelse`, it is going to be truly useful is the future.
+
+```{r}
+x <- 1:10
+ifelse(test = x<5, yes = "less than 5", no = "more equal than 5")
+```
+
+## Loops
+
+Loops are used in programming to perform a specific task recursively. In this section, we will learn how to create loops in R.
+
+- There are 3 types of loops in R: `repeat`, `while` and `for`.
+- Normally, loops are initialized with separated variables.
+- Inside a loop, a control variable is specified
+
+### `for` loop
+
+- The programmer controls how many times a loop is executed
+- Composed by an *iterator* and a *sequence vector*
+- Given the iterator
+
+```{r}
+x <- letters[1:10]
+
+for(i in 1:length(x)){
+  print(x[i]=="g")
+}
+
+```
+
+
+
+### `while` loop
+
+- `while` loops check first if a condition is met if it does, executes, otherwise, it does nothing.
+
+```{r}
+temperature <- 10
+while(temperature < 18){
+  print(paste0("If the temperature is "
+               , temperature, " C°: Do not swim"))
+  temperature=temperature+1
+}
+```
+
+- The test expression `temperature < 18` evaluates according to the current vector's value.
+- `while` loops have to include an incremental statement, falling to do so will create a...
+
+```{r, echo=FALSE, fig.align='center', fig.cap="Infinite loop!"}
+knitr::include_graphics("https://media.giphy.com/media/EmMWgjxt6HqXC/giphy.gif")
+```
+
+### `repeat` loop
+
+- Executes the same code until the user stops it.
+- Repeating an action infinite number of times is nonsense, therefore `repeat` is often used jointly with `stop` or `break`
+
+```{r, eval=FALSE}
+repeat{
+  message("This won't stop!!") # It is not evaluated
+}
+```
+
+```{r}
+x <- 1
+repeat{
+  print(x)
+  x <- x+1
+  if(x==5){
+    break
+  }
+}
+```
+
+## Loops+
+
+- As might think, loops in R not limited to `repeat` `for` or, `while`.
+- Advance loop functions let you apply a function to lists, matrices or vectors...
+- `rep` and `replicate` represent the basic idea of functions applied to vectors.
+
+```{r}
+set.seed(123)
+rep(x = rnorm(1), 7)
+replicate(n = 7, expr = rnorm(1))
+```
+
+
+## The `apply` family
+
+- Part of base functions in R
+- They use input lists and apply a function to each element.
+- Family members differ in the type of object that stems from an execution.
+
+### `apply`
+- Has 3 main arguments `X`, `MARGIN` and `FUN`
+  - X is **matrix**
+  - MARGIN refers to the orientation onto the functions has to be computed
+    - 2 across **columns**
+    - 1 across **rows**
+```{r}
+(mat <- matrix(1:25, nrow = 5))
+```
+
+```{r}
+apply(X = mat, MARGIN = 1, FUN = sum)
+apply(X = mat, MARGIN = 2, FUN = sum)
+```
+
+### `lapply`
+
+
+- Permitted inputs: data frames, lists or vectors.
+- The outcome is a list (the *l* stands for something after all)
+
+```{r}
+set.seed(123)
+list <- list(e1=rnorm(100, 5, 1)
+             , e2=rnorm(100, 10, 1)
+             , e3=rnorm(100, 15, 1)
+             , e4=list(rnorm(100, 5, 1)*100))
+lapply(X = list, FUN = mean)
+```
+
+
+```{r}
+lapply(X = list, FUN = function(x) mean(x[[1]]))
+```
+
+What's happening above?
+
+### `sapply`
+
+- A wrapper of `lapply`
+- Tries to simplify the outcome of `lapply` if the argument *simplify* is set at `TRUE` (the default value)
+
+```{r}
+sapply(list, function(x) mean(x[[1]]))
+sapply(list, function(x) mean(x[[1]]), simplify = F)
+```
+
+### `mapply`
+
+- Multivariate apply
+- Employ arguments and passes them into a function
+
+```{r}
+mapply(rnorm, n=1:5, mean=2, sd=1)
+```
+
+# Input/output
+
+
+## Read and write
+
+A preliminary for data analysis is: having data. Some datasets are "pretty", that is, they come in tabular format, a little cleaning and we are done. On the other side, there are unstructured data, typically text-heavy files that demand a huge amount of time in order to be used as an input.
+
+Have you ever heard of the quote "big rocks first", well, we will do the opposite here? Let's start by showing how to import, create and format tabular datasets.
+
+### Base reading functions
+
+The easiest form of data to import in R are *spreadsheet-like* text files.
+
+```{r}
+ls("package:base", pattern = "read")
+ls("package:utils", pattern = "read")
+```
+
+### `.txt` files
+
+Open a .txt files could easily become a Pandora's Box, you just never know if you are about to spread misery in your work for days! 
+
+```{r, echo=F}
+knitr::include_graphics("https://media.giphy.com/media/5AVgmIw7iAzdK/giphy.gif")
+```
+
+Problems:
+
+- Mismatch decimal and thousand separators
+
+| Locale                        | Format            |
+|-|-|
+| Canadian (English and French) | 4 294 967 295,000 |
+| German                        | 4 294 967.295,000 |
+| Italian                       | 4.294.967.295,000 |
+| US-English                    | 4,294,967,295.00  |
+
+- Ambiguous column separators
+  - Is it a Tab? Semicolon? Space? Comma?
+
+What we see:
+
+```{r, echo=F, out.width="100%", fig.align='center'}
+knitr::include_graphics("img/s2i1.png")
+```
+
+What R sees:
+
+```{r}
+readLines(con = "datasets/sample.txt", n = 11)
+```
+```{r}
+read.table(file = "datasets/sample.txt", sep = "\t")
+```
+```{r, error=TRUE}
+read.delim(file = "datasets/sample.txt", sep = ".")
+```
+
+### `.csv` files
+
+- CSV stands for Comma Separated Values
+-  In practical terms .txt and .csv extensions aren't that different.
+  - .csv extensions are composed by a delimiter and an enclosing (double quote to define a character), while .txt only have a delimiter.
+- `read.csv` formats character values as factors. This is inefficient since R has to map the values inside the vector a recognize how many different values exist within to form levels. Therefore, it is advisable to set `stringsAsFactors=FALSE`
+
+How to import a .csv to our environment?
+
+```{r}
+data <- read.csv("datasets/big-mac-full-index.csv"
+                 , stringsAsFactors = F)
+str(data)
+```
+
+## Import data from other statistical software
+
+- R is an open source language, which is nice since you are free to use it, create and implement your own functionalities. Nonetheless, is also create inconsistencies (remember how different package can use a function with the same name?).
+- There are several packages that convert between different extensions, the most popular are:
+  - `foreign`: Reading and writing data stored by some versions of 'Epi Info', 'Minitab', 'S', 'SAS', 'SPSS', 'Stata', 'Systat', 'Weka', and for reading and writing some 'dBase' files.
+  - `haven`: Import and Export 'SPSS', 'Stata' and 'SAS' Files
+  - The difference stems in that outcome type and the speed
+
+### Import from SPSS
+
+```{r}
+survey <- foreign::read.spss("datasets/survey.sav"
+                             , to.data.frame = T)
+dim(survey)
+```
+
+- Regularly SPSS files contain both a variable name and a description of such variable. When we read an SPSS file in R the labels disappear, and only the variables names are kept (labels can also be used, nonetheless they are most of the time big enough to not serve as a practical column name).
+- R saves label (or description) as an attribute. The last session we learned that attributes can be extracted with the function guess what? `attributes()`
+
+```{r}
+head(attributes(survey)$variable.labels)
+```
+
+### Import from other statistical systems
+
+- `Haven` is extremely useful since it follows the *Tidy* philosophy that is taking place in R. (we will cover this in depth the next session)
+
+
+```{r}
+(money <- foreign::read.dta("datasets/money.dta"))
+```
+
+```{r}
+(money <- haven::read_dta("datasets/money.dta"))
+```
+
+Do you see any difference?
+
+```{r, echo=FALSE, out.width="25%"}
+knitr::include_graphics("https://media.giphy.com/media/NS7gPxeumewkWDOIxi/giphy.gif")
+```
+
+## Exporting
+
+- Exporting data in R is not different from Reading it
+- Normally, exporting functions start with `write*`. For instance:
+
+```{r}
+haven::write_dta(data = head(survey), path = "datasets/survey.dta")
+```
+
+- Make sure that the output has the features you expected!
+
+```{r}
+export_obj <- survey[1:5, 1:3]
+```
+
+```{r}
+write.csv(x = export_obj, file = "datasets/sample1.csv")
+write.csv2(x = export_obj, file = "datasets/sample2.csv")
+```
+
+Are sample1 and sample2 equal? Let's see
+```{r}
+readLines(con = "datasets/sample1.csv", n = 2)
+readLines(con = "datasets/sample2.csv", n = 2)
+```
+
+## Saving into R data format
+
+### RDS
+
+- Saves and reload **one** object to a file
+
+Write:
+```{r, eval=FALSE}
+saveRDS(object = object, file = "file.rds")
+```
+Read:
+```{r, eval=F}
+readRDS(file = "file.rds")
+```
+
+### RData
+
+- Saves one or more R objects
+
+Write:
+```{r, eval=FALSE}
+save(list = list_objects, file = "file.RData")
+```
+
+Read:
+```{r, eval=FALSE}
+load(file = "file.RData")
+```
+
+# Tidy Data and the Tidyverse
+
+```{r, echo=F, out.width="25%"}
+knitr::include_graphics("img/hex-tidyverse.png")
+```
+
+## Tidy data
+
+- Wordly wisdom dictates that 80% of data analysis is spent in wrangling procedures.
+- Data preparation is a recursive task
+  - One does not simply keep with a final dataset, updating and transforming data is often unavoidable.
+  - Searching from anomalous data points
+  - Sanity checks
+  - Missing values imputation, etc.
+- Tidy data provide a standard way to explore, organize and analyze data.
+
+```{r, echo=FALSE, fig.showtext="fff", out.width="100%", fig.cap="Data analysis workflow (source: Wickham & Garret, 2017)", fig.align='center'}
+knitr::include_graphics("img/s2i2.png")
+```
+
+Related packages (not covered):
+
+- `data.table`: Fast aggregation of large data, fast ordered joins, fast add/modify/delete of columns by a group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development.
+
+- Most datasets are organized into columns and rows
+- Columns are often labeled, not in the case of rows (is more common in time series data)
+- There are many ways to structure the same underlying data
+
+
+
+Structure #1
+```{r, echo=FALSE}
+(data <- data.frame(name=c("rebecca", "thomas", "janna")
+                   , treatment_a=c(1, 3, 4)
+                   , treatment_b=c(2, 6, 8)))
+```
+
+Structure #2
+
+```{r, echo=FALSE}
+data2 <- t(as.matrix(data[,-1]))
+colnames(data2) <- data$name
+data2
+```
+
+### Principles
+
+1. Each variable forms a column
+1. Each observation forms a row
+1. Each type of observational unit forms a table
+
+
+
+Tidy structure
+
+```{r, echo=FALSE}
+data %>% gather(key = "treatment", value = "result", -name)
+```
+
+- Tidy data is standard and makes it easy to extract variables
+- Messy data regularly is described by:
+  - Column headers are values, not variable names
+  - Multiple variables are stored in one column.
+  - Variables are stored in both rows and columns.
+  - Multiple types of observational units are stored in the same table.
+  - A single observational unit is stored in multiple tables.
+
+- Solution?
+  - Must messy datasets' problems can be solved by:
+      - Melting
+      - String splitting
+      - Casting
+
+First things first...
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+- Tidyverse is a set of packages that were designed to work together
+- In this workshop, we will follow this philosophy instead of the base R functions
+  - Why? Is more efficient and consistent
+  - Old methods can be learned "on-the-fly"
+
+## Pipes
+
+- In R one can apply successive functions by enclosing between parentheses.
+- Let's say we want to create a new variable inside the survey object (the one from the SPSS file) and get it's mean. This new variable is $age^2$
+
+```{r}
+x <- survey$age # New intermediary variable
+age_2 <- x^2 # Apply the function
+(mean_2 <- mean(age_2)) # Calculate the mean of squared age
+```
+
+Evidently, one could also use the following process
+```{r}
+(mean_2 <- mean((survey$age)^2))
+```
+ 
+Cleaner, isn't it? But, can you believe that there is a way to this more consistent and readable?
+
+```r
+# The basic pipe `%>%` works as:
+y %>%
+  f() %>%  = g(f(y))
+  g()
+```
+
+So, if we want to get the mean value of the squared age:
+
+```{r}
+survey$age %>%
+  .^2 %>%
+  mean()
+```
+
+
+- `matrittr` allows us to create a more readable code
+  - Structuring sequences of data operations left-to-right (as opposed to from the inside and out)
+  - avoiding nested function calls,
+  - minimizing the need for local variables and function definitions, and
+  - making it easy to add steps anywhere in the sequence of operations.
+
+Basic pipes
+
+```{r, eval=F}
+- x %>% f is equivalent to f(x)
+- x %>% f(y) is equivalent to f(x, y)
+- x %>% f %>% g %>% h is equivalent to h(g(f(x)))
+```
+
+Placeholder
+
+```{r, eval=F}
+- x %>% f(y, .) is equivalent to f(y, x)
+- x %>% f(y, z = .) is equivalent to f(y, z = x)
+```
+
+
+## Tibbles
+
+- tibbles are data.frames with steroids
+- Almost all functions in the Tidyverse creates a tibble
+- It never changes the type of the inputs (i.e. string to factor)
+- Nor the names of variables
+- tibbles also have an enhanced print() method which makes them easier to use with large datasets containing complex objects.
+
+```{r}
+(survey_2 <- as_tibble(survey[1:100
+                            , c("sex", "age", "educ", "mast1")]
+                     )
+ ) # Let's create a sample of survey from the SPSS file
+```
+
+## dplyr
+
+- My favorite package, by far!
+- Establish a grammar syntax for data manipulation
+- Main functions:
+  - `mutate()` adds new variables that are functions of existing variables
+  - `select()` picks variables based on their names.
+  - `filter()` picks cases based on their values.
+  - `summarise()` reduces multiple values down to a single summary.
+  - `arrange()` changes the ordering of the rows.
+  - `group_by` select and apply the functions above to specific value
+
+### `mutate` and `transmute`
+
+- Create new variables in a consistent way
+- `mutate()` adds new variables and preserves existing ones
+- `transmute()` adds new variables and drops existing ones.
+- Both functions preserve the number of rows of the input.
+- New variables overwrite existing variables of the same name.
+
+Old way:
+
+```{r, eval=T}
+survey_2$age_2 <- survey_2$age^2
+survey_2$log_age <- log(survey_2$age)
+survey_2 %>% head(3)
+```
+
+Tidy way:
+
+```{r, eval=T}
+survey_2 <- survey_2 %>%
+  mutate(age_2=age^2
+         , log_age= age %>%
+           log())
+head(survey, 3)
+```
+
+```{r, eval=T}
+survey_2 %>%
+  transmute(age_2=age^2
+         , log_age= age %>%
+           log()) %>%
+  head(3)
+```
+]
+
+### `select` and `rename`
+
+- Choose or rename variables from a tbl
+- `select()` keeps only the variables you mention
+- `rename()` keeps all variables.
+- `:` to include ranges of variables
+- `-` to exclude them
+- Associated subfunctions:
+  - `starts_with()`: Starts with a prefix.
+  - `ends_with()`: Ends with a suffix.
+  - `contains()`: Contains a literal string.
+  - `matches()`: Matches a regular expression.
+  - `num_range()`: Matches a numerical range like x01, x02, x03.
+  - `one_of()`: Matches variable names in a character vector.
+  - `everything()`: Matches all variables.
+  - `last_col()`: Select last variable, possibly with an offset.
+
+#### Old way
+
+```{r}
+survey_2[,"age"] %>% head(3)
+```
+
+#### Tidy way
+
+```{r}
+survey %>%
+  select(age) %>%
+  head(3)
+
+survey %>%
+  select(edad=age) %>%
+  head(3)
+
+survey %>%
+  select(contains("age")) %>%
+  head(3)
+```
+
+### `filter`
+
+- Use filter() to choose rows/cases where conditions are true. Unlike base subsetting with brackets, rows, where the condition evaluates to NA, are dropped.
+- Useful functions
+    - `==, >, >= etc`
+    - `&, |, !, xor()`
+    - `is.na()`
+    - `between(), near()`
+    
+#### Old way
+
+```{r}
+survey_2[survey_2$sex=="FEMALES",] %>% head(3)
+```
+
+#### Tidy way
+
+```{r}
+survey_2 %>%
+  filter(sex=="FEMALES") %>%
+  head(3)
+```
+
+```{r}
+survey_2 %>%
+  filter(sex=="FEMALES" & age_2==576) %>% head(3)
+```
+
+### `summarise` and `group_by`
+
+- Create one or more scalar variables summarizing the variables of an existing tbl.
+- Tbls with groups created by `group_by()` will result in one row in the output for each group.
+- Tbls with no groups will result in one row.
+- Also `summarize` with *z* works
+- Useful functions: `mean(), median()`, `sd()`, `IQR()`, `mad()`, `min()`, `max()`, `quantile()`
+  ,`first()`, `last()`, `nth()`, `n()`, `n_distinct()`, `any()`, `all()`
+
+#### Old way (The struggle was real!)
+
+```{r}
+aggregate(survey_2$age, by=list(survey_2$educ, survey_2$sex), FUN=mean)
+```
+
+#### Tidy way
+
+```{r}
+survey_2 %>%
+  group_by(educ, sex) %>%
+  summarise(mean_age=mean(age))
+```
+
+- Note that tibble "remember" the last grouping variable, therefore, any further transformation will be indexed by such variable. Use `ungroup()` to clear.
+
+### `arrange`
+
+- Order tbl rows by an expression involving its variables.
+
+#### Old way
+
+```{r}
+head(survey_2)[order(head(survey_2$age)),]
+```
+
+```{r}
+head(survey_2) %>%
+  arrange(age)
+```
+
+Next session:
+
+1. Combining and separating DFs `tidyr`
+1. Reshaping DFs `tidyr`
+1. Advance functional programming `purrr`
+

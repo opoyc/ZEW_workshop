@@ -25,7 +25,6 @@ require(tidyverse)
 
 # Today's outline
 
-.middle[
 1. Flow control
   1. if, else, ifelse
 1. Loops
@@ -37,7 +36,7 @@ require(tidyverse)
 1. Input/output
   1. Reading data
   1. Writing data
-  ]
+1. Tidyverse
 
 ---
 
@@ -50,7 +49,7 @@ class: middle, inverse, center
 
 # Flow control
 
-The simplest flow control is conditional execution `if` which takes a scalar and prompt a statements of if this value is `TRUE`.
+The simplest flow control is conditional execution `if`. It takes a vector of length 1 and executes the statement if the conditional `TRUE`.
 
 ```{r}
 if(T==TRUE) print("This is tautological!")
@@ -72,12 +71,12 @@ if(FALSE) print("This is not going to be printed")
 if(5<10) print("5 is less than 10")
 ```
 
-Tip: For the sake of keeping good programming practices, it is recommented to employ curly brackets.
+Tip: For the sake of keeping good programming practices, it is recommended to employ curly brackets.
 ---
 
 # Flow control
 
-Conditional operations have little sense if there is no actions when the initial statement is not meet, is this case we are going to use `else`.
+Conditional operations have little sense if there are no actions when the initial statement is not met, in this case we are going to use `else`.
 
 ```{r}
 x <- 8
@@ -105,7 +104,7 @@ if(x<=7){
 
 # Flow control
 
-The aforementioned statements only accept vectors of length zero, none the less, there are build-in functions that perform the same conditionals that can also be expanded to vectors. **Try it if you want**
+The aforementioned statements only accept vectors of length zero, nonetheless, there are built-in functions that perform the same conditionals that can also be expanded to vectors. **Try it if you want**
 
 The vectorized conditional function is `ifelse`, it is going to be truly useful is the future.
 
@@ -118,11 +117,11 @@ ifelse(test = x<5, yes = "less than 5", no = "more equal than 5")
 
 # Loops
 
-Loops are used in programming to perform a specific task recursively. In this section we will learn how to create loops in R.
+Loops are used in programming to perform a specific task recursively. In this section, we will learn how to create loops in R.
 
 - There are 3 types of loops in R: `repeat`, `while` and `for`.
-- Normally, loops are initialized with a separated variables.
-- Inside a loop a control variable is specified
+- Normally, loops are initialized with separated variables.
+- Inside a loop, a control variable is specified
 
 ---
 
@@ -146,7 +145,7 @@ for(i in 1:length(x)){
 ## `while` loop
 
 .pl[
-- `while` loops check first if a condition is met, if it does, executes, otherwise it does nothing.
+- `while` loops check first if a condition is met if it does, executes, otherwise, it does nothing.
 
 ```{r}
 temperature <- 10
@@ -157,8 +156,8 @@ while(temperature < 18){
 }
 ```
 
-- The test expression `temperature < 18` evaluates according the current vector's value.
-- `while` loops have to include a incremental statement, falling to do so will create a...
+- The test expression `temperature < 18` evaluates according to the current vector's value.
+- `while` loops have to include an incremental statement, falling to do so will create a...
 ]
 
 
@@ -173,7 +172,7 @@ knitr::include_graphics("https://media.giphy.com/media/EmMWgjxt6HqXC/giphy.gif")
 ## `repeat` loop
 
 - Executes the same code until the user stops it.
-- Repeating an action infinite number of times is a nonsense, therefore `repeat` is oftenly used jointly with `stop`or `break`
+- Repeating an action infinite number of times is nonsense, therefore `repeat` is often used jointly with `stop` or `break`
 
 ```{r, eval=FALSE}
 repeat{
@@ -196,7 +195,7 @@ repeat{
 
 # Loops+
 
-- As might think, loops in are not limited to `repeat` `for` or, `while`.
+- As might think, loops in R not limited to `repeat` `for` or, `while`.
 - Advance loop functions let you apply a function to lists, matrices or vectors...
 - `rep` and `replicate` represent the basic idea of functions applied to vectors.
 
@@ -213,7 +212,7 @@ replicate(n = 7, expr = rnorm(1))
 
 - Part of base functions in R
 - They use input lists and apply a function to each element.
-- Family members differ in the type of object that stems from a execution.
+- Family members differ in the type of object that stems from an execution.
 
 .pl[
 ## `apply`
@@ -238,7 +237,7 @@ apply(X = mat, MARGIN = 2, FUN = sum)
 ## `lapply`
 
 .pl[
-- Permitted inputs: dataframes, lists or vectors.
+- Permitted inputs: data frames, lists or vectors.
 - The outcome is a list (the *l* stands for something after all)
 
 ```{r}
@@ -290,9 +289,9 @@ class: inverse, middle, center
 ---
 # Read and write
 
-A preliminary for data analysis is: having data. Some datasets are "pretty", that is, they come in tabular format, a little cleaning and we are done. On the other side there are unstructured data, typically text-heavy files that demand a huge amount of time in order to be used as an input.
+A preliminary for data analysis is: having data. Some datasets are "pretty", that is, they come in tabular format, a little cleaning and we are done. On the other side, there are unstructured data, typically text-heavy files that demand a huge amount of time in order to be used as an input.
 
-Have you ever heard of the quote "big rocks first", well, we will do the opposite here. Let's start by showing how to import, create and format tabular datasets.
+Have you ever heard of the quote "big rocks first", well, we will do the opposite here? Let's start by showing how to import, create and format tabular datasets.
 
 ## Base reading functions
 
@@ -310,7 +309,7 @@ ls("package:utils", pattern = "read")
 ## `.txt` files
 
 .pl[
-Open a .txt files could easily become a Pandora's Box, you just never know if you are about to spread a misery in your work for days! 
+Open a .txt files could easily become a Pandora's Box, you just never know if you are about to spread misery in your work for days! 
 
 ```{r, echo=F}
 knitr::include_graphics("https://media.giphy.com/media/5AVgmIw7iAzdK/giphy.gif")
@@ -320,7 +319,7 @@ knitr::include_graphics("https://media.giphy.com/media/5AVgmIw7iAzdK/giphy.gif")
 .pr[
 Problems:
 
-- Missmatch decimal and thousand separators
+- Mismatch decimal and thousand separators
 
 | Locale                        | Format            |
 |-------------------------------|-------------------|
@@ -329,7 +328,7 @@ Problems:
 | Italian                       | 4.294.967.295,000 |
 | US-English                    | 4,294,967,295.00  |
 
-- Ambigous column separators
+- Ambiguous column separators
   - Is it a Tab? Semicolon? Space? Comma?
 ]
 
@@ -368,8 +367,8 @@ read.delim(file = "datasets/sample.txt", sep = ".")
 
 - CSV stands for Comma Separated Values
 -  In practical terms .txt and .csv extensions aren't that different.
-  - .csv extensions are composed by a delimiter and a enclosing (double quote to define a character), while .txt only have delimiter.
-- `read.csv` formats character values as factors. This is inefficient since R has to map the values inside the vector a recognise how many different values exist within to form levels. Therefore, it is advisable to set `stringsAsFactors=FALSE`
+  - .csv extensions are composed by a delimiter and an enclosing (double quote to define a character), while .txt only have a delimiter.
+- `read.csv` formats character values as factors. This is inefficient since R has to map the values inside the vector a recognize how many different values exist within to form levels. Therefore, it is advisable to set `stringsAsFactors=FALSE`
 ]
 
 .pr[
@@ -402,8 +401,8 @@ survey <- foreign::read.spss("datasets/survey.sav"
 dim(survey)
 ```
 
-- Regularly SPSS files contain both a variable name and a description of such variable. When we read a SPSS file in R the labels disappear, and only the variables names are kept (labels can also be used, nonetheless they are most of the time big enough to not serve as a practical column name).
-- R saves label (or description) as an attributes. Last session we learned that attributes can be extract with the function guess what? `attributes()`
+- Regularly SPSS files contain both a variable name and a description of such variable. When we read an SPSS file in R the labels disappear, and only the variables names are kept (labels can also be used, nonetheless they are most of the time big enough to not serve as a practical column name).
+- R saves label (or description) as an attribute. The last session we learned that attributes can be extracted with the function guess what? `attributes()`
 
 ```{r}
 head(attributes(survey)$variable.labels)
@@ -509,7 +508,7 @@ knitr::include_graphics("img/hex-tidyverse.png")
 
 - Wordly wisdom dictates that 80% of data analysis is spent in wrangling procedures.
 - Data preparation is a recursive task
-  - One does not simply keep with a final dataset, updating and transforming data is oftenly unavoidable.
+  - One does not simply keep with a final dataset, updating and transforming data is often unavoidable.
   - Searching from anomalous data points
   - Sanity checks
   - Missing values imputation, etc.
@@ -521,7 +520,7 @@ knitr::include_graphics("img/s2i2.png")
 
 Related packages (not covered):
 
-- `data.table`: Fast aggregation of large data, fast ordered joins, fast add/modify/delete of columns by group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development.
+- `data.table`: Fast aggregation of large data, fast ordered joins, fast add/modify/delete of columns by a group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development.
 
 
 ---
@@ -529,7 +528,7 @@ Related packages (not covered):
 
 .pl[
 - Most datasets are organized into columns and rows
-- Columns are oftenly labeled, not in the case of rows (is more common in time series data)
+- Columns are often labeled, not in the case of rows (is more common in time series data)
 - There are many ways to structure the same underlying data
 
 &nbsp;
@@ -593,16 +592,16 @@ install.packages("tidyverse")
 ```
 
 - Tidyverse is a set of packages that were designed to work together
-- In this workshop we will follow this philosophy instead the base R functions
+- In this workshop, we will follow this philosophy instead of the base R functions
   - Why? Is more efficient and consistent
-  - Old methods can be learnt "on-the-fly"
+  - Old methods can be learned "on-the-fly"
 ]
 
 ---
 # Pipes
 
-- In R one can apply succesive functions by enclosing between parentheses.
-- Let's say we want to created a new variable inside the survey object (the one from the SPSS file), and get it's mean. This new variable is $age^2$
+- In R one can apply successive functions by enclosing between parentheses.
+- Let's say we want to create a new variable inside the survey object (the one from the SPSS file) and get it's mean. This new variable is $age^2$
 
 ```{r}
 x <- survey$age # New intermediary variable
@@ -637,7 +636,7 @@ survey$age %>%
 
 --
 
-- `matrittr` allow us to create a more readable code
+- `matrittr` allows us to create a more readable code
   - Structuring sequences of data operations left-to-right (as opposed to from the inside and out)
   - avoiding nested function calls,
   - minimizing the need for local variables and function definitions, and
@@ -719,7 +718,7 @@ survey_2 <- survey_2 %>%
   mutate(age_2=age^2
          , log_age= age %>%
            log())
-head(survey, 3)
+head(survey_2, 3)
 ```
 
 ```{r, eval=T}
@@ -786,7 +785,7 @@ survey %>%
 .pl[
 # `filter`
 
-- Use filter() to choose rows/cases where conditions are true. Unlike base subsetting with brackets, rows where the condition evaluates to NA are dropped.
+- Use filter() to choose rows/cases where conditions are true. Unlike base subsetting with brackets, rows, where the condition evaluates to NA, are dropped.
 - Useful functions
     - `==, >, >= etc`
     - `&, |, !, xor()`
