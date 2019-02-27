@@ -190,15 +190,13 @@ replicate(n = 7, expr = rnorm(1))
 - They use input lists and apply a function to each element.
 - Family members differ in the type of object that stems from a execution.
 
+.pl[
 ## `apply`
-
-.pl[[
 - Has 3 main arguments `X`, `MARGIN` and `FUN`
-  - X is a vector, list, dataframe, etc.
+  - X is **matrix**
   - MARGIN refers to the orientation onto the functions has to be computed
-    - 2 across **rows**
-    - 1 across **columns**
-    
+    - 2 across **columns**
+    - 1 across **rows**
 ```{r}
 (mat <- matrix(1:25, nrow = 5))
 ```
@@ -206,8 +204,62 @@ replicate(n = 7, expr = rnorm(1))
 
 .pr[
 ```{r}
-apply(X = mat, MARGIN = 1, FUN = mean)
-apply(X = mat, MARGIN = 2, FUN = mean)
+apply(X = mat, MARGIN = 1, FUN = sum)
+apply(X = mat, MARGIN = 2, FUN = sum)
+```
+]
+
+---
+## `lapply`
+
+.pl[
+- Permitted inputs: dataframes, lists or vectors.
+- The outcome is a list (the *l* stands for something after all)
+
+```{r}
+set.seed(123)
+list <- list(e1=rnorm(100, 5, 1)
+             , e2=rnorm(100, 10, 1)
+             , e3=rnorm(100, 15, 1)
+             , e4=list(rnorm(100, 5, 1)*100))
+lapply(X = list, FUN = mean)
+```
+]
+
+.pr[
+```{r}
+lapply(X = list, FUN = function(x) mean(x[[1]]))
 ```
 
+What's happening above?
 ]
+
+---
+.pl[
+## `sapply`
+
+- A wrapper of `lapply`
+- Tries to simplify the outcome of `lapply` if the argument *simplify* is set at `TRUE` (the default value)
+
+```{r}
+sapply(list, function(x) mean(x[[1]]))
+sapply(list, function(x) mean(x[[1]]), simplify = F)
+```
+]
+.pr[
+## `mapply`
+
+- Multivariate apply
+- Employ arguments and passes them into a function
+
+```{r}
+mapply(rnorm, n=1:5, mean=2, sd=1)
+```
+]
+
+---
+# Read and write
+
+
+
+
