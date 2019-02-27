@@ -788,6 +788,241 @@ readLines(con = "datasets/sample2.csv", n = 2)
 ```
 ## [1] "\"\";\"id\";\"sex\";\"age\"" "\"1\";415;\"FEMALES\";24"
 ```
+
+---
+# Saving into R data format
+
+.pl[
+## RDS
+
+- Saves and reload **one** object to a file
+
+Write:
+
+```r
+saveRDS(object = object, file = "file.rds")
+```
+Read:
+
+```r
+readRDS(file = "file.rds")
+```
+]
+.pr[
+## RData
+
+- Saves one or more R objects
+
+Write:
+
+```r
+save(list = list_objects, file = "file.RData")
+```
+
+Read:
+
+```r
+load(file = "file.RData")
+```
+]
+
+
+---
+class: inverse, middle, center
+
+# Tidy Data and the Tidyverse
+
+&lt;img src="img/hex-tidyverse.png" width="25%" /&gt;
+
+---
+# Tidy data
+
+- Wordly wisdom dictates that 80% of data analysis is spent in wrangling procedures.
+- Data preparation is a recursive task
+  - One does not simply keep with a final dataset, updating and transforming data is oftenly unavoidable.
+  - Searching from anomalous data points
+  - Sanity checks
+  - Missing values imputation, etc.
+- Tidy data provide a standard way to explore, organize and analyze data.
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/s2i2.png" alt="Data analysis workflow (source: Wickham &amp;amp; Garret, 2017)" width="505" /&gt;
+&lt;p class="caption"&gt;Data analysis workflow (source: Wickham &amp; Garret, 2017)&lt;/p&gt;
+&lt;/div&gt;
+
+Related packages (not covered):
+
+- `data.table`: Fast aggregation of large data, fast ordered joins, fast add/modify/delete of columns by group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development.
+
+
+---
+# Tidy data
+
+.pl[
+- Most datasets are organized into columns and rows
+- Columns are oftenly labeled, not in the case of rows (is more common in time series data)
+- There are many ways to structure the same underlying data
+
+&amp;nbsp;
+
+Structure #1
+
+```
+##      name treatment_a treatment_b
+## 1 rebecca           1           2
+## 2  thomas           3           6
+## 3   janna           4           8
+```
+
+Structure #2
+
+
+```
+##             rebecca thomas janna
+## treatment_a       1      3     4
+## treatment_b       2      6     8
+```
+]
+
+.pr[
+### Principles
+
+1. Each variable forms a column
+1. Each observation forms a row
+1. Each type of observational unit forms a table
+
+&amp;nbsp;
+
+Tidy structure
+
+
+```
+##      name   treatment result
+## 1 rebecca treatment_a      1
+## 2  thomas treatment_a      3
+## 3   janna treatment_a      4
+## 4 rebecca treatment_b      2
+## 5  thomas treatment_b      6
+## 6   janna treatment_b      8
+```
+]
+
+---
+# Tidy data
+
+.pl[
+- Tidy data is standard and makes it easy to extract variables
+- Messy data regularly is described by:
+  - Column headers are values, not variable names
+  - Multiple variables are stored in one column.
+  - Variables are stored in both rows and columns.
+  - Multiple types of observational units are stored in the same table.
+  - A single observational unit is stored in multiple tables.
+
+- Solution?
+  - Must messy datasets' problems can be solved by:
+      - Melting
+      - String splitting
+      - Casting
+]
+
+.pr[
+First things first...
+
+
+```r
+install.packages("tidyverse")
+```
+
+- Tidyverse is a set of packages that were designed to work together
+- In this workshop we will follow this philosophy instead the base R functions
+  - Why? Is more efficient and consistent
+  - Old methods can be learnt "on-the-fly"
+]
+
+---
+# Pipes
+
+- In R one can apply succesive functions by enclosing between parentheses.
+- Let's say we want to created a new variable inside the survey object (the one from the SPSS file), and get it's mean. This new variable is `\(age^2\)`
+
+
+```r
+x &lt;- survey$age # New intermediary variable
+age_2 &lt;- x^2 # Apply the function
+(mean_2 &lt;- mean(age_2)) # Calculate the mean of squared age
+```
+
+```
+## [1] 1575.465
+```
+
+Evidently, one could also use the following process
+
+```r
+(mean_2 &lt;- mean((survey$age)^2))
+```
+
+```
+## [1] 1575.465
+```
+ 
+Cleaner, isn't it? But, can you believe that there is a way to this more consistent and readable?
+
+```r
+# The basic pipe `%&gt;%` works as:
+y %&gt;%
+  f() %&gt;%  = g(f(y))
+  g()
+```
+
+---
+# Pipes
+
+So, if we want to get the mean value of the squared age:
+
+
+```r
+survey$age %&gt;%
+  .^2 %&gt;%
+  mean()
+```
+
+```
+## [1] 1575.465
+```
+
+- `matrittr` allow us to create a more readable code
+  - Structuring sequences of data operations left-to-right (as opposed to from the inside and out)
+  - avoiding nested function calls,
+  - minimizing the need for local variables and function definitions, and
+  - making it easy to add steps anywhere in the sequence of operations.
+
+Basic pipes
+
+- x %&gt;% f is equivalent to `\(f(x)\)`
+- x %&gt;% f(y) is equivalent to `\(f(x, y)\)`
+- x %&gt;% f %&gt;% g %&gt;% h is equivalent to `\(h(g(f(x)))\)`
+
+Placeholder
+
+- x %&gt;% `\(f(y, .)\)` is equivalent to `\(f(y, x)\)`
+- x %&gt;% `\(f(y, z = .)\)` is equivalent to `\(f(y, z = x)\)`
+
+---
+# Dplyr
+
+- My favorite package, by far!
+- Establish a grammar syntax for data manipulation
+- Main functions:
+  - `mutate()` adds new variables that are functions of existing variables
+  - `select()` picks variables based on their names.
+  - `filter()` picks cases based on their values.
+  - `summarise()` reduces multiple values down to a single summary.
+  - `arrange()` changes the ordering of the rows.
+  - `group_by` select and apply the functions above to specific value
+
+#
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
