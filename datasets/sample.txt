@@ -1,0 +1,6 @@
+date	iso_a3	currency_code	name	local_price
+4/1/2000	ARG	ARS	Argentina	2.5
+4/1/2000	AUS	AUD	Australia	2.59
+4/1/2000	BRA	BRL	Brazil	2.95
+4/1/2000	CAN	CAD	Canada	2.85
+4/1/2000	CHE	CHF	Switzerland	5.9

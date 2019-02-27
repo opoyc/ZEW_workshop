@@ -440,6 +440,324 @@ mapply(rnorm, n=1:5, mean=2, sd=1)
 
 ---
 # Read and write
+
+A preliminary for data analysis is: having data. Some datasets are "pretty", that is, they come in tabular format, a little cleaning and we are done. On the other side there are unstructured data, typically text-heavy files that demand a huge amount of time in order to be used as an input.
+
+Have you ever heard of the quote "big rocks first", well, we will do the opposite here. Let's start by showing how to import, create and format tabular datasets.
+
+## Base reading functions
+
+The easiest form of data to import in R are *spreadsheet-like* text files.
+
+
+```r
+ls("package:base", pattern = "read")
+```
+
+```
+## [1] "read.dcf"     "readBin"      "readChar"     "readline"    
+## [5] "readLines"    "readRDS"      "readRenviron" "Sys.readlink"
+```
+
+```r
+ls("package:utils", pattern = "read")
+```
+
+```
+##  [1] "read.csv"         "read.csv2"        "read.delim"      
+##  [4] "read.delim2"      "read.DIF"         "read.fortran"    
+##  [7] "read.fwf"         "read.socket"      "read.table"      
+## [10] "readCitationFile"
+```
+
+
+---
+# Read and write
+
+## `.txt` files
+
+.pl[
+Open a .txt files could easily become a Pandora's Box, you just never know if you are about to spread a misery in your work for days! 
+
+![](https://media.giphy.com/media/5AVgmIw7iAzdK/giphy.gif)&lt;!-- --&gt;
+]
+
+.pr[
+Problems:
+
+- Missmatch decimal and thousand separators
+
+| Locale                        | Format            |
+|-------------------------------|-------------------|
+| Canadian (English and French) | 4 294 967 295,000 |
+| German                        | 4 294 967.295,000 |
+| Italian                       | 4.294.967.295,000 |
+| US-English                    | 4,294,967,295.00  |
+
+- Ambigous column separators
+  - Is it a Tab? Semicolon? Space? Comma?
+]
+
+---
+# Import data
+## `.txt` files
+
+What we see:
+
+&lt;img src="img/s2i1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+What R sees:
+
+
+```r
+readLines(con = "datasets/sample.txt", n = 11)
+```
+
+```
+## [1] "date\tiso_a3\tcurrency_code\tname\tlocal_price"
+## [2] "4/1/2000\tARG\tARS\tArgentina\t2.5"            
+## [3] "4/1/2000\tAUS\tAUD\tAustralia\t2.59"           
+## [4] "4/1/2000\tBRA\tBRL\tBrazil\t2.95"              
+## [5] "4/1/2000\tCAN\tCAD\tCanada\t2.85"              
+## [6] "4/1/2000\tCHE\tCHF\tSwitzerland\t5.9"
+```
+
+---
+# Import data
+## `.txt` files
+
+
+```r
+read.table(file = "datasets/sample.txt", sep = "\t")
+```
+
+```
+##         V1     V2            V3          V4          V5
+## 1     date iso_a3 currency_code        name local_price
+## 2 4/1/2000    ARG           ARS   Argentina         2.5
+## 3 4/1/2000    AUS           AUD   Australia        2.59
+## 4 4/1/2000    BRA           BRL      Brazil        2.95
+## 5 4/1/2000    CAN           CAD      Canada        2.85
+## 6 4/1/2000    CHE           CHF Switzerland         5.9
+```
+
+```r
+read.delim(file = "datasets/sample.txt", sep = ".")
+```
+
+```
+##                                    date.iso_a3.currency_code.name.local_price
+## 4/1/2000\tARG\tARS\tArgentina\t2                                            5
+## 4/1/2000\tAUS\tAUD\tAustralia\t2                                           59
+## 4/1/2000\tBRA\tBRL\tBrazil\t2                                              95
+## 4/1/2000\tCAN\tCAD\tCanada\t2                                              85
+## 4/1/2000\tCHE\tCHF\tSwitzerland\t5                                          9
+```
+
+---
+# Import data
+
+.pl[
+## `.csv` files
+
+- CSV stands for Comma Separated Values
+-  In practical terms .txt and .csv extensions aren't that different.
+  - .csv extensions are composed by a delimiter and a enclosing (double quote to define a character), while .txt only have delimiter.
+- `read.csv` formats character values as factors. This is inefficient since R has to map the values inside the vector a recognise how many different values exist within to form levels. Therefore, it is advisable to set `stringsAsFactors=FALSE`
+]
+
+.pr[
+How to import a .csv to our environment?
+
+
+```r
+data &lt;- read.csv("datasets/big-mac-full-index.csv"
+                 , stringsAsFactors = F)
+str(data)
+```
+
+```
+## 'data.frame':	1218 obs. of  19 variables:
+##  $ date         : chr  "2000-04-01" "2000-04-01" "2000-04-01" "2000-04-01" ...
+##  $ iso_a3       : chr  "ARG" "AUS" "BRA" "CAN" ...
+##  $ currency_code: chr  "ARS" "AUD" "BRL" "CAD" ...
+##  $ name         : chr  "Argentina" "Australia" "Brazil" "Canada" ...
+##  $ local_price  : num  2.5 2.59 2.95 2.85 5.9 ...
+##  $ dollar_ex    : num  1 1.68 1.79 1.47 1.7 ...
+##  $ dollar_price : num  2.5 1.54 1.65 1.94 3.47 ...
+##  $ USD_raw      : num  -0.004 -0.386 -0.343 -0.228 0.383 -0.023 -0.524 -0.446 0.226 -0.051 ...
+##  $ EUR_raw      : num  0.05 -0.352 -0.308 -0.186 0.458 0.03 -0.498 -0.416 0.293 0 ...
+##  $ GBP_raw      : num  -0.167 -0.486 -0.451 -0.354 0.156 -0.183 -0.602 -0.537 0.025 -0.207 ...
+##  $ JPY_raw      : num  -0.099 -0.444 -0.406 -0.301 0.251 -0.116 -0.569 -0.499 0.11 -0.142 ...
+##  $ CNY_raw      : num  1.091 0.289 0.378 0.622 1.903 ...
+##  $ GDP_dollar   : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ adj_price    : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ USD_adjusted : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ EUR_adjusted : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ GBP_adjusted : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ JPY_adjusted : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ CNY_adjusted : num  NA NA NA NA NA NA NA NA NA NA ...
+```
+]
+
+---
+.pl[
+# Import data from other statistical software
+
+- R is an open source language, which is nice since you are free to use it, create and implement your own functionalities. Nonetheless, is also create inconsistencies (remember how different package can use a function with the same name?).
+- There are several packages that convert between different extensions, the most popular are:
+  - `foreign`: Reading and writing data stored by some versions of 'Epi Info', 'Minitab', 'S', 'SAS', 'SPSS', 'Stata', 'Systat', 'Weka', and for reading and writing some 'dBase' files.
+  - `haven`: Import and Export 'SPSS', 'Stata' and 'SAS' Files
+  - The difference stems in that outcome type and the speed
+]
+--
+.pr[
+## Import from SPSS
+
+
+```r
+survey &lt;- foreign::read.spss("datasets/survey.sav"
+                             , to.data.frame = T)
+```
+
+```
+## re-encoding from CP1252
+```
+
+```r
+dim(survey)
+```
+
+```
+## [1] 439 134
+```
+
+- Regularly SPSS files contain both a variable name and a description of such variable. When we read a SPSS file in R the labels disappear, and only the variables names are kept (labels can also be used, nonetheless they are most of the time big enough to not serve as a practical column name).
+- R saves label (or description) as an attributes. Last session we learned that attributes can be extract with the function guess what? `attributes()`
+
+
+```r
+head(attributes(survey)$variable.labels)
+```
+
+```
+##                       id                      sex                      age 
+##                       ""                    "sex"                       "" 
+##                  marital                    child                     educ 
+##         "marital status"                  "child" "highest educ completed"
+```
+]
+
+---
+## Import from other statistical systems
+
+- `Haven` is extremely useful since it follows the *Tidy* philosophy that is taking place in R. (we will cover this in depth the next session)
+
+.pl[
+
+```r
+(money &lt;- foreign::read.dta("datasets/money.dta"))
+```
+
+```
+##         y     m      i
+## 1   506.5 141.8  3.247
+## 2   524.6 146.5  2.605
+## 3   565.0 149.2  2.908
+## 4   596.7 154.7  3.253
+## 5   637.7 161.8  3.686
+## 6   691.1 169.5  4.055
+## 7   756.0 173.7  5.082
+## 8   799.6 185.1  4.630
+## 9   873.4 199.4  5.470
+## 10  944.0 205.8  6.853
+## 11  992.7 216.5  6.562
+## 12 1077.6 230.7  4.511
+## 13 1185.9 251.9  4.466
+## 14 1326.4 265.8  7.178
+## 15 1434.2 277.5  7.926
+## 16 1549.2 291.1  6.122
+## 17 1718.0 310.4  5.266
+## 18 1918.3 335.5  5.510
+## 19 2163.9 363.2  7.572
+## 20 2417.8 389.0 10.017
+## 21 2631.7 414.1 11.374
+## 22 2954.1 440.6 13.776
+## 23 3073.0 478.2 11.084
+## 24 3309.5 521.1  8.750
+```
+]
+
+.pr[
+
+```r
+(money &lt;- haven::read_dta("datasets/money.dta"))
+```
+
+```
+## # A tibble: 24 x 3
+##        y     m     i
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  506.  142.  3.25
+##  2  525.  146.  2.61
+##  3  565   149.  2.91
+##  4  597.  155.  3.25
+##  5  638.  162.  3.69
+##  6  691.  170.  4.05
+##  7  756   174.  5.08
+##  8  800.  185.  4.63
+##  9  873.  199.  5.47
+## 10  944   206.  6.85
+## # … with 14 more rows
+```
+
+Do you see any difference?
+
+&lt;img src="https://media.giphy.com/media/NS7gPxeumewkWDOIxi/giphy.gif" width="25%" /&gt;
+]
+
+---
+# Exporting
+
+- Exporting data in R is not different from Reading it
+- Normally, exporting functions start with `write*`. For instance:
+
+
+```r
+haven::write_dta(data = head(survey), path = "datasets/survey.dta")
+```
+
+- Make sure that the output has the features you expected!
+
+
+```r
+export_obj &lt;- survey[1:5, 1:3]
+```
+
+
+
+```r
+write.csv(x = export_obj, file = "datasets/sample1.csv")
+write.csv2(x = export_obj, file = "datasets/sample2.csv")
+```
+
+Are sample1 and sample2 equal? Let's see
+
+```r
+readLines(con = "datasets/sample1.csv", n = 2)
+```
+
+```
+## [1] "\"\",\"id\",\"sex\",\"age\"" "\"1\",415,\"FEMALES\",24"
+```
+
+```r
+readLines(con = "datasets/sample2.csv", n = 2)
+```
+
+```
+## [1] "\"\";\"id\";\"sex\";\"age\"" "\"1\";415;\"FEMALES\";24"
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
