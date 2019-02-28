@@ -9,9 +9,8 @@ output:
       toc_depth: 3
       toc_float: true
       number_sections: true
-      highlight: pygments
-      theme: yeti
-      css: "css/zew.css"
+      highlight: espresso
+      theme: cosmo
       df_print: paged
       code_folding: show
       toc_include: true
