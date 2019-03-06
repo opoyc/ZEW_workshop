@@ -396,5 +396,7 @@ midd-blockquote {
 
 /* important code slightly blue */
 .remark-code-line-highlighted {
-  background-color: #000000 !important;
+  background-color: rgba(239, 228, 9, 0.3); !important;
+  color: #ffffff;
+  border-radius: 3px;
 }

@@ -1,0 +1,106 @@
+Name,Label,Question
+economy,Economy,
+economycode,Economy Code,
+regionwb,"Region, WB",
+pop_adult,"Population 15+, 2016, WDI",
+wpid_random,Gallup World Poll identifier,
+wgt,Weight,
+female,Respondent is female,
+age,Respondent age,
+educ,Respondent education level,
+inc_q,Within-economy household income quintile,
+emp_in,Respondent is in the workforce,
+fin2,Has a debit card,"A/An [local terminology for ATM/debit card] is a card connected to an account at a financial institution that allows you to withdraw money, and the money is taken out of THAT ACCOUNT right away. Do you, personally, have a/an [local terminology for ATM/debit card]? Yes or no?"
+fin3,If has debit card: card in own name,Is this [local terminology for ATM/debit card] connected to an account with your name on it?
+fin4,If has debit card: used card in past 12 months,"In the PAST 12 MONTHS, have you used your OWN [local terminology for ATM/debit card] DIRECTLY to make a purchase?"
+fin5,Used mobile phone or internet to access FI account,"In the PAST 12 MONTHS, did you ever use a MOBILE PHONE or the Internet to make a payment, to buy something, or to send money FROM your account at a bank or another type of financial institution?"
+fin6,Used mobile phone or internet to check account balance,"In the PAST 12 MONTHS, have you checked your account balance using a mobile phone or the Internet?"
+fin7,Has a credit card,"A credit card is a card that allows you to BORROW money in order to make payments or buy things, and you can pay the balance off later. Do you, personally, have a credit card?"
+fin8,If has credit card: used card in past 12 months,"In the PAST 12 MONTHS, have you, personally, used your credit card?"
+fin9,If has account: any deposit into account in past 12 months,"In the PAST 12 MONTHS, has money ever been DEPOSITED into your personal account(s)? This includes cash or electronic deposits, or any time money is put into your account(s) by yourself, an employer, or another person or institution."
+fin10,If has account: any withdrawal from account in past 12 months,"In the PAST 12 MONTHS, has money ever been TAKEN OUT of your personal account(s)? This includes cash withdrawals you make in person, using your [local terminology for ATM/debit card] or mobile phone, electronic payments or purchases, checks, or any other time money is removed from your account(s) by yourself or by another person or institution."
+fin11a,If does not have account: b/c too far away,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - FIN11A.Because financial institutions are too far away"
+fin11b,If does not have account: b/c too expensive,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because financial services are too expensive"
+fin11c,If does not have account: b/c lack documentation,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because you don’t have the necessary documentation (identity card, wage slip, etc.)"
+fin11d,If does not have account: b/c lack trust,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because you don’t trust financial institutions"
+fin11e,If does not have account: b/c religious reasons,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because of religious reasons"
+fin11f,If does not have account: b/c lack of money,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because you don’t have enough money to use financial institutions"
+fin11g,If does not have account: b/c family member already has one,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because someone else in the family already has an account"
+fin11h,If does not have account: b/c no need for financial services,"UNBANKED SECTION Please tell me whether each of the following is A REASON why you, personally, DO NOT have an account at a bank or another type of formal financial institution. Is it ___________ ? (Randomly rotate FIN11A-FIN11H) - Because you have no need for financial services at a formal institution"
+fin14a,Made bill payments online using the Internet,"In the PAST 12 MONTHS, have you, personally, used the Internet, whether on a mobile phone, a computer, or some other device, to ________? - Make bill payments"
+fin14b,Bought something online using the Internet,"In the PAST 12 MONTHS, have you, personally, used the Internet, whether on a mobile phone, a computer, or some other device, to ________? - Buy something online"
+fin14c,Paid online or in cash at delivery,"In the PAST 12 MONTHS, have you, personally, used the Internet, whether on a mobile phone, a computer, or some other device, to ________? - Do you usually pay online or in cash when the order is delivered?"
+fin15,Saved in past 12 months: for farm/business purposes,"SAVINGS SECTION In the PAST 12 MONTHS, have you, personally, saved or set aside any money to start, operate, or grow a business or farm?"
+fin16,Saved in past 12 months: for old age,"SAVINGS SECTION In the PAST 12 MONTHS, have you, personally, saved or set aside any money FOR OLD AGE?"
+fin17a,Saved in past 12 months: using an account at a financial institution,"SAVINGS SECTION  In the PAST 12 MONTHS, have you, personally, saved or set aside any money by __________? - Using an account at a bank or another type of formal financial institution (This can include using another person’s account)"
+fin17b,Saved in past 12 months: using an informal savings club,"SAVINGS SECTION In the PAST 12 MONTHS, have you, personally, saved or set aside any money by __________? - Using an informal savings group/club such as [local terminology for savings group/club] or a person outside the family"
+fin19,"Has loan from a financial institution for home, apartment, or land","BORROWING SECTION Do you, by yourself or together with someone else, currently have a loan you took out from a bank or another type of formal financial institution to purchase a HOME, APARTMENT, OR LAND?"
+fin20,Borrowed in past 12 months: for medical purposes,"BORROWING SECTION In the PAST 12 MONTHS, have you, by yourself or together with someone else, borrowed money for health or medical purposes?"
+fin21,Borrowed in past 12 months: for farm/business purposes,"BORROWING SECTION In the PAST 12 MONTHS, have you, by yourself or together with someone else, borrowed money to start, operate, or grow a business or farm?"
+fin22a,Borrowed in past 12 months: from a financial institution,"BORROWING SECTION In the PAST 12 MONTHS, have you, by yourself or together with someone else, borrowed any money from any of the following sources? - From a bank or another type of formal financial institution"
+fin22b,Borrowed in past 12 months: from family or friends,"BORROWING SECTION In the PAST 12 MONTHS, have you, by yourself or together with someone else, borrowed any money from any of the following sources? - From family, relatives, or friends"
+fin22c,Borrowed in past 12 months: from an informal savings club,"BORROWING SECTION In the PAST 12 MONTHS, have you, by yourself or together with someone else, borrowed any money from any of the following sources? - From an informal savings group/club such as [local terminology for savings group/club]"
+fin24,Possibility of coming up with emergency funds,"FINANCIAL RESILIENCE SECTION Now, imagine that you have an emergency and you need to pay [1/20 of GNI per capita in local currency]. Is it possible or not possible that you could come up with [1/20 of GNI per capita in local currency] within the NEXT MONTH?"
+fin25,Main source of emergency funds,What would be the MAIN source of money that you would use to come up with [1/20 of GNI per capita in local currency] within the NEXT MONTH? CIRCLE ONE RESPONSE
+fin26,Sent domestic remittances in past 12 months,"PAYMENTS SECTION In the PAST 12 MONTHS, have you, personally, GIVEN or SENT money to a relative or friend living in a different city or area INSIDE (country where survey takes place)? This can be money you brought yourself or sent in some other way. (This can be money given or sent for any reason)"
+fin27a,If sent domestic remittances: through a financial institution,"In the PAST 12 MONTHS, have you, personally, GIVEN or SENT money to a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You sent money through a bank or another type of formal financial institution"
+fin27b,If sent domestic remittances: through a mobile phone,"In the PAST 12 MONTHS, have you, personally, GIVEN or SENT money to a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You sent money through a mobile phone"
+fin27c1,If sent domestic remittances: in cash,"In the PAST 12 MONTHS, have you, personally, GIVEN or SENT money to a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You handed cash to this person or sent cash through someone you know"
+fin27c2,If sent domestic remittances: through an MTO,"In the PAST 12 MONTHS, have you, personally, GIVEN or SENT money to a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You sent money through a money transfer service"
+fin28,Received domestic remittances in past 12 months,"In the PAST 12 MONTHS, have you, personally, RECEIVED money from a relative or friend living in a different city or area INSIDE (country where survey takes place), including any money you received in person? Yes or no? (This can be money received for any reason except payments for goods and services) CIRCLE ONE RESPONSE"
+fin29a,If received domestic remittances: through a financial institution,"In the PAST 12 MONTHS, have you, personally, RECEIVED money from a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You received money through a bank or another type of formal financial institution"
+fin29b,If received domestic remittances: through a mobile phone,"In the PAST 12 MONTHS, have you, personally, RECEIVED money from a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You received money through a mobile phone"
+fin29c1,If received domestic remittances: in cash,"In the PAST 12 MONTHS, have you, personally, RECEIVED money from a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You were handed cash by this person or by someone you know"
+fin29c2,If received domestic remittances: through an MTO,"In the PAST 12 MONTHS, have you, personally, RECEIVED money from a relative or friend living in a different city or area inside (country where survey takes place) in any of the following ways? - You received money through a money transfer service"
+fin30,Paid utility bills in past 12 months,"In the PAST 12 MONTHS, have you, personally, made regular payments for electricity, water, OR trash collection? Yes or no?"
+fin31a,If paid utility bills: using an account,"In the PAST 12 MONTHS, have you, personally, made payments for electricity, water, OR trash collection in any of the following ways? - You used an account at a bank or another type of formal financial institution to directly make a payment"
+fin31b,If paid utility bills: through a mobile phone,"In the PAST 12 MONTHS, have you, personally, made payments for electricity, water, OR trash collection in any of the following ways? - You used a mobile phone to make a payment"
+fin31c,If paid utility bills: in cash,"In the PAST 12 MONTHS, have you, personally, made payments for electricity, water, OR trash collection in any of the following ways? (Read) You made a payment using cash."
+fin32,Received wage payments in past 12 months,"Have you received any money from an EMPLOYER, in the form of SALARY OR WAGES, for doing work in the PAST 12 MONTHS? Please do NOT consider any money you received directly from clients or customers. CIRCLE ONE RESPONSE"
+fin33,If received wage payments: work in public sector,"In the PAST 12 MONTHS, have you been employed by the government, military, or public sector? Yes or no?"
+fin34a,If received wage payments: into an account,"In the PAST 12 MONTHS, has an EMPLOYER paid your salary or wages in any of the following ways? - You received payments directly into an account at a bank or another type of formal financial institution"
+fin34b,If received wage payments: through a mobile phone,"In the PAST 12 MONTHS, has an EMPLOYER paid your salary or wages in any of the following ways? - You received payments through a mobile phone"
+fin34c1,If received wage payments: in cash,"In the PAST 12 MONTHS, has an EMPLOYER paid your salary or wages in any of the following ways? - You received payments DIRECTLY in cash"
+fin34c2,If received wage payments: to a card,"In the PAST 12 MONTHS, has an EMPLOYER paid your salary or wages in any of the following ways? - You received payments to a card"
+fin35,If received cashless wage payments: first account,"Thinking about the account you use to receive payments from an employer, was it the first account you ever opened, or not?"
+fin36,If received cashless wage payments: opened to receive payments,Did you open this account in order to receive payments from this employer?
+fin37,Received government transfers in past 12 months,"In the PAST 12 MONTHS, have you, personally, RECEIVED any financial support from the government? This money could include payments for educational or medical expenses, unemployment benefits, subsidy payments, or any kind of SOCIAL BENEFITS. Please do NOT include wages or any payments related to work."
+fin38,Received government transfers in past 12 months: pension,"In the PAST 12 MONTHS, have you, personally, received a pension from the government, military, or public sector?"
+fin39a,If received government transfers: into an account,"In the PAST 12 MONTHS, have you received any money from the government in any of the following ways? - You received payments directly into an account at a bank or another type of formal financial institution"
+fin39b,If received government transfers: through a mobile phone,"In the PAST 12 MONTHS, have you received any money from the government in any of the following ways? - You received payments through a mobile phone"
+fin39c1,If received government transfers: in cash,"In the PAST 12 MONTHS, have you received any money from the government in any of the following ways? - You received payments DIRECTLY in cash"
+fin39c2,If received government transfers: to a card,"In the PAST 12 MONTHS, have you received any money from the government in any of the following ways? - You received payments to a card"
+fin40,If received cashless government transfers: first account,"Thinking about the account you use to receive payments from the government, was it the first account you ever opened, or not? CIRCLE ONE RESPONSE"
+fin41,If received cashless government transfers: opened to receive payments,Did you open this account in order to receive payments from the government? CIRCLE ONE RESPONSE
+fin42,Received agricultural payments in past 12 months,"In the PAST 12 MONTHS, have you, personally, RECEIVED money from any source for the sale of agricultural products, crops, produce, or livestock? CIRCLE ONE RESPONSE"
+fin43a,If received agricultural payments: into an account,"In the PAST 12 MONTHS, have you received money for the sale of agricultural products, crops, produce, or livestock in any of the following ways? - You received payments directly into an account at a bank or another type of formal financial institution"
+fin43b,If received agricultural payments: through a mobile phone,"In the PAST 12 MONTHS, have you received money for the sale of agricultural products, crops, produce, or livestock in any of the following ways? - You received payments through a mobile phone"
+fin43c1,If received agricultural payments: in cash,"In the PAST 12 MONTHS, have you received money for the sale of agricultural products, crops, produce, or livestock in any of the following ways? - You received payments DIRECTLY in cash"
+fin43c2,If received agricultural payments: to a card,"In the PAST 12 MONTHS, have you received money for the sale of agricultural products, crops, produce, or livestock in any of the following ways? - You received payments to a card"
+fin44,If received agricultural payments: opened to receive payments,"Thinking about the account you use to receive payments for the sale of agricultural products, crops, produce, or livestock, was it the first account you ever opened, or not? CIRCLE ONE RESPONSE"
+fin45,If received agricultural payments: opened to receive payments,Did you open this account in order to receive these payments?
+fin46,Received self-employment payments: in past 12 months,"In the PAST 12 MONTHS, have you, personally, received money from your business, or for selling goods, or for providing services, including part-time work? CIRCLE ONE RESPONSE"
+fin47a,If received self-employment payments: into an account,"In the PAST 12 MONTHS, have you received money from your business, or for selling goods, or for providing services, in any of the following ways? - You received payments directly into an account at a bank or another type of formal financial institution"
+fin47b,If received self-employment payments: through a mobile phone,"In the PAST 12 MONTHS, have you received money from your business, or for selling goods, or for providing services, in any of the following ways? - You received payments through a mobile phone"
+fin47c1,If received self-employment payments: in cash,"In the PAST 12 MONTHS, have you received money from your business, or for selling goods, or for providing services, in any of the following ways? - You received payments DIRECTLY in cash"
+fin47c2,If received self-employment payments: to a card,"In the PAST 12 MONTHS, have you received money from your business, or for selling goods, or for providing services, in any of the following ways? - You received payments to a card"
+fin47c3,Marginal: Used debit card in your own name,"In the PAST 12 MONTHS, have you used your OWN [insert local terminology for ATM/debit card] DIRECTLY to make a purchase?"
+fin47c4,Marginal: Used mobile phone or internet to access FI account,"In the PAST 12 MONTHS, did you ever use a MOBILE PHONE or the Internet to make a payment, to buy something, or to send money FROM your account at a bank or another type of financial institution?"
+fin47c5,Marginal: Used mobile phone or internet to check account balance,"In the PAST 12 MONTHS, have you checked your account balance using a mobile phone or the Internet?"
+mobileowner,Owns a mobile phone,
+fin48,Has a national ID,
+account_fin,Has an account at a financial institution,
+account_mob,Has a mobile money account,
+account,Has an account,
+saved,Saved in the past year,
+borrowed,Borrowed in the past year,
+receive_wages,Payments: wage payments,
+receive_transfers,Payments: government transfers,
+receive_pension,Payments: government pension,
+receive_agriculture,Payments: selling agricultural goods,
+pay_utilities,Payments: utility bills,
+remittances,Domestic remittances,
+pay_onlne,Pay online [of adults]- F2F,
+pay_onlne_mobintbuy,Pay online [of buyers]- F2F,
+pay_cash,Pay in cash when order is delivered [of adults]- F2F,
+pay_cash_mobintbuy,Pay in cash when order is delivered [of buyers]- F2F,

@@ -98,7 +98,6 @@ Loops are used in programming to perform a specific task recursively. In this se
 
 ```{r}
 x <- letters[1:10]
-
 for(i in 1:length(x)){
   print(x[i]=="g")
 }
@@ -594,7 +593,7 @@ survey_2 %>%
            log()) %>%
   head(3)
 ```
-]
+
 
 ### `select` and `rename`
 

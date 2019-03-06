@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Workshop: Data science with R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Obryan Poyser" />
+    <meta name="date" content="2019-03-06" />
+    <link rel="stylesheet" href="css/zew-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/zew.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Workshop: Data science with R
+## ZEW - Session #3
+### Obryan Poyser
+### 2019-03-06
+
+---
+
+
+
+
+# Today's outline
+
+1. Tidyverse
+    1. dplyr
+        1. Scoped variants
+        1. Joining operations
+    1. tidyr
+---
+class: inverse, middle, center
+
+# Tidy Data and the Tidyverse
+
+&lt;img src="img/hex-tidyverse.png" width="25%" /&gt;
+
+---
+# `dplyr`: scoped variants
+
+Until now we have seen the main function of `dplyr`. Each serves for specific tasks relating data wrangling. Nonetheless, each of them is accompanied with special variants called "scoped functions" that serve for even more explicit problems.
+
+In this session we are going to work with the Global Financial Inclusion Database. According to the WB *"the world’s most comprehensive data set on how adults save, borrow, make payments, and manage risk."* The DB consist on 140 different countries with representative surveys of 150K adults age 15+ for the year 2017.
+
+The data below is a 10% sample without replacement of the whole DB.
+
+
+
+
+```r
+findex &lt;- readr::read_rds("datasets/global_findex/sample_findex.rds")
+
+# There is a dictionary of the data as well.
+dic &lt;- readr::read_csv("datasets/global_findex/dictionary.csv")
+```
+
+---
+## Scoped variants
+
+- `*_all()`: affects every variable. Ex:
+  - `mutate_all()`
+  - `summarise_all()`
+  - `filter_all()`
+- `*_if()`: affects variables selected with a character vector or `vars()` Ex:
+  - `mutate_if()`
+  - `summarise_if()`-
+  - `filter_if()`
+- `*_at()`: affects variables selected with a predicate function (predicate are functions that return `TRUE` or `FALSE`) Ex:
+  - `mutate_at()`
+  - `summarise_at()`
+  - `filter_at()`
+
+---
+## `_all()`
+
+Example: `mutate_all()`
+
+```r
+findex %&gt;%
+    mutate_all(.funs = ~as.character(.))
+```
+
+```
+## # A tibble: 15,492 x 32
+##    economy economycode regionwb pop_adult wpid_random wgt   female age  
+##    &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 Singap… SGP         High in… 4752894   179146060   0.49… Female 46   
+##  2 Singap… SGP         High in… 4752894   133475226   0.31… Female 49   
+##  3 Austria AUT         High in… 7514308   132051989   0.32… Male   68   
+##  4 India   IND         South A… 950815296 141077164   0.49… Male   26   
+##  5 Bulgar… BGR         Europe … 6123295.5 154071117   0.82… Male   43   
+##  6 Russia… RUS         Europe … 119382752 136370908   1.47… Female 15   
+##  7 Malays… MYS         East As… 23508496  128720820   2.61… Male   8    
+##  8 Maurit… MUS         Sub-Sah… 1024565.… 189052742   1.28… Male   68   
+##  9 Iraq    IRQ         Middle … 22122044  127693502   1.01… Male   23   
+## 10 Lebanon LBN         Middle … 4591023   125975062   0.60… Female 10   
+## # … with 15,482 more rows, and 24 more variables: educ &lt;chr&gt;, inc_q &lt;chr&gt;,
+## #   emp_in &lt;chr&gt;, fin2 &lt;chr&gt;, fin7 &lt;chr&gt;, fin8 &lt;chr&gt;, fin14a &lt;chr&gt;,
+## #   fin14b &lt;chr&gt;, fin19 &lt;chr&gt;, fin26 &lt;chr&gt;, fin28 &lt;chr&gt;, fin32 &lt;chr&gt;,
+## #   fin37 &lt;chr&gt;, mobileowner &lt;chr&gt;, account_fin &lt;chr&gt;, account_mob &lt;chr&gt;,
+## #   account &lt;chr&gt;, saved &lt;chr&gt;, borrowed &lt;chr&gt;, receive_wages &lt;chr&gt;,
+## #   receive_transfers &lt;chr&gt;, receive_pension &lt;chr&gt;,
+## #   receive_agriculture &lt;chr&gt;, fin2_b &lt;chr&gt;
+```
+
+
+---
+## `_if()`
+
+Example: `mutate_if()`
+
+
+```r
+findex %&gt;%
+    transmute_if(.predicate=is.numeric, .funs = list(log=~log(.)
+                                                  , abs=~abs(.)))
+```
+
+```
+## # A tibble: 15,492 x 16
+##    pop_adult_log wpid_random_log wgt_log age_log receive_transfe…
+##            &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;            &lt;dbl&gt;
+##  1          15.4            19.0 -0.712     3.83             1.39
+##  2          15.4            18.7 -1.17      3.89             1.39
+##  3          15.8            18.7 -1.13      4.22             1.39
+##  4          20.7            18.8 -0.697     3.26             1.39
+##  5          15.6            18.9 -0.186     3.76             1.39
+##  6          18.6            18.7  0.387     2.71             1.39
+##  7          17.0            18.7  0.960     2.08             0   
+##  8          13.8            19.1  0.251     4.22             1.39
+##  9          16.9            18.7  0.0130    3.14             1.39
+## 10          15.3            18.7 -0.497     2.30             1.39
+## # … with 15,482 more rows, and 11 more variables:
+## #   receive_pension_log &lt;dbl&gt;, receive_agriculture_log &lt;dbl&gt;,
+## #   fin2_b_log &lt;dbl&gt;, pop_adult_abs &lt;dbl&gt;, wpid_random_abs &lt;dbl&gt;,
+## #   wgt_abs &lt;dbl&gt;, age_abs &lt;dbl&gt;, receive_transfers_abs &lt;dbl&gt;,
+## #   receive_pension_abs &lt;dbl&gt;, receive_agriculture_abs &lt;dbl&gt;,
+## #   fin2_b_abs &lt;dbl&gt;
+```
+
+---
+## `_at()`
+
+Example: `mutate_at()`
+
+
+```r
+findex %&gt;%
+    transmute_at(.vars = vars(contains("fin")), .funs = ~case_when(
+        .=="no" ~ 0
+        , .=="yes" ~ 1
+    ))
+```
+
+```
+## # A tibble: 15,492 x 12
+##     fin2  fin7  fin8 fin14a fin14b fin19 fin26 fin28 fin32 fin37
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1     1     1      1      1     1     0     0     1     0
+##  2     1     0    NA      0      0     0     0     0     0     0
+##  3     1     1     1      1      0     0    NA    NA     1     0
+##  4     0     0    NA      0      0     0     0     0     1     0
+##  5     0     0    NA      0      0     0     0     0    NA     0
+##  6     1     1     0      0      0     0     1     0     1     0
+##  7     1     0    NA      0      1     0     0     0     1     1
+##  8     0     0    NA      0      0     0    NA    NA     1     0
+##  9     1     1     0      0      0     0    NA    NA     0     0
+## 10     1     0    NA      0      0     1     0     0     0     0
+## # … with 15,482 more rows, and 2 more variables: account_fin &lt;dbl&gt;,
+## #   fin2_b &lt;dbl&gt;
+```
+
+---
+## Merging data
+
+.pl[
+- Normally, one finds data distributed into several different files
+- dplyr provides join functions to perform merging according to matching cells indetifiers
+  &lt;!-- - `left_join()` --&gt;
+  &lt;!-- - `right_join()` --&gt;
+  &lt;!-- - `inner_join()` --&gt;
+  &lt;!-- - `full_join()` --&gt;
+  &lt;!-- - `anti_join()` --&gt;
+  &lt;!-- - `semi_join()` --&gt;
+
+&lt;img src="img/join2.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+  ]
+  
+.pr[
+  
+- Also it is possible to combine datasets when they share the same column names with `bind_cols()`
+
+&lt;img src="img/join1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+- Or rows with `bind_rows()`
+
+&lt;img src="img/join3.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+## Merging data: example
+
+.pl[
+
+```r
+(df1 &lt;- tibble::tribble(
+    ~col1, ~col2, ~col3,
+      "a",     1,     3,
+      "b",    NA,     5,
+      "b",     5,     6
+    ))
+```
+
+```
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+```
+
+```r
+(df2 &lt;- tibble::tribble(
+           ~col1, ~col2, ~col4,
+             "a",     1,  TRUE,
+             "b",    NA, FALSE,
+             "b",     6, FALSE,
+             "c",    10, FALSE
+           ))
+```
+
+```
+## # A tibble: 4 x 3
+##   col1   col2 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1 TRUE 
+## 2 b        NA FALSE
+## 3 b         6 FALSE
+## 4 c        10 FALSE
+```
+]
+
+.pr[
+
+```r
+(list_df &lt;- list(e1=df1, e2=df1, e3=df2))
+```
+
+```
+## $e1
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+## 
+## $e2
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+## 
+## $e3
+## # A tibble: 4 x 3
+##   col1   col2 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1 TRUE 
+## 2 b        NA FALSE
+## 3 b         6 FALSE
+## 4 c        10 FALSE
+```
+
+]
+
+---
+## Merging data: left and right
+
+.pl[
+
+```r
+df1
+```
+
+```
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+```
+
+```r
+df2
+```
+
+```
+## # A tibble: 4 x 3
+##   col1   col2 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1 TRUE 
+## 2 b        NA FALSE
+## 3 b         6 FALSE
+## 4 c        10 FALSE
+```
+]
+
+.pr[
+
+
+```r
+# left_join(): matches values from df2 to df1
+df1 %&gt;%
+    left_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 3 x 4
+##   col1   col2  col3 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1     3 TRUE 
+## 2 b        NA     5 FALSE
+## 3 b         5     6 NA
+```
+
+
+```r
+# right_join(): matches valyes from df1 to df2
+df1 %&gt;%
+    right_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 4 x 4
+##   col1   col2  col3 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1     3 TRUE 
+## 2 b        NA     5 FALSE
+## 3 b         6    NA FALSE
+## 4 c        10    NA FALSE
+```
+]
+
+---
+## Merging data: inner and full
+
+.pl[
+
+```r
+df1
+```
+
+```
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+```
+
+```r
+df2
+```
+
+```
+## # A tibble: 4 x 3
+##   col1   col2 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1 TRUE 
+## 2 b        NA FALSE
+## 3 b         6 FALSE
+## 4 c        10 FALSE
+```
+]
+
+.pr[
+
+```r
+# inner_join(): retain only the rows with matches
+df1 %&gt;%
+    inner_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 2 x 4
+##   col1   col2  col3 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1     3 TRUE 
+## 2 b        NA     5 FALSE
+```
+
+```r
+# full_join(): retain all values, all rows
+df1 %&gt;%
+    full_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 5 x 4
+##   col1   col2  col3 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1     3 TRUE 
+## 2 b        NA     5 FALSE
+## 3 b         5     6 NA   
+## 4 b         6    NA FALSE
+## 5 c        10    NA FALSE
+```
+]
+
+---
+## Merging data: semi and anti
+
+.pl[
+
+```r
+df1
+```
+
+```
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+```
+
+```r
+df2
+```
+
+```
+## # A tibble: 4 x 3
+##   col1   col2 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1 TRUE 
+## 2 b        NA FALSE
+## 3 b         6 FALSE
+## 4 c        10 FALSE
+```
+]
+
+.pr[
+
+```r
+# semi_join(): returns rows of df1 that have match in df2
+df1 %&gt;%
+    semi_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 2 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+```
+
+
+```r
+# anti_join(): return rows of df1 that do not have a match in df2
+df1 %&gt;%
+*   anti_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 1 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 b         5     6
+```
+]
+
+---
+## Merging data: by row/column
+
+.pl[
+
+```r
+df1
+```
+
+```
+## # A tibble: 3 x 3
+##   col1   col2  col3
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3
+## 2 b        NA     5
+## 3 b         5     6
+```
+
+```r
+df2
+```
+
+```
+## # A tibble: 4 x 3
+##   col1   col2 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1 TRUE 
+## 2 b        NA FALSE
+## 3 b         6 FALSE
+## 4 c        10 FALSE
+```
+]
+
+
+.pr[
+
+```r
+# bind_rows: When row-binding, columns are matched by name, 
+# and any missing columns will be filled with NA.
+df1 %&gt;%
+    bind_rows(df2)
+```
+
+```
+## # A tibble: 7 x 4
+##   col1   col2  col3 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1     3 NA   
+## 2 b        NA     5 NA   
+## 3 b         5     6 NA   
+## 4 a         1    NA TRUE 
+## 5 b        NA    NA FALSE
+## 6 b         6    NA FALSE
+## 7 c        10    NA FALSE
+```
+
+
+```r
+# bind_cols: rows are matched by position, 
+# so all data frames must have the same number of rows.
+df1 %&gt;%
+    bind_cols(df1)
+```
+
+```
+## # A tibble: 3 x 6
+##   col1   col2  col3 col11 col21 col31
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 a         1     3 a         1     3
+## 2 b        NA     5 b        NA     5
+## 3 b         5     6 b         5     6
+```
+]
+
+---
+## Merging data: advanced stuff
+
+
+- Join functions have a `by=` argument to match specific columns.
+- If two matching columns have different names one can specify such details by:
+
+
+```r
+data1 %&gt;%
+    left_join(by = c("var1"="var2"))
+```
+--
+
+.pl[
+Notice the difference between:
+
+
+```r
+df1 %&gt;%
+    left_join(df2)
+```
+
+```
+## Joining, by = c("col1", "col2")
+```
+
+```
+## # A tibble: 3 x 4
+##   col1   col2  col3 col4 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a         1     3 TRUE 
+## 2 b        NA     5 FALSE
+## 3 b         5     6 NA
+```
+]
+
+.pr[
+and...
+
+```r
+df1 %&gt;%
+    left_join(df2, by="col1")
+```
+
+```
+## # A tibble: 5 x 5
+##   col1  col2.x  col3 col2.y col4 
+##   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 a          1     3      1 TRUE 
+## 2 b         NA     5     NA FALSE
+## 3 b         NA     5      6 FALSE
+## 4 b          5     6     NA FALSE
+## 5 b          5     6      6 FALSE
+```
+]
+
+---
+## Merging data: advanced stuff
+
+.pl[
+- What can we do if there are several separated datasets we want to:
+    1. join?
+    1. bind?
+- According to the approach followed in the last slides it is necessary to call the join function per object, like:
+
+
+```r
+df1 %&gt;%
+    left_join(df2) %&gt;%
+    left_join(df3) %&gt;% ...
+```
+
+- However, there is a powerful and intuitive way to execute this task with the reduce function, which is also embedded in the package `purrr`. Therefore the problem could be solved only by specifying the list of dataframes and then applying the joining function recursively. Example:]
+
+.pr[
+
+
+```r
+list(df1, df1, df2) %&gt;%
+    reduce(.f = left_join, by="col1"
+           , suffix=c("_iter1", "_iter2"))
+```
+
+```
+## # A tibble: 9 x 7
+##   col1  col2_iter1 col3_iter1 col2_iter2 col3_iter2  col2 col4 
+##   &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
+## 1 a              1          3          1          3     1 TRUE 
+## 2 b             NA          5         NA          5    NA FALSE
+## 3 b             NA          5         NA          5     6 FALSE
+## 4 b             NA          5          5          6    NA FALSE
+## 5 b             NA          5          5          6     6 FALSE
+## 6 b              5          6         NA          5    NA FALSE
+## 7 b              5          6         NA          5     6 FALSE
+## 8 b              5          6          5          6    NA FALSE
+## 9 b              5          6          5          6     6 FALSE
+```
+]
+---
+# `tidyr`
+
+- The main purpose of `tidyr` is to create tidy data
+- There are 2 main functions for converting long to wide data and viceversa, plus other 2 useful for separating tasks.
+    - `gather()`: takes multiple columns, and gathers them into key-value pairs: it makes “wide” data longer.
+    - `spread()`: takes two columns (key &amp; value), and spreads into multiple columns: it makes “long” data wider.
+    - `separate()`: pull apart columns that represent multiple variables
+    - `extract()`: turns each group into a new column
+    
+---
+.pl[
+### `gather()`
+
+```r
+(df1 &lt;- df1 %&gt;%
+    mutate(obs=1:3))
+```
+
+```
+## # A tibble: 3 x 4
+##   col1   col2  col3   obs
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+## 1 a         1     3     1
+## 2 b        NA     5     2
+## 3 b         5     6     3
+```
+
+
+```r
+df1 %&gt;%
+    gather(key = "key", value = "data")
+```
+
+```
+## # A tibble: 12 x 2
+##    key   data 
+##    &lt;chr&gt; &lt;chr&gt;
+##  1 col1  a    
+##  2 col1  b    
+##  3 col1  b    
+##  4 col2  1    
+##  5 col2  &lt;NA&gt; 
+##  6 col2  5    
+##  7 col3  3    
+##  8 col3  5    
+##  9 col3  6    
+## 10 obs   1    
+## 11 obs   2    
+## 12 obs   3
+```
+]
+
+.pr[
+
+```r
+(df1_long &lt;- df1 %&gt;%
+    gather(key = "key", value = "data"
+*          , -obs)
+ )
+```
+
+```
+## # A tibble: 9 x 3
+##     obs key   data 
+##   &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 col1  a    
+## 2     2 col1  b    
+## 3     3 col1  b    
+## 4     1 col2  1    
+## 5     2 col2  &lt;NA&gt; 
+## 6     3 col2  5    
+## 7     1 col3  3    
+## 8     2 col3  5    
+## 9     3 col3  6
+```
+]
+
+---
+.pl[
+## `spread()`
+
+```r
+(df1_long &lt;- df1_long %&gt;%
+    mutate(new_var=paste0(data, "-", data)))
+```
+
+```
+## # A tibble: 9 x 4
+##     obs key   data  new_var
+##   &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  
+## 1     1 col1  a     a-a    
+## 2     2 col1  b     b-b    
+## 3     3 col1  b     b-b    
+## 4     1 col2  1     1-1    
+## 5     2 col2  &lt;NA&gt;  NA-NA  
+## 6     3 col2  5     5-5    
+## 7     1 col3  3     3-3    
+## 8     2 col3  5     5-5    
+## 9     3 col3  6     6-6
+```
+
+
+```r
+df1_long %&gt;%
+    spread(key = key, value = data)
+```
+
+```
+## # A tibble: 9 x 5
+##     obs new_var col1  col2  col3 
+##   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 1-1     &lt;NA&gt;  1     &lt;NA&gt; 
+## 2     1 3-3     &lt;NA&gt;  &lt;NA&gt;  3    
+## 3     1 a-a     a     &lt;NA&gt;  &lt;NA&gt; 
+## 4     2 5-5     &lt;NA&gt;  &lt;NA&gt;  5    
+## 5     2 b-b     b     &lt;NA&gt;  &lt;NA&gt; 
+## 6     2 NA-NA   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+## 7     3 5-5     &lt;NA&gt;  5     &lt;NA&gt; 
+## 8     3 6-6     &lt;NA&gt;  &lt;NA&gt;  6    
+## 9     3 b-b     b     &lt;NA&gt;  &lt;NA&gt;
+```
+]
+
+--
+
+.pr[
+ ## `separate()`
+
+```r
+df1_long %&gt;%
+    separate(new_var, into = c("var1", "var2"), sep = "-")
+```
+
+```
+## # A tibble: 9 x 5
+##     obs key   data  var1  var2 
+##   &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 col1  a     a     a    
+## 2     2 col1  b     b     b    
+## 3     3 col1  b     b     b    
+## 4     1 col2  1     1     1    
+## 5     2 col2  &lt;NA&gt;  NA    NA   
+## 6     3 col2  5     5     5    
+## 7     1 col3  3     3     3    
+## 8     2 col3  5     5     5    
+## 9     3 col3  6     6     6
+```
+
+
+```r
+sv &lt;- tibble(id=1:3, q1=c("1", "1,2", "1,3,4"))
+sv %&gt;%
+    separate_rows(q1)
+```
+
+```
+## # A tibble: 6 x 2
+##      id q1   
+##   &lt;int&gt; &lt;chr&gt;
+## 1     1 1    
+## 2     2 1    
+## 3     2 2    
+## 4     3 1    
+## 5     3 3    
+## 6     3 4
+```
+
+]
+
+---
+# `purrr`
+
+.pl[
+- Toolkit by providing a complete and consistent set of tools for working with functions and vectors.
+- Allow you to replace many for loops with code that is both more succinct and easier to read.
+- `purrr` has docenzs of functions, some could be overly complex. However, must of the time we will use the most basic function called `map()`
+    - The `map_*()` functions transform their input by applying a function to each element and returning a vector the same length as the input.
+    - `map()` is a powered `apply()`!
+
+
+```r
+lapply(X = letters[1:3], FUN = function(x) return(x))
+```
+
+```
+## [[1]]
+## [1] "a"
+## 
+## [[2]]
+## [1] "b"
+## 
+## [[3]]
+## [1] "c"
+```
+]
+
+.pr[
+
+```r
+map(.x = letters[1:3], .f = function(x) return(x)) # explicit functions
+```
+
+```
+## [[1]]
+## [1] "a"
+## 
+## [[2]]
+## [1] "b"
+## 
+## [[3]]
+## [1] "c"
+```
+
+```r
+map(.x = letters[1:3], .f = ~return(.)) # implicit functions
+```
+
+```
+## [[1]]
+## [1] "a"
+## 
+## [[2]]
+## [1] "b"
+## 
+## [[3]]
+## [1] "c"
+```
+]
+---
+# `purrr`: unleashing the true power
+
+
+```r
+(findex_model &lt;- findex %&gt;%
+     group_by(economy, regionwb))
+```
+
+```
+## # A tibble: 15,492 x 32
+## # Groups:   economy, regionwb [144]
+##    economy economycode regionwb pop_adult wpid_random   wgt female   age
+##    &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt;
+##  1 Singap… SGP         High in…    4.75e6   179146060 0.491 Female    46
+##  2 Singap… SGP         High in…    4.75e6   133475226 0.311 Female    49
+##  3 Austria AUT         High in…    7.51e6   132051989 0.324 Male      68
+##  4 India   IND         South A…    9.51e8   141077164 0.498 Male      26
+##  5 Bulgar… BGR         Europe …    6.12e6   154071117 0.830 Male      43
+##  6 Russia… RUS         Europe …    1.19e8   136370908 1.47  Female    15
+##  7 Malays… MYS         East As…    2.35e7   128720820 2.61  Male       8
+##  8 Maurit… MUS         Sub-Sah…    1.02e6   189052742 1.29  Male      68
+##  9 Iraq    IRQ         Middle …    2.21e7   127693502 1.01  Male      23
+## 10 Lebanon LBN         Middle …    4.59e6   125975062 0.609 Female    10
+## # … with 15,482 more rows, and 24 more variables: educ &lt;fct&gt;, inc_q &lt;fct&gt;,
+## #   emp_in &lt;fct&gt;, fin2 &lt;fct&gt;, fin7 &lt;fct&gt;, fin8 &lt;fct&gt;, fin14a &lt;fct&gt;,
+## #   fin14b &lt;fct&gt;, fin19 &lt;fct&gt;, fin26 &lt;fct&gt;, fin28 &lt;fct&gt;, fin32 &lt;fct&gt;,
+## #   fin37 &lt;fct&gt;, mobileowner &lt;fct&gt;, account_fin &lt;fct&gt;, account_mob &lt;fct&gt;,
+## #   account &lt;fct&gt;, saved &lt;fct&gt;, borrowed &lt;fct&gt;, receive_wages &lt;fct&gt;,
+## #   receive_transfers &lt;dbl&gt;, receive_pension &lt;dbl&gt;,
+## #   receive_agriculture &lt;dbl&gt;, fin2_b &lt;dbl&gt;
+```
+
+---
+# `purrr`: unleashing the true power
+
+
+```r
+(findex_model &lt;- findex %&gt;%
+     group_by(economy, regionwb) %&gt;% 
+     nest() # take every peace of data associated with the group
+ )
+```
+
+```
+## # A tibble: 144 x 3
+##    economy          regionwb                                data           
+##    &lt;chr&gt;            &lt;chr&gt;                                   &lt;list&gt;         
+##  1 Singapore        High income: nonOECD                    &lt;tibble [117 ×…
+##  2 Austria          High income: OECD                       &lt;tibble [96 × …
+##  3 India            South Asia                              &lt;tibble [301 ×…
+##  4 Bulgaria         Europe &amp; Central Asia (excluding high … &lt;tibble [95 × …
+##  5 Russian Federat… Europe &amp; Central Asia (excluding high … &lt;tibble [209 ×…
+##  6 Malaysia         East Asia &amp; Pacific (excluding high in… &lt;tibble [110 ×…
+##  7 Mauritius        Sub-Saharan Africa (excluding high inc… &lt;tibble [118 ×…
+##  8 Iraq             Middle East &amp; North Africa (excluding … &lt;tibble [89 × …
+##  9 Lebanon          Middle East &amp; North Africa (excluding … &lt;tibble [91 × …
+## 10 Gabon            Sub-Saharan Africa (excluding high inc… &lt;tibble [104 ×…
+## # … with 134 more rows
+```
+
+---
+# `purrr`: unleashing the true power
+
+
+```r
+(findex_model &lt;- findex %&gt;%
+    group_nest(economy, regionwb) %&gt;% # Notice that there is a function that does the =
+    mutate(model=map(data # loop over each element of the column data
+                     , ~glm(fin2_b~pop_adult+female+age+educ # specification
+                            , data = . # the dot is interpreted as every value of data
+                            , family = binomial() # link function
+                            )
+                     )
+           )
+ )
+```
+
+```
+## # A tibble: 144 x 4
+##    economy    regionwb                              data            model  
+##    &lt;chr&gt;      &lt;chr&gt;                                 &lt;list&gt;          &lt;list&gt; 
+##  1 Afghanist… South Asia                            &lt;tibble [95 × … &lt;S3: g…
+##  2 Albania    Europe &amp; Central Asia (excluding hig… &lt;tibble [86 × … &lt;S3: g…
+##  3 Algeria    Middle East &amp; North Africa (excludin… &lt;tibble [102 ×… &lt;S3: g…
+##  4 Argentina  Latin America &amp; Caribbean (excluding… &lt;tibble [93 × … &lt;S3: g…
+##  5 Armenia    Europe &amp; Central Asia (excluding hig… &lt;tibble [99 × … &lt;S3: g…
+##  6 Australia  High income: OECD                     &lt;tibble [98 × … &lt;S3: g…
+##  7 Austria    High income: OECD                     &lt;tibble [96 × … &lt;S3: g…
+##  8 Azerbaijan Europe &amp; Central Asia (excluding hig… &lt;tibble [87 × … &lt;S3: g…
+##  9 Bahrain    High income: nonOECD                  &lt;tibble [102 ×… &lt;S3: g…
+## 10 Bangladesh South Asia                            &lt;tibble [103 ×… &lt;S3: g…
+## # … with 134 more rows
+```
+
+---
+# `purrr`: unleashing the true power
+
+
+```r
+(findex_model &lt;- findex %&gt;%
+    group_nest(economy, regionwb) %&gt;%
+    mutate(model=map(data
+                     , ~glm(fin2_b~female+age+educ
+                            , data = .
+                            , family = binomial()
+                            )
+                     )
+           , coef=map(model, tidy) # coefficients as tibble
+           , stats=map(model, glance) # summary statistics
+           , fitted=map(model, augment) # adds info on each observation
+           ) 
+ )
+```
+
+```
+## # A tibble: 144 x 7
+##    economy   regionwb            data      model  coef    stats   fitted   
+##    &lt;chr&gt;     &lt;chr&gt;               &lt;list&gt;    &lt;list&gt; &lt;list&gt;  &lt;list&gt;  &lt;list&gt;   
+##  1 Afghanis… South Asia          &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  2 Albania   Europe &amp; Central A… &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  3 Algeria   Middle East &amp; Nort… &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  4 Argentina Latin America &amp; Ca… &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  5 Armenia   Europe &amp; Central A… &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  6 Australia High income: OECD   &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  7 Austria   High income: OECD   &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  8 Azerbaij… Europe &amp; Central A… &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+##  9 Bahrain   High income: nonOE… &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+## 10 Banglade… South Asia          &lt;tibble … &lt;S3: … &lt;tibbl… &lt;tibbl… &lt;tibble …
+## # … with 134 more rows
+```
+
+---
+# `purrr`: unleashing the true power
+
+
+```r
+findex_model$coef[[1]]
+```
+
+```
+## # A tibble: 5 x 5
+##   term                           estimate std.error statistic p.value
+##   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)                    -21.0    3525.      -0.00596   0.995
+## 2 femaleFemale                    -0.0540    1.32    -0.0409    0.967
+## 3 age                             -0.0272    0.0705  -0.386     0.700
+## 4 educsecondary                   19.2    3525.       0.00545   0.996
+## 5 educcompleted tertiary or more  20.5    3525.       0.00581   0.995
+```
+
+
+---
+# `purrr`: unleashing the true power
+
+Let's extract the log odds gender==female
+
+```r
+(findex_model %&gt;%
+    mutate(female_coef=map(coef, ~.x %&gt;%
+                            dplyr::filter(term=="femaleFemale")
+                           )
+           )
+ )
+```
+
+```
+## # A tibble: 144 x 8
+##    economy  regionwb       data    model  coef   stats  fitted  female_coef
+##    &lt;chr&gt;    &lt;chr&gt;          &lt;list&gt;  &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt;  &lt;list&gt;     
+##  1 Afghani… South Asia     &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  2 Albania  Europe &amp; Cent… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  3 Algeria  Middle East &amp;… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  4 Argenti… Latin America… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  5 Armenia  Europe &amp; Cent… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  6 Austral… High income: … &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  7 Austria  High income: … &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  8 Azerbai… Europe &amp; Cent… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  9 Bahrain  High income: … &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+## 10 Banglad… South Asia     &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+## # … with 134 more rows
+```
+
+
+---
+# `purrr`: unleashing the true power
+
+Why not calculing confidence intervals? and extracting the relevant variables
+
+```r
+(findex_model %&gt;%
+    mutate(female_coef=map(coef, ~.x %&gt;%
+                            dplyr::filter(term=="femaleFemale") %&gt;%
+                            mutate(min_int=estimate-1.96*std.error
+                                   , max_int=estimate+1.96*std.error) %&gt;% 
+                            dplyr::select(estimate, p.value, contains("int")
+                                          )
+                           )
+           )
+ )
+```
+
+```
+## # A tibble: 144 x 8
+##    economy  regionwb       data    model  coef   stats  fitted  female_coef
+##    &lt;chr&gt;    &lt;chr&gt;          &lt;list&gt;  &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt;  &lt;list&gt;     
+##  1 Afghani… South Asia     &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  2 Albania  Europe &amp; Cent… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  3 Algeria  Middle East &amp;… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  4 Argenti… Latin America… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  5 Armenia  Europe &amp; Cent… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  6 Austral… High income: … &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  7 Austria  High income: … &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  8 Azerbai… Europe &amp; Cent… &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+##  9 Bahrain  High income: … &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+## 10 Banglad… South Asia     &lt;tibbl… &lt;S3: … &lt;tibb… &lt;tibb… &lt;tibbl… &lt;tibble [1…
+## # … with 134 more rows
+```
+
+---
+# `purrr`: unleashing the true power
+
+Let's get rid of the columns that we are not interested
+
+
+```r
+(findex_model %&gt;%
+    mutate(female_coef=map(coef, ~.x %&gt;%
+                            dplyr::filter(term=="femaleFemale") %&gt;%
+                            mutate(min_int=estimate-1.96*std.error
+                                   , max_int=estimate+1.96*std.error) %&gt;% 
+                            dplyr::select(estimate, p.value, contains("int")
+                                          )
+                           )
+           ) %&gt;% 
+     dplyr::select(economy, regionwb, female_coef)
+ )
+```
+
+```
+## # A tibble: 144 x 3
+##    economy     regionwb                                     female_coef    
+##    &lt;chr&gt;       &lt;chr&gt;                                        &lt;list&gt;         
+##  1 Afghanistan South Asia                                   &lt;tibble [1 × 4…
+##  2 Albania     Europe &amp; Central Asia (excluding high incom… &lt;tibble [1 × 4…
+##  3 Algeria     Middle East &amp; North Africa (excluding high … &lt;tibble [1 × 4…
+##  4 Argentina   Latin America &amp; Caribbean (excluding high i… &lt;tibble [1 × 4…
+##  5 Armenia     Europe &amp; Central Asia (excluding high incom… &lt;tibble [1 × 4…
+##  6 Australia   High income: OECD                            &lt;tibble [1 × 4…
+##  7 Austria     High income: OECD                            &lt;tibble [1 × 4…
+##  8 Azerbaijan  Europe &amp; Central Asia (excluding high incom… &lt;tibble [1 × 4…
+##  9 Bahrain     High income: nonOECD                         &lt;tibble [1 × 4…
+## 10 Bangladesh  South Asia                                   &lt;tibble [1 × 4…
+## # … with 134 more rows
+```
+
+---
+# `purrr`: unleashing the true power
+
+What's inside female_coef?
+
+
+```r
+(findex_model &lt;- findex_model %&gt;%
+    mutate(female_coef=map(coef, ~.x %&gt;%
+                            dplyr::filter(term=="femaleFemale") %&gt;%
+                            mutate(min_int=estimate-1.96*std.error
+                                   , max_int=estimate+1.96*std.error) %&gt;% 
+                            dplyr::select(estimate, p.value, contains("int")
+                                          )
+                           )
+           ) %&gt;% 
+     dplyr::select(economy, regionwb, female_coef) %&gt;% 
+     unnest(female_coef)
+ )
+```
+
+```
+## # A tibble: 144 x 6
+##    economy   regionwb                      estimate p.value min_int max_int
+##    &lt;chr&gt;     &lt;chr&gt;                            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Afghanis… South Asia                     -0.0540 0.967    -2.64    2.53 
+##  2 Albania   Europe &amp; Central Asia (exclu…  -0.814  0.188    -2.03    0.397
+##  3 Algeria   Middle East &amp; North Africa (…  -1.58   0.00484  -2.67   -0.480
+##  4 Argentina Latin America &amp; Caribbean (e…   0.631  0.170    -0.270   1.53 
+##  5 Armenia   Europe &amp; Central Asia (exclu…  -0.208  0.705    -1.29    0.870
+##  6 Australia High income: OECD               0.638  0.473    -1.11    2.38 
+##  7 Austria   High income: OECD               1.04   0.266    -0.788   2.86 
+##  8 Azerbaij… Europe &amp; Central Asia (exclu…   0.885  0.114    -0.213   1.98 
+##  9 Bahrain   High income: nonOECD           -0.811  0.179    -2.00    0.373
+## 10 Banglade… South Asia                     -2.28   0.0675   -4.72    0.164
+## # … with 134 more rows
+```
+
+
+---
+# `purrr`: unleashing the true power
+
+Little exploration maybe?
+
+
+```r
+findex_model %&gt;% summary()
+```
+
+```
+##    economy            regionwb            estimate       
+##  Length:144         Length:144         Min.   :-22.0850  
+##  Class :character   Class :character   1st Qu.: -0.8070  
+##  Mode  :character   Mode  :character   Median : -0.2956  
+##                                        Mean   : -0.2548  
+##                                        3rd Qu.:  0.1825  
+##                                        Max.   : 40.6676  
+##     p.value             min_int              max_int         
+##  Min.   :0.0000001   Min.   :-153321.20   Min.   :    -0.85  
+##  1st Qu.:0.1589702   1st Qu.:     -2.03   1st Qu.:     0.40  
+##  Median :0.3991529   Median :     -1.48   Median :     0.95  
+##  Mean   :0.4498833   Mean   :  -1899.68   Mean   :  1899.17  
+##  3rd Qu.:0.7264826   3rd Qu.:     -1.03   3rd Qu.:     1.54  
+##  Max.   :1.0000000   Max.   :      0.30   Max.   :153321.20
+```
+
+---
+# `purrr`: unleashing the true power
+
+The natural question is "why", but for the sake of the exercise we are going to truncate the data and keep the record that lie between the 10% and 90% percentile of the lower confidence interval
+
+```r
+(findex_model_coef &lt;- findex_model %&gt;%
+    filter_at(.vars = vars(min_int)
+              , .vars_predicate = any_vars(between(., quantile(., 0.1)
+                                                   , quantile(., 0.9)
+                                                   )
+                                           )
+              ) )
+```
+
+```
+## # A tibble: 114 x 6
+##    economy   regionwb                      estimate p.value min_int max_int
+##    &lt;chr&gt;     &lt;chr&gt;                            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Afghanis… South Asia                     -0.0540 0.967    -2.64    2.53 
+##  2 Albania   Europe &amp; Central Asia (exclu…  -0.814  0.188    -2.03    0.397
+##  3 Algeria   Middle East &amp; North Africa (…  -1.58   0.00484  -2.67   -0.480
+##  4 Armenia   Europe &amp; Central Asia (exclu…  -0.208  0.705    -1.29    0.870
+##  5 Australia High income: OECD               0.638  0.473    -1.11    2.38 
+##  6 Austria   High income: OECD               1.04   0.266    -0.788   2.86 
+##  7 Bahrain   High income: nonOECD           -0.811  0.179    -2.00    0.373
+##  8 Belarus   Europe &amp; Central Asia (exclu…  -0.460  0.405    -1.54    0.623
+##  9 Benin     Sub-Saharan Africa (excludin…  -0.483  0.519    -1.95    0.984
+## 10 Bolivia   Latin America &amp; Caribbean (e…  -0.168  0.781    -1.35    1.02 
+## # … with 104 more rows
+```
+
+---
+# `purrr`: unleashing the true power
+
+.pl[
+
+```r
+g0 &lt;- findex_model_coef %&gt;% 
+    qplot(min_int, geom = "density", data = ., ylab = "density")+
+    scale_x_continuous(limits = c(-5, 0))
+```
+]
+
+.pr[
+![](ws_3_files/figure-html/unnamed-chunk-50-1.png)&lt;!-- --&gt;
+]
+
+
+---
+# `purrr`: unleashing the true power
+
+![](ws_3_files/figure-html/unnamed-chunk-51-1.png)&lt;!-- --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-dark",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
