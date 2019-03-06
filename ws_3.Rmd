@@ -23,14 +23,6 @@ require(broom)
 #require(ggplot2)
 ```
 
-# Today's outline
-
-1. Tidyverse
-    1. dplyr
-        1. Scoped variants
-        1. Joining operations
-    1. tidyr
----
 class: inverse, middle, center
 
 # Tidy Data and the Tidyverse
@@ -355,8 +347,9 @@ list(df1, df1, df2) %>%
     - `extract()`: turns each group into a new column
     
 ---
-.pl[
 ### `gather()`
+
+.pl[
 ```{r}
 (df1 <- df1 %>%
     mutate(obs=1:3))
@@ -378,34 +371,37 @@ df1 %>%
 ]
 
 ---
-.pl[
 ## `spread()`
+.pl[
 ```{r}
 (df1_long <- df1_long %>%
     mutate(new_var=paste0(data, "-", data)))
 ```
+]
 
+.pr[
 ```{r}
 df1_long %>%
     spread(key = key, value = data)
 ```
 ]
 
---
+---
+## `separate()`
 
-.pr[
- ## `separate()`
+.pl[
 ```{r}
 df1_long %>%
     separate(new_var, into = c("var1", "var2"), sep = "-")
 ```
+]
 
+.pr[
 ```{r}
 sv <- tibble(id=1:3, q1=c("1", "1,2", "1,3,4"))
 sv %>%
     separate_rows(q1)
 ```
-
 ]
 
 ---
@@ -601,12 +597,13 @@ g0
 ```
 ]
 
-
 ---
 # `purrr`: unleashing the true power
 
-```{r, echo=FALSE}
-findex_model_coef %>%
+.pl[
+
+```{r}
+g1 <- findex_model_coef %>%
     filter(grepl(regionwb, pattern = "High")) %>%
     ggplot() +
     geom_point(aes(economy, estimate, col=economy))+
@@ -615,3 +612,10 @@ findex_model_coef %>%
     coord_flip()+
     facet_wrap(~regionwb)
 ```
+]
+
+.pr[
+```{r, echo=FALSE}
+g1
+```
+]
