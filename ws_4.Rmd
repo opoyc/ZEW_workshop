@@ -340,15 +340,37 @@ Besides the aforementioned metadata we have:
 1. `paper` size, e.g. letter, a4
 
 ---
-# RMarkdown: blogs
-
-Example->
-
----
-# RMarkdown: presentation
+class: middle
 
 .center[
-<iframe align="middle" width="560" height="315" src="https://www.youtube.com/embed/Rhi4Fjpcync" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+At this point we get our hands dirty a create some documents!
 ]
+
+---
+# Webscraping
+
+.pl[
+### Definition
+
+The practice of gathering data through any means other than a program interacting with an API. [Source](https://books.google.de/books?id=7z_fCQAAQBAJ&printsec=frontcover&dq=web+scraping&hl=en&sa=X&ved=0ahUKEwiil6ydrpHhAhXbxMQBHUZ0BRsQ6AEIKjAA#v=onepage&q=web%20scraping&f=false)
+  - Writing a wide variety of programming techniques and technologies
+
+### Why?
+
+- Access to new data allows us to do novel findings in empirical work
+- New data opens the possibility to test new hypothesis
+- Unstructed data represents 80% of the total information created inside the Internet
+]
+
+.pr[
+```{r, fig.align='center', echo=FALSE, fig.subcap="souce", fig.cap="Unstructured vs structured data."}
+include_graphics("img/unst.jpg")
+```
+]
+
+---
+# Webscraping
+
+
 
 
