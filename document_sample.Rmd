@@ -1,0 +1,93 @@
+---
+title: "This is a title"
+subtitle: "This is a subtitle"
+documentclass: article
+author: "Obryan Poyser"
+date: "3/20/2019"
+#bibliography:
+#fontsize: 15pt
+#geometry: margin=2in
+papersize: letter
+linkcolor: "red"
+citecolor: "red"
+urlcolor: "blue"
+#aspectratio: 169
+# institute: "UAB"
+# theme: AnnArbor
+# colortheme: beaver
+#abstract:
+output:
+  pdf_document:
+      toc: false 
+      toc_depth: 2
+      number_section: true
+      latex_engine: pdflatex
+      #toc_float: true
+         #collapsed: false
+         #smooth_scroll: false
+      #theme: cosmo
+      #highlight: expresso
+      #css: [own_style.css]
+header-includes:
+   - \usepackage{pdflscape}
+   - \usepackage{setspace}
+   - \usepackage{mathtools}
+   - \usepackage{threeparttable}
+   - \newcommand{\bls}{\begin{landscape}}
+   - \newcommand{\els}{\end{landscape}}
+   - \usepackage{multirow}
+   - \usepackage{booktabs,caption}
+   - \usepackage{graphicx}
+   - \usepackage{placeins}
+   - \usepackage{amsmath}
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tidyverse)
+```
+
+# Abstract {-}
+
+ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pulvinar neque sit amet ultrices gravida. Ut sed lacus nec eros fermentum convallis quis at quam. Donec porta eros in tristique dictum. Integer tortor orci, aliquam sed aliquam quis, convallis interdum dolor. Sed felis neque, lobortis a fringilla eu, pulvinar nec risus. Vivamus efficitur purus ut rutrum maximus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque a lorem at mi suscipit venenatis. Integer sollicitudin nisi vitae euismod sodales.
+
+\newpage
+
+# Introduction
+
+Vestibulum hendrerit urna eget mauris vestibulum, eu elementum mi blandit. Pellentesque dignissim diam eu pretium laoreet. Aliquam imperdiet ex a ornare vehicula. Morbi vitae gravida felis. Etiam tortor libero, ornare eget varius sit amet, porttitor nec orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras hendrerit metus quis euismod fringilla. Etiam sapien lacus, auctor in scelerisque non, congue at tortor. Donec eget vehicula odio. Donec sed luctus nibh. Integer ac magna sit amet augue rhoncus egestas non pellentesque lectus. Pellentesque sed mattis leo, in volutpat ipsum. Duis scelerisque quam non interdum pellentesque. Etiam ac tortor vitae nibh feugiat lobortis ac et nunc. Integer sed arcu risus.
+
+Donec vel maximus tortor. Fusce ut finibus dolor. Praesent id pharetra velit, quis dictum augue. Suspendisse a fermentum est. Phasellus blandit lectus nec ullamcorper vestibulum. Sed sit amet fringilla ex. Phasellus accumsan justo a est placerat, quis condimentum lacus varius. 
+
+# Literature review
+
+Integer hendrerit ac urna ut volutpat. Ut ac ullamcorper nulla. Vivamus eleifend sapien quis urna auctor, non viverra magna facilisis. Aliquam vestibulum massa a purus bibendum dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris viverra molestie ante non hendrerit. Morbi vitae porttitor urna. Donec convallis justo et volutpat hendrerit. 
+
+
+\newpage
+# Results {.tabset .tabset-fade .tabset-pills}
+
+Nullam viverra, erat ac malesuada elementum, tortor eros tempor eros, id malesuada ipsum est in ex. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam feugiat scelerisque nisl, ut tincidunt nulla bibendum eget. Sed sapien augue, finibus vehicula justo nec, condimentum dapibus turpis. Phasellus id turpis mauris. Pellentesque dapibus, ex mattis porttitor iaculis, ante mi accumsan orci, condimentum convallis dui arcu at purus. Nam imperdiet ultricies urna vitae maximus. Maecenas porta enim in turpis accumsan suscipit. Nullam in dui justo. Phasellus eget sem in arcu mollis malesuada ac nec lacus. Nulla nec libero felis. Vivamus ornare vitae mi tempor gravida. In condimentum, mauris vitae pharetra tempor, risus nisl porttitor purus, in aliquam dolor elit et augue. Nullam porta mauris feugiat erat sodales malesuada.
+
+\bls
+```{r, results='asis', echo=FALSE}
+data <- iris %>%
+    as_tibble() %>%
+    janitor::clean_names()
+mlist <- list(
+    m1=lm(sepal_length~., data=data)
+    , m2=lm(sepal_length~.-1, data=data)
+    , m3=lm(sepal_length~sepal_width+petal_length, data=data)
+    , m4=lm(sepal_length~sepal_width+petal_width, data=data)
+)
+stargazer::stargazer(mlist, title = "Model comparison", header = F, type = "latex")
+```
+\els
+
+
+# References
+
+<div id="refs"></div>
+
+
+# Appendix
