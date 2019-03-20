@@ -82,12 +82,12 @@ The standard for writing articles/presentations in academia. LaTeX is a document
 \usepackage[utf8]{inputenc}
 \usepackage{mathtools}
 
-\begin{document}
+`\begin{document}
   \begin{equation}\label{eqn:einstein}
     E=mc^2\tag{*}
   \end{equation}
   \eqref{eqn:einstein}
-\end{document}
+\end{document}`
 ```
 ]
 .pr[
@@ -374,6 +374,50 @@ The practice of gathering data through any means other than a program interactin
 
 ---
 # Webscraping
+
+.pl[
+- `rvest` is probably the most friendly user package for scraping website inside the R-universe.
+- The main functions are:
+  1. `html_nodes(x)`
+  1. `html_text(x, trim = FALSE)`
+  1. `html_name(x)`
+  1. `html_children(x)`
+  1. `html_attrs(x)`
+  1. `html_attr(x, name, default = NA_character_)`
+  
+- Websites are by the triad:
+  1. CSS: style
+    - CSS is a styling language
+    - Used for presentation
+    - Base syntax
+    - Matching selector define the style of html documents
+  1. HTML: content
+  1. Javascript: actions
+
+]
+
+.pr[
+- CSS has several selector, nonetheless the main ones are:
+  1. element: span, div, a, etc.
+  1. class: define specific characteristics. Selector "."
+  1. id: are unique across the HTML. Selector "#"
+  
+  ```css
+selector { # curly brackets define the end and the start of a given selector
+    property1: value;
+    property2: value;
+}
+```
+
+]
+
+---
+# Webscraping: building blocks
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/imdb.png" alt="Example: Top 100 movies in IMDb" width="1737" /&gt;
+&lt;p class="caption"&gt;Example: Top 100 movies in IMDb&lt;/p&gt;
+&lt;/div&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
