@@ -4,7 +4,7 @@ subtitle: "This is a subtitle"
 documentclass: article
 author: "Obryan Poyser"
 date: "3/20/2019"
-#bibliography:
+bibliography: refs.bib
 #fontsize: 15pt
 #geometry: margin=2in
 papersize: letter
@@ -47,6 +47,8 @@ knitr::opts_chunk$set(echo = TRUE)
 require(tidyverse)
 ```
 
+\tableofcontents
+
 # Abstract {-}
 
  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pulvinar neque sit amet ultrices gravida. Ut sed lacus nec eros fermentum convallis quis at quam. Donec porta eros in tristique dictum. Integer tortor orci, aliquam sed aliquam quis, convallis interdum dolor. Sed felis neque, lobortis a fringilla eu, pulvinar nec risus. Vivamus efficitur purus ut rutrum maximus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque a lorem at mi suscipit venenatis. Integer sollicitudin nisi vitae euismod sodales.
@@ -61,7 +63,7 @@ Donec vel maximus tortor. Fusce ut finibus dolor. Praesent id pharetra velit, qu
 
 # Literature review
 
-Integer hendrerit ac urna ut volutpat. Ut ac ullamcorper nulla. Vivamus eleifend sapien quis urna auctor, non viverra magna facilisis. Aliquam vestibulum massa a purus bibendum dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris viverra molestie ante non hendrerit. Morbi vitae porttitor urna. Donec convallis justo et volutpat hendrerit. 
+Integer hendrerit ac urna ut volutpat. Ut ac ullamcorper nulla. Vivamus eleifend sapien quis urna auctor, non viverra magna facilisis. Aliquam vestibulum massa a purus bibendum dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris viverra molestie ante non hendrerit. Morbi vitae porttitor urna. Donec convallis justo et volutpat hendrerit. [@Beidas-strom2014]
 
 
 \newpage
@@ -83,7 +85,6 @@ mlist <- list(
 stargazer::stargazer(mlist, title = "Model comparison", header = F, type = "latex")
 ```
 \els
-
 
 # References
 
