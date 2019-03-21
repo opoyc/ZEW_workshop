@@ -4,7 +4,7 @@ Therefore, some of the basic functions are not going to be covered, but try to b
 
 Here I provide the session slides in PDF, Html and Rmd formats. However, you just can pull the current repository, either by terminal or downloading (for every session) the whole folder [(LINK)](https://github.com/opoyc/ZEW_workshop/tree/gh-pages)
 
-<img src="https://media.giphy.com/media/26BGIqWh2R1fi6JDa/giphy.gif" alt="homer" style="display: block; margin-left: auto; margin-right: auto; width: 50%">
+<img src="https://media.giphy.com/media/26BGIqWh2R1fi6JDa/giphy.gif" alt="homer" style="display: block; margin-left: auto; margin-right: auto; width: 40%">
 
 
 | Session |Topic | File | Contents |
