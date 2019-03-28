@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Workshop: Data science with R (ZEW)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Obryan Poyser" />
+    <meta name="date" content="2019-03-27" />
+    <link rel="stylesheet" href="css/zew-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/zew.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Workshop: Data science with R (ZEW)
+## Session #5: Sentiment analysis and graphics
+### Obryan Poyser
+### 2019-03-27
+
+---
+
+
+
+
+
+
+# Outline
+
+- Sentiment analysis
+    - Twitter API
+    - Text files
+    - Regular expressions
+- Graphs with `ggplot2`
+
+---
+# Sentiment analysis
+
+.pl[
+1. Information gathering involves finding what other people think
+1. Growing availability of opinion rich content in the Internet opened new possibilities
+1. Sentiment analysis, (also called opinion mining)
+    1. Field of study that analyzes: people’s opinions, sentiments, appraisals, attitudes, and emotions toward entities and their attributes expressed in written text.
+    1. Entities could be: products, services, organizations, individuals, events, issues, or topics
+    1. Computational treatment of the opinion, sentiment, and subjectivity
+]
+
+.pr[
+&lt;img src="https://cdn.pixabay.com/photo/2017/11/26/15/16/smiley-2979107_960_720.jpg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Sentiment analysis
+
+.pl[
+1. It has been an active research field of natural language processing (NLP).
+    1. Data mining
+    1. Web mining
+1. In acamedia is strongly related to **reputation mechanisms**
+    1. Online reputation mechanisms builds **trust** inside marketplaces.
+    1. Reputation mechanism promote cooperation and reduce asymmetric information.
+    1. Lemons? Anybody?
+]
+
+.pr[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://cdn-images-1.medium.com/max/1200/1*NvWwH4yrQ-qK8X6yzLBOig.png" alt="Source: https://medium.com/@avtarsehra/icos-and-economics-of-lemon-markets-96638e86b3b2"  /&gt;
+&lt;p class="caption"&gt;Source: https://medium.com/@avtarsehra/icos-and-economics-of-lemon-markets-96638e86b3b2&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+# Sentiment analysis
+
+1. Creating systems that can process subjective information effectively requires overcoming a number of novel challenges.
+
+--
+
+1. Complex structure of the languange
+  1. Contradictory: Some phrases might express contradictory polarity conditional on the context:
+      1. *This camera sucks* vs *this vaccum cleaner really sucks*
+  1. Sentences can express no sentiment at all
+      1. *Can you tell me which Sony camera is good?*
+      1. *Does anyone know how to repair this terrible printer?* (ever more complex)
+  1. Sarcasm: there is a great amoun of people who do not get it, imagine a machine!
+      1. Not common in product reviews, but there's plenty of them in politics.
+  1. Implicit sentiment
+      1. *This washer uses a lot of water* (bad)
+
+---
+# Sentiment analysis
+
+1. Sentiment words can be divided into:
+    1. base type: as expressed before
+    1. comparative type: better, worse, best, worst, etc.
+
+--
+
+1. There three main approaches compile sentiment words:
+    1. Manual: time consuming
+    1. Dictionary-based: Process of the algorithm: seeds' sentiment words, search for synonyms/antonyms, propagate polarity and ends with manual cleaning. There are more complex algorithms as well.
+    1. Corpus-based: given a seed of list of known sentiment words, discover other sentiment words and their orientations from a domain corpus. Adapt the new sentiment lexicon using the domain corpus. 
+
+--
+
+1. Sentiment analysis is a whole are of NLP, therefore there is vas amount of details and approaches, in this session we will focus on dictionary lexicon-based method for sentiment analysis.
+
+
+---
+# Sentiment analysis [in practice]
+
+1. My must include in our technical toolbox **regular expressions (REGEX)**
+1. Then again, is a whole universe of rules.
+    1. There will be always one easier way to solve one problem. Practice matters a lot.
+1. REGEX reference: https://www.regular-expressions.info/refcapture.html
+1. REGEX gymnasium: https://regex101.com/
+1. REGEX in R cheatsheet: https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf
+1. Main difference: R uses two escaping backslashes `\\`
+1. Is an iterative process. The cleaning process demands a lot of time.
+
+
+---
+# Sentiment analysis [in practice]
+
+&lt;img src="img/regex.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+# Sentiment analysis [in practice]
+
+
+
+.pl[
+## Packages
+
+```r
+library("twitteR")
+library("tidytext")
+library(qdap)
+library(tm)
+library(epubr)
+```
+]
+
+
+.pr[
+## Relevant functions
+
+```r
+tm::removePunctuation() 
+tm::removeNumbers()
+tm::stripWhitespace()
+tm::removeWords()
+tm::stopwords()
+tm::stemDocument() # reduce words to unify documents eg 
+# computers, computation -&gt; comput -&gt; computer
+tm::TermDocumentMatrix()
+tm::DocumentTermMatrix()
+tm::stemCompletion() # complete the word taking as an input a dictionary
+qdap::bracketX(): # "It's (so) cool" -&gt; "It's cool"
+qdap::replace_number(): # "2" -&gt; "two"
+qdap::replace_abbreviation(): # "Sr" -&gt; "Senior"
+qdap::replace_contraction(): # "shouldn't" -&gt; "should not"
+qdap::replace_symbol() # "$" -&gt; "dollar"
+```
+
+]
+
+---
+# Sentiment analysis [Twitter API]
+
+.pl[
+As humans, what are some things that we want that technology might help us to get?
+1. We want to be heard.
+1. We want to satisfy our curiosity.
+1. We want it easy.
+1. We want it now.
+
+]
+
+.pr[
+&lt;img src="https://images.unsplash.com/photo-1543185377-aa2f876d1760?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1350&amp;q=80" style="display: block; margin: auto;" /&gt;
+
+]
+
+.footnote[
+How to create a Twitter API: https://towardsdatascience.com/access-data-from-twitter-api-using-r-and-or-python-b8ac342d3efe
+]
+
+---
+# Sentiment analysis [Twitter API and Brexit]
+
+
+
+
+
+
+```r
+tw = searchTwitter(searchString = "#Brexit OR Brexit", n = 500, lang = "en") %&gt;% 
+    twListToDF() %&gt;% # Converts raw tweets to dataframe
+    as_tibble()
+#write_rds(tw, path = "datasets/twitter.rds")
+```
+
+
+```r
+tw &lt;- read_rds(path = "datasets/twitter.rds")
+tw$text %&gt;% 
+  head(10)
+```
+
+```
+##  [1] "This ‘second vote’ debate reminds me of my 3 year old niece when she doesn’t get her own way. #brexit"                                             
+##  [2] "RT @euronews: #RawPolitics | \"Bored to death.\"\n\nAre you sick of Brexit? Well, German MEP Jens Geier echoed how some of us are feeling.\n\nhtt…"
+##  [3] "A kid no older than four has walked in to Addenbrookes with a massive \"Z\" shaved in to his head and now I absolutel… https://t.co/eD5JQK3DIu"    
+##  [4] "RT @rtenews: EU cannot betray 6m people who signed petition to revoke Article 50 : @eucopresident #brexit https://t.co/wlSEmavDUC"                 
+##  [5] "@Trump_ton Many would leave with Brexit looming."                                                                                                  
+##  [6] "RT @AyoCaesar: Today in ‘Too Remain-y for Lexiters, Too Lexit-y for Remainers’: denying the relationship of Brexit to an emboldened racist…"       
+##  [7] "RT @LeaveEUOfficial: WATCH | Unbelievable! The President of the European Council Donald Tusk says \"you cannot ignore the six million people…"     
+##  [8] "RT @mikegalsworthy: We need just 180K to get this over 💥6 MILLION💥 today.\n\nThe Government’s dismissive response is irrelevant- they’re not…"     
+##  [9] "I've just asked my MP to support the Beckett Amendment for a People's Vote on the Brexit deal - tells yours here:… https://t.co/nzQ48sEFEg"        
+## [10] "RT @remain_central: Retweet if you want the Brexit default to be: Revoke Article 50. https://t.co/caCHzrdWnu"
+```
+
+---
+# Sentiment analysis [Case: One hundred years of solitude]
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://images-na.ssl-images-amazon.com/images/I/91ruYlNHCfL.jpg" alt="Cien años de soledad - Gabriel García Marquez (eng. version)" height="460" /&gt;
+&lt;p class="caption"&gt;Cien años de soledad - Gabriel García Marquez (eng. version)&lt;/p&gt;
+&lt;/div&gt;
+
+---
+# Sentiment analysis
+## Case: One hundred years of solitude
+
+
+
+```r
+#cas &lt;- epub("datasets/garcia_one_hundred.epub")
+#write_rds(cas, path = "datasets/cas.rds")
+(cas &lt;- read_rds("datasets/cas.rds") %&gt;% 
+  dplyr::select(title:date, data))
+```
+
+```
+## # A tibble: 1 x 4
+##   title                           creator              date  data          
+##   &lt;chr&gt;                           &lt;chr&gt;                &lt;chr&gt; &lt;list&gt;        
+## 1 1967 - One Hundred Years of So… Gabriel Garcia Marq… 1967  &lt;tibble [22 ×…
+```
+
+```r
+cas$data[[1]] %&gt;%
+  head(5)
+```
+
+```
+## # A tibble: 5 x 4
+##   section    text                                               nword nchar
+##   &lt;chr&gt;      &lt;chr&gt;                                              &lt;int&gt; &lt;int&gt;
+## 1 Cover      ""                                                     0     0
+## 2 Heading000 "Gabriel García Márquez\nOne Hundred Years of Sol…   103   633
+## 3 Heading001 "ONE\n\nMANY YEARS LATER as he faced the firing s…  6102 34781
+## 4 Heading002 "TWO\n\nWHEN THE PIRATE Sir Francis Drake attacke…  6521 36070
+## 5 Heading003 "THREE\n\nPILAR TERNERA'S son was brought to his …  7899 44139
+```
+
+```r
+# Work from the text
+cas &lt;- cas$data[[1]]
+```
+
+---
+# Sentiment analysis: lexicons and polarity
+
+.pl[
+
+```r
+# afinn
+get_sentiments(lexicon = "afinn") %&gt;% 
+  summary()
+```
+
+```
+##      word               score        
+##  Length:2476        Min.   :-5.0000  
+##  Class :character   1st Qu.:-2.0000  
+##  Mode  :character   Median :-2.0000  
+##                     Mean   :-0.5889  
+##                     3rd Qu.: 2.0000  
+##                     Max.   : 5.0000
+```
+
+```r
+# bing
+get_sentiments(lexicon = "bing") %&gt;% 
+  distinct(sentiment)
+```
+
+```
+## # A tibble: 2 x 1
+##   sentiment
+##   &lt;chr&gt;    
+## 1 negative 
+## 2 positive
+```
+]
+
+.pr[
+1. AFINN is a list of English words rated for valence with an integer
+between minus five (negative) and plus five (positive). The words have
+been manually labeled by Finn Årup Nielsen in 2009-2011. The file
+is tab-separated. [Source](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010)
+1. Bing proposed the Feature-Based Opinion Mining model, which is now also called Aspect-Based Opinion Mining [Source](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon)
+]
+ 
+---
+# Sentiment analysis: lexicons and polarity
+
+.pl[
+
+```r
+# nrc
+get_sentiments("nrc") %&gt;% 
+  distinct(sentiment) %&gt;% 
+  pull(sentiment)
+```
+
+```
+##  [1] "trust"        "fear"         "negative"     "sadness"     
+##  [5] "anger"        "surprise"     "positive"     "disgust"     
+##  [9] "joy"          "anticipation"
+```
+
+```r
+# loughran
+get_sentiments("loughran") %&gt;% 
+  distinct(sentiment) %&gt;% 
+  pull(sentiment)
+```
+
+```
+## [1] "negative"     "positive"     "uncertainty"  "litigious"   
+## [5] "constraining" "superfluous"
+```
+]
+
+.pr[
+1. The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing. [Source](https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)
+1. Loughran contains tools useful for textual analysis in financial applications and data from some of the textual-related publications. [Source](https://sraf.nd.edu/textual-analysis/resources/)
+]
+
+---
+# Sentiment analysis: lexicons and polarity
+
+1. Polarity is calculated with according to the following variables
+    1. Polarized term: negative or positive
+    1. Neutral term: no emotion
+    1. Negator: inverted polarized eg "not good"
+    1. Valence shifters: words that affect the emotional context
+        1. Amplifiers: increase emotional context (eg very good)
+        1. De-amplifiers: decrease emotional context (eg not bad)
+
+
+```r
+string &lt;- c("The view from east side of the bridge is very good")
+
+(polarity &lt;- qdap::polarity(string))
+```
+
+```
+##   all total.sentences total.words ave.polarity sd.polarity stan.mean.polarity
+## 1 all               1          11        0.543          NA                 NA
+```
+
+$$
+\frac{term + amplifier}{\sqrt{n}} \\
+\frac{1 + 0.8}{\sqrt{11}}=0.54
+$$
+
+
+---
+# Sentiment analysis [Twitter API and Brexit]
+
+
+
+```r
+## First steps
+tw1 &lt;- tw %&gt;% 
+    dplyr::select(text, id) %&gt;% 
+    mutate(text=str_squish(text)
+           , link=str_extract_all(text, pattern = "(?&lt;=(https:\\/\\/)).+", simplify = T) %&gt;% 
+               as.vector()
+           , mention=str_extract_all(text, pattern = "(?&lt;=(@)).+(?=: )", simplify = T) %&gt;% 
+               as.vector()
+           , rt=ifelse(str_detect(string = text, pattern = "RT(?= @)"), yes = T, F)
+           , hashtags=str_extract_all(text, "#\\S+") %&gt;% 
+               map(.f = ~paste0(., collapse = ";")) %&gt;% 
+               unlist()
+           , text_clean=str_remove_all(text, pattern = "…|(#\\S+ )|(@\\S+ )|(htt\\S+)|(RT )") %&gt;% 
+               str_replace_all(pattern = "’", replacement = "'") %&gt;%
+               str_remove_all(pattern = "![:alpha:]") %&gt;% 
+               str_to_lower() %&gt;% 
+               qdap::replace_abbreviation() %&gt;% 
+               qdap::replace_contraction() %&gt;% 
+               tm::removePunctuation() %&gt;% 
+               tm::removeWords(words = c(stop_words$word, stopwords())) %&gt;% 
+               str_squish() %&gt;% str_to_lower()
+               ) %&gt;% 
+    mutate(word=map(text_clean, ~str_extract_all(string = .x
+                                                 , pattern = "[[:alpha:]]+", simplify = T) %&gt;% 
+                        as.vector() %&gt;% 
+                        str_split(pattern = " ", simplify = T)
+                    )
+           , text_clean=str_to_lower(string = text_clean)) %&gt;%
+    unnest(word)
+```
+ 
+---
+# Sentiment analysis [Twitter API and Brexit] 
+ 
+.pl[
+
+```r
+tw2 &lt;- list(tw1, get_sentiments("afinn")
+     , get_sentiments("bing")
+     , get_sentiments("nrc")
+     , get_sentiments("loughran")) %&gt;% 
+  reduce(left_join, by="word") %&gt;%
+  group_by(id) %&gt;% 
+  filter(!duplicated(word)) %&gt;% 
+  rename(afinn=score, bing=sentiment.x, nrc=sentiment.y, loughran=sentiment)
+
+tw2 %&gt;% 
+  group_by(word) %&gt;% 
+  tally() %&gt;% 
+  arrange(desc(n)) %&gt;% 
+  top_n(n = 20, wt = n) %&gt;% 
+  ggplot(aes(reorder(word, n), n))+
+  geom_col()+
+  coord_flip()
+```
+ ]
+ 
+.pr[
+&lt;img src="ws_5_files/figure-html/g1-label-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Sentiment analysis [Twitter API and Brexit] 
+
+.pl[
+## AFINN
+
+
+```r
+tw2 %&gt;% 
+  filter(!is.na(afinn)) %&gt;% 
+  group_by(rt) %&gt;% 
+  summarise(mean=mean(afinn)) %&gt;% 
+  ggplot(aes(rt, mean))+
+  geom_col()+
+  labs(x="Is it retweeted?")
+```
+]
+
+.pr[
+&lt;img src="ws_5_files/figure-html/unnamed-chunk-16-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+# Sentiment analysis [Twitter API and Brexit] 
+
+
+.pl[
+## BING
+
+
+```r
+tw2 %&gt;% 
+  filter(!is.na(bing)) %&gt;% 
+  group_by(bing) %&gt;% 
+  tally() %&gt;% 
+  ggplot(aes(bing, n))+
+  geom_col()
+```
+
+]
+
+.pr[
+&lt;img src="ws_5_files/figure-html/unnamed-chunk-17-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Sentiment analysis [Twitter API and Brexit] 
+
+.pl[
+## NRC
+
+```r
+tw2 %&gt;% 
+  filter(!is.na(nrc)) %&gt;% 
+  group_by(rt, nrc) %&gt;% 
+  tally() %&gt;% 
+  mutate(sum=sum(n), n=n/sum) %&gt;% 
+  replace_na(replace = list(sadness=0)) %&gt;% 
+  ggplot(aes(reorder(nrc, n), n, fill=rt))+
+  geom_col(position = "dodge")+
+  coord_flip()
+```
+]
+
+.pr[
+&lt;img src="ws_5_files/figure-html/unnamed-chunk-18-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Sentiment analysis [Twitter API and Brexit] 
+
+.pl[
+## Loughran
+
+
+```r
+tw2 %&gt;% 
+  filter(!is.na(loughran)) %&gt;% 
+  group_by(rt, loughran) %&gt;% 
+  tally() %&gt;% 
+  mutate(sum=sum(n), n=n/sum) %&gt;% 
+  replace_na(replace = list(sadness=0)) %&gt;% 
+  ggplot(aes(reorder(loughran, n), n, fill=rt))+
+  geom_col(position = "dodge")+
+  coord_flip()
+```
+]
+
+.pr[
+&lt;img src="ws_5_files/figure-html/unnamed-chunk-19-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Sentiment analysis [CAS]
+
+
+
+```r
+cas1 &lt;- cas %&gt;% 
+  slice(3:n()) %&gt;%
+  mutate(text=str_to_lower(text) %&gt;% 
+           tm::removePunctuation() %&gt;% 
+           str_remove_all(pattern = "\\n") %&gt;% 
+           tm::removeWords(words = stop_words$word) %&gt;% 
+           str_squish()) %&gt;% 
+    unnest_tokens(output = "word", input = "text") %&gt;% 
+    left_join(get_sentiments("afinn")) %&gt;%
+    left_join(get_sentiments("nrc")) %&gt;% 
+    #replace_na(replace = list(score=0)) %&gt;% 
+    #group_by(section) %&gt;% 
+    mutate(n=1:n(), sum=sum(score)
+           , mean=mean(score, na.rm = T))
+```
+
+```
+## Joining, by = "word"
+## Joining, by = "word"
+```
+
+---
+# Sentiment analysis [CAS]
+
+
+```r
+cas1 %&gt;% 
+    as_tsibble(index = n) %&gt;% 
+    mutate(pol2=tsibble::slide_dbl(score, ~sum(.x, na.rm = T), .size = 100, .step = 25)) %&gt;% 
+    ggplot(aes(n, pol2, col=sentiment))+
+    geom_point(aes(col=sentiment))+
+    geom_smooth(se = F)
+```
+
+&lt;img src="ws_5_files/figure-html/unnamed-chunk-21-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+# References
+
+.middle[
+- Danneman, N., &amp; Heimann, R. (2014). Social media mining with R. Packt Publishing Ltd.
+- Munzert, S., Rubba, C., Meißner, P., &amp; Nyhuis, D. (2014). Automated data collection with R: A practical guide to web scraping and text mining. 
+- John Wiley &amp; Sons. Russell, M. A. (2013). Mining the Social Web: Data Mining Facebook, Twitter, LinkedIn, Google+, GitHub, and More. " O'Reilly Media, Inc.".
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-dark",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

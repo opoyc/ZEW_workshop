@@ -1,6 +1,6 @@
 ---
-title: "Workshop: Data science with R"
-subtitle: "ZEW - Session #4"
+title: "Workshop: Data science with R (ZEW)"
+subtitle: "Session #4: Reproducible research & Web scraping"
 author: "Obryan Poyser"
 date: "2019-03-20"
 output:

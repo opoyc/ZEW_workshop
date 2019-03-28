@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>Workshop: Data science with R</title>
+    <title>Workshop: Data science with R (ZEW)</title>
     <meta charset="utf-8" />
     <meta name="author" content="Obryan Poyser" />
     <meta name="date" content="2019-03-06" />
@@ -12,8 +12,8 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Workshop: Data science with R
-## ZEW - Session #3
+# Workshop: Data science with R (ZEW)
+## Session #3: Data wrangling (cont.)
 ### Obryan Poyser
 ### 2019-03-06
 
@@ -77,16 +77,16 @@ findex %&gt;%
 ## # A tibble: 15,492 x 32
 ##    economy economycode regionwb pop_adult wpid_random wgt   female age  
 ##    &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
-##  1 Mozamb… MOZ         Sub-Sah… 15850773  141162711   0.78… Female 2    
-##  2 Ukraine UKR         Europe … 38149932  197500379   1.46… Female 26   
-##  3 Gabon   GAB         Sub-Sah… 1269789   146060394   0.30… Male   18   
-##  4 Venezu… VEN         Latin A… 22762362  147928189   0.55… Female 41   
-##  5 Rwanda  RWA         Sub-Sah… 7094419   179789279   1.65… Male   36   
-##  6 Monten… MNE         Europe … 509031.5… 202078829   0.32… Female 39   
-##  7 Morocco MAR         Middle … 25550170  13836       0.42… Female 15   
-##  8 Cambod… KHM         East As… 10814416  117109019   0.82… Male   36   
-##  9 Bolivia BOL         Latin A… 7400247   116466964   0.73… Female 12   
-## 10 Centra… CAF         Sub-Sah… 2595884   119279387   1.07… Male   8    
+##  1 Norway  NOR         High in… 4300062   206532528   0.28… Male   52   
+##  2 Gabon   GAB         Sub-Sah… 1269789   145744642   0.74… Male   18   
+##  3 United… USA         High in… 261642064 207366667   1.10… Female 15   
+##  4 Maurit… MRT         Sub-Sah… 2576113   114079731   0.68… Female 10   
+##  5 Ireland IRL         High in… 3737161.5 159679927   1.35… Male   17   
+##  6 Cambod… KHM         East As… 10814416  210261134   0.39… Female 61   
+##  7 Saudi … SAU         High in… 24033932  188270882   0.64… Female 9    
+##  8 Namibia NAM         Sub-Sah… 1564881   114102862   1.16… Male   10   
+##  9 Tanzan… TZA         Sub-Sah… 30519122  197765577   1.91… Male   11   
+## 10 Cambod… KHM         East As… 10814416  201585864   0.66… Female 22   
 ## # … with 15,482 more rows, and 24 more variables: educ &lt;chr&gt;, inc_q &lt;chr&gt;,
 ## #   emp_in &lt;chr&gt;, fin2 &lt;chr&gt;, fin7 &lt;chr&gt;, fin8 &lt;chr&gt;, fin14a &lt;chr&gt;,
 ## #   fin14b &lt;chr&gt;, fin19 &lt;chr&gt;, fin26 &lt;chr&gt;, fin28 &lt;chr&gt;, fin32 &lt;chr&gt;,
@@ -113,16 +113,16 @@ findex %&gt;%
 ## # A tibble: 15,492 x 16
 ##    pop_adult_log wpid_random_log wgt_log age_log receive_transfe…
 ##            &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;            &lt;dbl&gt;
-##  1          16.6           18.8  -0.240    0.693             1.39
-##  2          17.5           19.1   0.381    3.26              1.39
-##  3          14.1           18.8  -1.20     2.89              1.39
-##  4          16.9           18.8  -0.593    3.71              1.39
-##  5          15.8           19.0   0.504    3.58              1.39
-##  6          13.1           19.1  -1.12     3.66              0   
-##  7          17.1            9.54 -0.861    2.71              1.39
-##  8          16.2           18.6  -0.193    3.58              1.39
-##  9          15.8           18.6  -0.312    2.48              1.39
-## 10          14.8           18.6   0.0692   2.08              1.39
+##  1          15.3            19.1  -1.27     3.95             0   
+##  2          14.1            18.8  -0.288    2.89             1.39
+##  3          19.4            19.1   0.103    2.71             0   
+##  4          14.8            18.6  -0.382    2.30             1.39
+##  5          15.1            18.9   0.304    2.83             1.10
+##  6          16.2            19.2  -0.935    4.11             1.39
+##  7          17.0            19.1  -0.445    2.20             1.39
+##  8          14.3            18.6   0.156    2.30             1.39
+##  9          17.2            19.1   0.651    2.40             1.39
+## 10          16.2            19.1  -0.412    3.09             1.39
 ## # … with 15,482 more rows, and 11 more variables:
 ## #   receive_pension_log &lt;dbl&gt;, receive_agriculture_log &lt;dbl&gt;,
 ## #   fin2_b_log &lt;dbl&gt;, pop_adult_abs &lt;dbl&gt;, wpid_random_abs &lt;dbl&gt;,
@@ -149,16 +149,16 @@ findex %&gt;%
 ## # A tibble: 15,492 x 12
 ##     fin2  fin7  fin8 fin14a fin14b fin19 fin26 fin28 fin32 fin37
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1     0     0    NA      0      0     0     1     0     0     0
-##  2     1     0    NA      0      0     0     0     0     1     0
-##  3     1     0    NA      1      1     0     1     1     1     0
-##  4     1     1     1      1      1     1     1     1     1     0
-##  5     0     0    NA      0      0     0     0     0     1     0
-##  6     0     0    NA      0      0     1     0     1     1     1
-##  7     1     0    NA      0      0     0     0     0     0     0
-##  8     1     0    NA      0      0     0     1     0     0     0
-##  9     1     0    NA      0      0     0     0     0     1     0
-## 10     0     0    NA      0      0    NA     0     0     0     0
+##  1     1     1     1      1      1     1    NA    NA     0     1
+##  2     1     0    NA      1      0     0     1     1     1     0
+##  3     1     0    NA      1      1     0    NA    NA     1     1
+##  4     0     0    NA      0      0     0     0     0     0     0
+##  5     1     1     1      1      1     0    NA    NA     1     1
+##  6     0     0    NA      0      0     0     0     1     0     0
+##  7     0     0    NA      0      0     0    NA    NA     1     0
+##  8     1     0    NA      0      0     0     1     1     1     0
+##  9     0     0    NA      0      0     0     0     0     1     0
+## 10     0     0    NA      0      0     0     0     1     0     0
 ## # … with 15,482 more rows, and 2 more variables: account_fin &lt;dbl&gt;,
 ## #   fin2_b &lt;dbl&gt;
 ```
@@ -915,16 +915,16 @@ map(.x = letters[1:3], .f = ~return(.)) # implicit functions
 ## # Groups:   economy, regionwb [144]
 ##    economy economycode regionwb pop_adult wpid_random   wgt female   age
 ##    &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt;
-##  1 Mozamb… MOZ         Sub-Sah… 15850773    141162711 0.786 Female     2
-##  2 Ukraine UKR         Europe … 38149932    197500379 1.46  Female    26
-##  3 Gabon   GAB         Sub-Sah…  1269789    146060394 0.301 Male      18
-##  4 Venezu… VEN         Latin A… 22762362    147928189 0.553 Female    41
-##  5 Rwanda  RWA         Sub-Sah…  7094419    179789279 1.65  Male      36
-##  6 Monten… MNE         Europe …   509032.   202078829 0.326 Female    39
-##  7 Morocco MAR         Middle … 25550170        13836 0.423 Female    15
-##  8 Cambod… KHM         East As… 10814416    117109019 0.825 Male      36
-##  9 Bolivia BOL         Latin A…  7400247    116466964 0.732 Female    12
-## 10 Centra… CAF         Sub-Sah…  2595884    119279387 1.07  Male       8
+##  1 Norway  NOR         High in…    4.30e6   206532528 0.282 Male      52
+##  2 Gabon   GAB         Sub-Sah…    1.27e6   145744642 0.750 Male      18
+##  3 United… USA         High in…    2.62e8   207366667 1.11  Female    15
+##  4 Maurit… MRT         Sub-Sah…    2.58e6   114079731 0.682 Female    10
+##  5 Ireland IRL         High in…    3.74e6   159679927 1.36  Male      17
+##  6 Cambod… KHM         East As…    1.08e7   210261134 0.393 Female    61
+##  7 Saudi … SAU         High in…    2.40e7   188270882 0.641 Female     9
+##  8 Namibia NAM         Sub-Sah…    1.56e6   114102862 1.17  Male      10
+##  9 Tanzan… TZA         Sub-Sah…    3.05e7   197765577 1.92  Male      11
+## 10 Cambod… KHM         East As…    1.08e7   201585864 0.662 Female    22
 ## # … with 15,482 more rows, and 24 more variables: educ &lt;fct&gt;, inc_q &lt;fct&gt;,
 ## #   emp_in &lt;fct&gt;, fin2 &lt;fct&gt;, fin7 &lt;fct&gt;, fin8 &lt;fct&gt;, fin14a &lt;fct&gt;,
 ## #   fin14b &lt;fct&gt;, fin19 &lt;fct&gt;, fin26 &lt;fct&gt;, fin28 &lt;fct&gt;, fin32 &lt;fct&gt;,
@@ -947,18 +947,18 @@ map(.x = letters[1:3], .f = ~return(.)) # implicit functions
 
 ```
 ## # A tibble: 144 x 3
-##    economy             regionwb                              data          
-##    &lt;chr&gt;               &lt;chr&gt;                                 &lt;list&gt;        
-##  1 Mozambique          Sub-Saharan Africa (excluding high i… &lt;tibble [93 ×…
-##  2 Ukraine             Europe &amp; Central Asia (excluding hig… &lt;tibble [108 …
-##  3 Gabon               Sub-Saharan Africa (excluding high i… &lt;tibble [99 ×…
-##  4 Venezuela, RB       Latin America &amp; Caribbean (excluding… &lt;tibble [111 …
-##  5 Rwanda              Sub-Saharan Africa (excluding high i… &lt;tibble [99 ×…
-##  6 Montenegro          Europe &amp; Central Asia (excluding hig… &lt;tibble [90 ×…
-##  7 Morocco             Middle East &amp; North Africa (excludin… &lt;tibble [579 …
-##  8 Cambodia            East Asia &amp; Pacific (excluding high … &lt;tibble [154 …
-##  9 Bolivia             Latin America &amp; Caribbean (excluding… &lt;tibble [99 ×…
-## 10 Central African Re… Sub-Saharan Africa (excluding high i… &lt;tibble [104 …
+##    economy       regionwb                                 data             
+##    &lt;chr&gt;         &lt;chr&gt;                                    &lt;list&gt;           
+##  1 Norway        High income: OECD                        &lt;tibble [109 × 3…
+##  2 Gabon         Sub-Saharan Africa (excluding high inco… &lt;tibble [101 × 3…
+##  3 United States High income: OECD                        &lt;tibble [99 × 30…
+##  4 Mauritania    Sub-Saharan Africa (excluding high inco… &lt;tibble [114 × 3…
+##  5 Ireland       High income: OECD                        &lt;tibble [103 × 3…
+##  6 Cambodia      East Asia &amp; Pacific (excluding high inc… &lt;tibble [162 × 3…
+##  7 Saudi Arabia  High income: nonOECD                     &lt;tibble [113 × 3…
+##  8 Namibia       Sub-Saharan Africa (excluding high inco… &lt;tibble [103 × 3…
+##  9 Tanzania      Sub-Saharan Africa (excluding high inco… &lt;tibble [94 × 30…
+## 10 Latvia        High income: OECD                        &lt;tibble [88 × 30…
 ## # … with 134 more rows
 ```
 
@@ -983,16 +983,16 @@ map(.x = letters[1:3], .f = ~return(.)) # implicit functions
 ## # A tibble: 144 x 4
 ##    economy    regionwb                              data            model  
 ##    &lt;chr&gt;      &lt;chr&gt;                                 &lt;list&gt;          &lt;list&gt; 
-##  1 Afghanist… South Asia                            &lt;tibble [96 × … &lt;S3: g…
-##  2 Albania    Europe &amp; Central Asia (excluding hig… &lt;tibble [98 × … &lt;S3: g…
-##  3 Algeria    Middle East &amp; North Africa (excludin… &lt;tibble [90 × … &lt;S3: g…
-##  4 Argentina  Latin America &amp; Caribbean (excluding… &lt;tibble [114 ×… &lt;S3: g…
-##  5 Armenia    Europe &amp; Central Asia (excluding hig… &lt;tibble [106 ×… &lt;S3: g…
-##  6 Australia  High income: OECD                     &lt;tibble [92 × … &lt;S3: g…
-##  7 Austria    High income: OECD                     &lt;tibble [84 × … &lt;S3: g…
-##  8 Azerbaijan Europe &amp; Central Asia (excluding hig… &lt;tibble [103 ×… &lt;S3: g…
-##  9 Bahrain    High income: nonOECD                  &lt;tibble [123 ×… &lt;S3: g…
-## 10 Bangladesh South Asia                            &lt;tibble [85 × … &lt;S3: g…
+##  1 Afghanist… South Asia                            &lt;tibble [92 × … &lt;S3: g…
+##  2 Albania    Europe &amp; Central Asia (excluding hig… &lt;tibble [115 ×… &lt;S3: g…
+##  3 Algeria    Middle East &amp; North Africa (excludin… &lt;tibble [98 × … &lt;S3: g…
+##  4 Argentina  Latin America &amp; Caribbean (excluding… &lt;tibble [96 × … &lt;S3: g…
+##  5 Armenia    Europe &amp; Central Asia (excluding hig… &lt;tibble [104 ×… &lt;S3: g…
+##  6 Australia  High income: OECD                     &lt;tibble [101 ×… &lt;S3: g…
+##  7 Austria    High income: OECD                     &lt;tibble [108 ×… &lt;S3: g…
+##  8 Azerbaijan Europe &amp; Central Asia (excluding hig… &lt;tibble [85 × … &lt;S3: g…
+##  9 Bahrain    High income: nonOECD                  &lt;tibble [93 × … &lt;S3: g…
+## 10 Bangladesh South Asia                            &lt;tibble [107 ×… &lt;S3: g…
 ## # … with 134 more rows
 ```
 
@@ -1043,13 +1043,13 @@ findex_model$coef[[1]]
 
 ```
 ## # A tibble: 5 x 5
-##   term                            estimate std.error statistic p.value
-##   &lt;chr&gt;                              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 (Intercept)                    -2.66e+ 1    98716. -2.69e- 4   1.000
-## 2 femaleFemale                   -2.97e-14    79568. -3.73e-19   1    
-## 3 age                             4.23e-16     3114.  1.36e-19   1    
-## 4 educsecondary                  -1.67e-14    93013. -1.80e-19   1    
-## 5 educcompleted tertiary or more -3.49e-14   216310. -1.62e-19   1
+##   term                           estimate std.error  statistic p.value
+##   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)                     -245.     110831. -0.00221     0.998
+## 2 femaleFemale                      -3.22    54430. -0.0000591   1.000
+## 3 age                                3.98     1808.  0.00220     0.998
+## 4 educsecondary                     71.7     71401.  0.00100     0.999
+## 5 educcompleted tertiary or more   186.      86496.  0.00215     0.998
 ```
 
 
@@ -1182,16 +1182,16 @@ What's inside female_coef?
 ## # A tibble: 144 x 6
 ##    economy   regionwb                  estimate p.value   min_int   max_int
 ##    &lt;chr&gt;     &lt;chr&gt;                        &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 Afghanis… South Asia               -2.97e-14  1       -1.56e+5   1.56e+5
-##  2 Albania   Europe &amp; Central Asia (… -1.06e- 2  0.986   -1.19e+0   1.17e+0
-##  3 Algeria   Middle East &amp; North Afr… -6.69e- 1  0.238   -1.78e+0   4.41e-1
-##  4 Argentina Latin America &amp; Caribbe…  3.86e- 1  0.336   -4.00e-1   1.17e+0
-##  5 Armenia   Europe &amp; Central Asia (… -2.54e- 1  0.595   -1.19e+0   6.80e-1
-##  6 Australia High income: OECD         3.09e+ 0  0.123   -8.38e-1   7.02e+0
-##  7 Austria   High income: OECD        -2.26e- 1  0.865   -2.84e+0   2.39e+0
-##  8 Azerbaij… Europe &amp; Central Asia (…  8.16e- 1  0.118   -2.07e-1   1.84e+0
-##  9 Bahrain   High income: nonOECD     -1.44e+ 0  0.0178  -2.64e+0  -2.50e-1
-## 10 Banglade… South Asia               -1.83e+ 0  0.103   -4.03e+0   3.68e-1
+##  1 Afghanis… South Asia                 -3.22   1.000    -1.07e+5   1.07e+5
+##  2 Albania   Europe &amp; Central Asia (e…  -1.19   0.0466   -2.36e+0  -1.80e-2
+##  3 Algeria   Middle East &amp; North Afri…  -1.99   0.00256  -3.28e+0  -6.95e-1
+##  4 Argentina Latin America &amp; Caribbea…   0.502  0.261    -3.74e-1   1.38e+0
+##  5 Armenia   Europe &amp; Central Asia (e…  -1.09   0.0300   -2.07e+0  -1.05e-1
+##  6 Australia High income: OECD           0.0325 0.966    -1.45e+0   1.51e+0
+##  7 Austria   High income: OECD          -0.913  0.118    -2.06e+0   2.31e-1
+##  8 Azerbaij… Europe &amp; Central Asia (e…  -0.508  0.371    -1.62e+0   6.03e-1
+##  9 Bahrain   High income: nonOECD       -1.65   0.00864  -2.89e+0  -4.19e-1
+## 10 Banglade… South Asia                 -1.94   0.0822   -4.12e+0   2.47e-1
 ## # … with 134 more rows
 ```
 
@@ -1207,20 +1207,20 @@ findex_model %&gt;% summary()
 ```
 
 ```
-##    economy            regionwb            estimate       
-##  Length:144         Length:144         Min.   :-18.3808  
-##  Class :character   Class :character   1st Qu.: -0.7143  
-##  Mode  :character   Mode  :character   Median : -0.2203  
-##                                        Mean   : -0.3807  
-##                                        3rd Qu.:  0.1082  
-##                                        Max.   : 34.1079  
-##     p.value             min_int              max_int         
-##  Min.   :0.0000022   Min.   :-155953.92   Min.   :    -1.10  
-##  1st Qu.:0.2057683   1st Qu.:     -2.16   1st Qu.:     0.48  
-##  Median :0.4657282   Median :     -1.45   Median :     0.94  
-##  Mean   :0.4920671   Mean   :  -3344.79   Mean   :  3344.03  
-##  3rd Qu.:0.8000435   3rd Qu.:     -0.95   3rd Qu.:     1.47  
-##  Max.   :1.0000000   Max.   :      0.16   Max.   :155953.92
+##    economy            regionwb            estimate           p.value      
+##  Length:144         Length:144         Min.   :-18.0594   Min.   :0.0000  
+##  Class :character   Class :character   1st Qu.: -0.8269   1st Qu.:0.1419  
+##  Mode  :character   Mode  :character   Median : -0.2921   Median :0.3908  
+##                                        Mean   :  0.5553   Mean   :0.4400  
+##                                        3rd Qu.:  0.2241   3rd Qu.:0.7081  
+##                                        Max.   : 87.8917   Max.   :1.0000  
+##     min_int              max_int         
+##  Min.   :-106685.70   Min.   :    -0.85  
+##  1st Qu.:     -2.20   1st Qu.:     0.29  
+##  Median :     -1.61   Median :     0.89  
+##  Mean   :  -1482.80   Mean   :  1483.91  
+##  3rd Qu.:     -1.04   3rd Qu.:     1.50  
+##  Max.   :     -0.14   Max.   :106679.26
 ```
 
 ---
@@ -1242,16 +1242,16 @@ The natural question is "why", but for the sake of the exercise we are going to 
 ## # A tibble: 114 x 6
 ##    economy   regionwb                      estimate p.value min_int max_int
 ##    &lt;chr&gt;     &lt;chr&gt;                            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Albania   Europe &amp; Central Asia (exclu…  -0.0106  0.986   -1.19    1.17 
-##  2 Algeria   Middle East &amp; North Africa (…  -0.669   0.238   -1.78    0.441
-##  3 Armenia   Europe &amp; Central Asia (exclu…  -0.254   0.595   -1.19    0.680
-##  4 Australia High income: OECD               3.09    0.123   -0.838   7.02 
-##  5 Austria   High income: OECD              -0.226   0.865   -2.84    2.39 
-##  6 Bahrain   High income: nonOECD           -1.44    0.0178  -2.64   -0.250
-##  7 Belarus   Europe &amp; Central Asia (exclu…   0.0664  0.898   -0.947   1.08 
-##  8 Belgium   High income: OECD               0.0158  0.989   -2.16    2.19 
-##  9 Benin     Sub-Saharan Africa (excludin…  -0.0779  0.912   -1.46    1.30 
-## 10 Bolivia   Latin America &amp; Caribbean (e…  -0.0690  0.888   -1.03    0.888
+##  1 Albania   Europe &amp; Central Asia (exclu…  -1.19   0.0466    -2.36 -0.0180
+##  2 Armenia   Europe &amp; Central Asia (exclu…  -1.09   0.0300    -2.07 -0.105 
+##  3 Australia High income: OECD               0.0325 0.966     -1.45  1.51  
+##  4 Austria   High income: OECD              -0.913  0.118     -2.06  0.231 
+##  5 Azerbaij… Europe &amp; Central Asia (exclu…  -0.508  0.371     -1.62  0.603 
+##  6 Bahrain   High income: nonOECD           -1.65   0.00864   -2.89 -0.419 
+##  7 Belarus   Europe &amp; Central Asia (exclu…  -0.136  0.789     -1.13  0.859 
+##  8 Benin     Sub-Saharan Africa (excludin…  -1.15   0.115     -2.59  0.281 
+##  9 Bolivia   Latin America &amp; Caribbean (e…  -0.612  0.195     -1.54  0.314 
+## 10 Botswana  Sub-Saharan Africa (excludin…  -1.09   0.0420    -2.13 -0.0393
 ## # … with 104 more rows
 ```
 

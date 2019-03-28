@@ -306,7 +306,11 @@ midd-blockquote {
 }
 
 .remark-slide-content {
-  font-size: 18px;
+  font-size: 22px;
+}
+
+.remark-slide-content .caption {
+  font-size: 17px;
 }
 
 /* H1 fonts */
