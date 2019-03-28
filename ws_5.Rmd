@@ -198,10 +198,7 @@ How to create a Twitter API: https://towardsdatascience.com/access-data-from-twi
 
 
 ```{r, include=FALSE, eval=FALSE}
-setup_twitter_oauth(consumer_key = "1ohBu6jXbkhdODB4WdKHWVhty"
-                    , consumer_secret = "ZgCuS8W9cZk75sg285Bai3bTpxqD3OmMOKW5zFspNnxe1BpHTY"
-                    , access_token = "514570445-DB7XhF8BpFwCf2TYDiV5UxIqPu4QQPrnL0cxBDjt" 
-                    , access_secret = "BJ7irTehlPsx1nmltmGKPBHO5BT9xv6TDLgps3QbwRens")
+
 ```
 
 
@@ -368,7 +365,7 @@ tw2 %>%
   tally() %>% 
   arrange(desc(n)) %>% 
   top_n(n = 20, wt = n) %>% 
-  ggplot(aes(reorder(word, n), n))+
+  ggplot(aes(x = reorder(word, n), y = n))+
   geom_col()+
   coord_flip()
 ```

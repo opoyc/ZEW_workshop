@@ -435,7 +435,7 @@ tw2 %&gt;%
   tally() %&gt;% 
   arrange(desc(n)) %&gt;% 
   top_n(n = 20, wt = n) %&gt;% 
-  ggplot(aes(reorder(word, n), n))+
+  ggplot(aes(x = reorder(word, n), y = n))+
   geom_col()+
   coord_flip()
 ```
