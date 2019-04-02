@@ -15,35 +15,140 @@ output:
       - "css/zew-fonts.css"
       - "css/zew.css"
 ---
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+library(tidyverse)
+library(knitr)
+```
+
+```{r, echo=FALSE}
+stdF <- function(x){
+    (x-mean(x, na.rm = T))/sd(x, na.rm = T)
+}
+
+normF <- function(x){
+    (x-min(x, na.rm = T))/(max(x, na.rm = T)-min(x, na.rm = T))
+}
+
+robF <- function(x){
+    (x-quantile(x, na.rm = T, probs = 0.25))/(quantile(x, na.rm = T, probs = 0.25)-quantile(x, na.rm = T, probs = .75))
+}
+```
+
+
 
 # Outline
 
 1. Clustering
+1. Dimensionality reduction
 
 
 
 ---
-# Clustering
+# End-to-end machine learning project
 
-1. Def: the process of grouping similar objects together.
+
+.middle[
+1- Look at the big picture.  
+2- Get the data.  
+3- Discover and visualize the data to gain insights.  
+4- Prepare the data for Machine Learning algorithms.
+.speccolor1[5- Select a model and train it.  
+6- Fine-tune your model.  
+7- Present your solution.  
+8- Launch, monitor, and maintain your system]]
+
+---
+# Unsupervised learning
+
+### Definition
+
+1. Subsumes all kinds of machine learning where there is **no known output**
+1. "Learning without a teacher"
 
 --
 
-1. Inputs
-    1. Similarity-based clustering $(N \times N)$
-        1. Instrument are typically dissimilarity or distance matrices.
-    1. Feature-based clustering $(N \times X_p)$
+### Types
 
+1. Unsupervised transformations (UT): algorithms that create new representation of high dimensional data, which output is potentially easier for other algorithms as well as human to understand the underlying structure.
+    1. Dimensionality reduction is the most common application of UT. It summarises the data by creating a smaller feature space that contains as much as possible the variance of the original representation.
+    1. Clustering algorithms: partition of data into different groups according to a similarity rule.
+    
+--
+
+### Challenges
+
+1. Evaluate if the algorithm is learning something salient
+1. With unlabeled data is hard to tell if the we have done right.
+    1. In psychological studies is common to construct factors from a set of features.
+1. Is considered as "pre-processing" the data which is going to be used for supervised learning models.
+1. Unsupervised learning algorithms are **highly sensitive to scales**.
+
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+
+### Definition
+
+1. The process of grouping similar objects together.
+1. Grouping/segmenting a collection of objects into subsets or "clusters", such that those within each cluster are more closely related to one another than objects assigned to different clusters.
 
 --
 
-1. Outputs
-    1. Flat clustering: partition into disjoint sets
-        1. It is necessary to provide ex-ante the number of sets
-    1. Hierarchical clustering: nested tree sets
-        1. 
+### Inputs
+
+1. Similarity-based clustering $(N \times N)$
+    1. Instrument are typically dissimilarity or distance matrices.
+1. Feature-based clustering $(N \times X_p)$
+
+--
+
+### Outputs
+
+1. Flat clustering: partition into disjoint sets
+    1. It is necessary to provide ex-ante the number of sets
+1. Hierarchical clustering: nested tree sets
+    1. It is not required to specify the number of sets
     
+---
+# Unsupervised learning: Clustering (data segmentation)
+
+.pl[
+1. As stated, clustering algorithms are sensitive to scales. It is a common practice to transforma the features.
+    1. Normalize $x_i \in (0,1)$: $\frac{x_i-min(x_i)}{max(x_i)-min(x_i)}$
+    1. Standardize $x_i \sim (0,1)$: $\frac{x_i-E(x_i)}{\sigma_{x_i}}$
+    1. Robust scaler: $\frac{x_i-Q_1(x_i)}{Q_3(x_i)-Q_1(x_i)}$
+```{r, eval=FALSE}
+x1=1*rep(1, 100)+rnorm(100, sd = 2)
+x2=4*rep(1, 100)+rnorm(100)
+```
     
-    
-Where: 
-$X_p=(x_{i,1},\dots,x_{i,p})$
+]
+
+.pr2[
+```{r, echo=FALSE, out.width="100%", fig.height=4, fig.retina=2}
+tibble::tibble(x1=1*rep(1, 100)+rnorm(100, sd = 2)
+               ,x2=4*rep(1, 100)+rnorm(100)
+               , index=(1:100)) %>% 
+    mutate_at(vars(x1, x2), .funs = list(std=~stdF(.)
+                                         , norm=~normF(.)
+                                         , rob=~robF(.))) %>%
+    pivot_longer(cols = -index) %>% 
+    mutate(type=case_when(
+        str_detect(name, pattern = "std")~"std"
+        , str_detect(name, pattern = "norm")~"norm"
+        , str_detect(name, pattern = "rob")~"robust"
+        , TRUE~"original"
+        )
+        , var=str_sub(name, 1, 2)
+    ) %>% 
+    ggplot(aes(value, fill=type))+
+    geom_density(alpha=0.7)+
+    facet_grid(~var)+
+    theme(legend.position = "bottom")
+```
+]
+
+
+---
+# Unsupervised learning: Clustering (data segmentation)

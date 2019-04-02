@@ -373,6 +373,16 @@ midd-blockquote {
   height: 98%;
 }
 
+.pr2 {
+  float: right;
+  width: 49%;
+  height: 98%;
+  vertical-align: middle;
+  margin-top: 5%;
+
+}
+
+
 .hljs-solarized-dark .hljs {
   color: #ffffff;
   background: #002b36;
@@ -403,4 +413,15 @@ midd-blockquote {
   background-color: rgba(239, 228, 9, 0.3); !important;
   color: #ffffff;
   border-radius: 3px;
+}
+
+.speccolor1 {
+    color: lightgray;
+}
+
+.middle {
+    vertical-align: middle;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 15%;
 }
