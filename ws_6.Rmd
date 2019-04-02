@@ -1,0 +1,49 @@
+---
+title: "Workshop: Data science with R (ZEW)"
+subtitle: "Session #6: Unsupervised learning"
+author: "Obryan Poyser"
+date: "2019-04-04"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: solarized-dark
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    css:
+      - "css/zew-fonts.css"
+      - "css/zew.css"
+---
+
+# Outline
+
+1. Clustering
+
+
+
+---
+# Clustering
+
+1. Def: the process of grouping similar objects together.
+
+--
+
+1. Inputs
+    1. Similarity-based clustering $(N \times N)$
+        1. Instrument are typically dissimilarity or distance matrices.
+    1. Feature-based clustering $(N \times X_p)$
+
+
+--
+
+1. Outputs
+    1. Flat clustering: partition into disjoint sets
+        1. It is necessary to provide ex-ante the number of sets
+    1. Hierarchical clustering: nested tree sets
+        1. 
+    
+    
+    
+Where: 
+$X_p=(x_{i,1},\dots,x_{i,p})$

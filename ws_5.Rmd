@@ -506,7 +506,8 @@ cas1 %>%
     mutate(pol2=tsibble::slide_dbl(score, ~sum(.x, na.rm = T), .size = 100, .step = 25)) %>% 
     ggplot(aes(n, pol2, col=sentiment))+
     geom_point(aes(col=sentiment))+
-    geom_smooth(se = F)
+    geom_smooth(se = F)+
+    labs(x="Book's progress (words)", y="Sentiment score", title="Moving sentiment of Gabriel García Márquez book: One hundred Years of Solitude")
 ```
 
 
