@@ -16,13 +16,14 @@ output:
       - "css/zew.css"
 ---
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-knitr::opts_chunk$set(fig.align = "center")
+knitr::opts_chunk$set(fig.align = "center", fig.retina = 4, out.width = "100%")
 library(tidyverse)
 library(knitr)
 library(magrittr)
 library(factoextra)
 library(cluster)
 library(gridExtra)
+library(factoextra)
 ```
 
 ```{r, echo=FALSE}
@@ -283,13 +284,15 @@ include_graphics("img/session_6/hier1.png")
     1. Step 1: Every observation represents a cluster
     1. Step 2: Cluster merge into a single cluster in the next level
     1. The dissimilarity at each level could be:
-        1. Single linkage (SL) or nearest-neighbor: closest intergroup similarity (least dissimilar)
-        1. Complete linkage (CL): furthest intergroup dissimilarity (most dissimilar)
-        1. Group average (GA): average dissimilarity between groups.
+        1. Single linkage (SL) or nearest-neighbor
+        1. Complete linkage (CL)
+        1. Average linkage (AL)
+        1. Centroid linkage (CeL)
+        1. Ward’s minimum variance method (ward)
 ]
 
 .pr[
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
 include_graphics("img/session_6/hier2.png")
 include_graphics("img/session_6/hier3.png")
 ```
@@ -356,6 +359,20 @@ wdi %>%
 ```
 
 ---
+# Necessary packages for this session
+
+```{r, eval=FALSE}
+library(tidyverse)
+library(knitr)
+library(magrittr)
+library(factoextra)
+library(cluster)
+library(gridExtra)
+```
+
+
+
+---
 # K-means clustering: segmentating the countries according to WDI
 
 .pl[
@@ -386,8 +403,8 @@ Tip: The build-in function `scale(x)` does the same as the user-defined function
 ```{r g2, eval=FALSE}
 (wdi_case_df <- wdi_case %>%
     tibble::column_to_rownames("country")) %>% 
-  factoextra::get_dist(method = "euclidean") %>% 
-  factoextra::fviz_dist()
+  get_dist(method = "euclidean") %>% 
+  fviz_dist()
 ```
 
 Tip: The package `factoextra`is a good tool to visualize clusters in R.
@@ -405,8 +422,10 @@ Tip: The package `factoextra`is a good tool to visualize clusters in R.
 
 .pl[
 ```{r}
+set.seed(123)
 wdi1 <- wdi_case %>%
-    tibble::column_to_rownames("country") # kmeans does not work well with tibbles (for now)
+    sample_n(50) %>% 
+    tibble::column_to_rownames("country")  # kmeans does not work well with tibbles (for now)
 
 (kmeans <- c(2:10) %>% 
     enframe(name = "name", value = "centers") %>% 
@@ -432,8 +451,8 @@ kmeans$k_means[[1]] %>% summary()
 ```{r}
 kmeans %<>% 
   mutate(k_graph=map(k_means
-                     , ~factoextra::fviz_cluster(object = .
-                                                 , data = wdi1)+
+                     , ~fviz_cluster(object = .
+                                     , data = wdi1)+
                        labs(title="")
                      )
   )
@@ -514,15 +533,179 @@ kmeans %>%
 ---
 # Hierarchical clustering: segmentating the countries according to WDI
 
-```{r}
-dist_wdi <- factoextra::get_dist(wdi1)
-hclust_avg <- hclust(dist_wdi, method = 'average')
+```{r, eval=FALSE}
+hclust <- tidyr::expand_grid(aggl=c("ward.D", "ward.D2", "single"
+                                             , "complete", "average", "centroid")
+                   , k=2:5) %>% 
+  mutate(h_clust=map2(.x = aggl, .y = k, .f = ~eclust(x = wdi1, FUNcluster = "hclust"
+                                                      , hc_method = .x
+                                                      , k=.y
+                                                      , hc_metric = "pearson")
+                      )
+         )
+```
+
+```{r, echo=FALSE, eval=FALSE}
+write_rds(hclust, "datasets/hclust.rds")
+```
+
+```{r, echo=FALSE}
+(hclust <- read_rds("datasets/hclust.rds"))
+```
+
+---
+# Hierarchical clustering: segmentating the countries according to WDI
+
+```{r, warning=FALSE, error=FALSE, fig.retina=4, out.width="45%"}
+fviz_dend(hclust$h_clust[[4]], horiz = T)
 ```
 
 
+---
+# Hierarchical clustering: segmentating the countries according to WDI
+
+.pl[
+### How sensitive are the cluster affinity to the agglomeration measure?
+
+```{r hclust1, eval=FALSE}
+dendextend::tanglegram(hclust$h_clust[[8]], hclust$h_clust[[12]]
+                       , lwd=1
+                       , highlight_distinct_edges = FALSE
+                       , common_subtrees_color_branches = TRUE)
+```
+
+Entanglement measures the correspondency between two trees. It goes from 1 (full entanglement) to 0 (no entanglement).
+
+```{r}
+dlist <- dendextend::dendlist(as.dendrogram(hclust$h_clust[[8]])
+                              , as.dendrogram(hclust$h_clust[[12]]))
+dendextend::entanglement(dlist)
+```
+
+]
+
+.pr[
+```{r ref.label="hclust1", echo=FALSE}
+
+```
+
+]
 
 
 
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+1. Principal components are a sequence of projections of the data, mutually uncorrelated and ordered in variance.
+1. First it identifies the hyperplane that lies closest to the data, and then it projects the data onto it.
+1. Given a set of data $\mathbb{R}^p$, a PC provides a linear approximation to the data $(x_1,\dots, x_N)$, of all ranks $q \le p$.
+    1. $f(\lambda)=\mu + V_q\lambda$
+    
+where: $\mu$ is a location vector in $\mathbb{R}^p$, $V_q$ a $p \times q$ matrix with $q$ orthogonal unit vector as columns, and $\lambda$ is a $q$ vector of parameters.
+]
+
+.pr[
+```{r, echo=FALSE, out.width="100%"}
+include_graphics("img/session_6/pca1.png")
+```
+]
+
+.footnote[
+Source\: Friedman, J., Hastie, T., & Tibshirani, R. (2001)
+]
+
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+1. Components are orthogonal to each other, therefore, there is no common variance among the total set.
+1. Typically, one applies Singular Value Decomposition (SVD) to decompose the original data in terms of eigenvalue and eigenvectors.
+```{r}
+(pca <- prcomp(wdi1)) %>% 
+  summary()
+```
+
+]
+
+.pr[
+```{r, fig.cap="How many factors include?", echo=FALSE, out.width="80%"}
+fviz_screeplot(pca)
+```
+]
+
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+```{r, fig.width=8}
+fviz_pca(pca, col.var = "contrib", repel=T)
+```
+]
+
+.pr[
+```{r, out.width="70%"}
+pheatmap::pheatmap(cor(wdi1))
+```
+
+]
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+## Variables
+```{r}
+(pca_var <- get_pca_var(pca))
+```
+
+```{r contvar, eval=FALSE}
+pca_var$contrib %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column("var") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(cols = dim_1:dim_6) %>% 
+  ggplot(aes(name, value, fill=var))+
+  geom_col()
+```
+]
+
+.pr[
+```{r ref.label="contvar", echo=FALSE}
+
+```
+]
+
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+## Observations
+```{r}
+(pca_var <- get_pca_ind(pca))
+```
+
+```{r contvar1, eval=FALSE}
+pca_var$contrib %>% 
+    as.data.frame() %>% 
+    tibble::rownames_to_column("obs") %>% 
+    janitor::clean_names() %>% 
+    pivot_longer(cols = dim_1:dim_6, names_to = "comp") %>% 
+    group_by(comp) %>% 
+    top_n(n = 3, wt = value) %>% 
+    mutate(rank=rank(desc(value))) %>% 
+    ggplot(aes(reorder(obs, value), value))+
+    geom_col(aes(fill=value))+
+    facet_wrap(~comp, scales = "free")+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")+
+    labs(x="", y="Contribution")
+```
+]
+
+.pr[
+```{r ref.label="contvar1", echo=FALSE}
+
+```
+]
 
 
 ---

@@ -232,7 +232,7 @@ In the [appendix](#appendix) I have included more distance measures.
 ]
 
 .pr[
-&lt;img src="img/session_6/hier1.png" width="1328" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/session_6/hier1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -244,17 +244,19 @@ In the [appendix](#appendix) I have included more distance measures.
     1. Step 1: Every observation represents a cluster
     1. Step 2: Cluster merge into a single cluster in the next level
     1. The dissimilarity at each level could be:
-        1. Single linkage (SL) or nearest-neighbor: closest intergroup similarity (least dissimilar)
-        1. Complete linkage (CL): furthest intergroup dissimilarity (most dissimilar)
-        1. Group average (GA): average dissimilarity between groups.
+        1. Single linkage (SL) or nearest-neighbor
+        1. Complete linkage (CL)
+        1. Average linkage (AL)
+        1. Centroid linkage (CeL)
+        1. Ward’s minimum variance method (ward)
 ]
 
 .pr[
-&lt;img src="img/session_6/hier2.png" width="1047" style="display: block; margin: auto;" /&gt;&lt;img src="img/session_6/hier3.png" width="845" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/session_6/hier2.png" width="100%" style="display: block; margin: auto;" /&gt;&lt;img src="img/session_6/hier3.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 
 ```r
@@ -288,7 +290,7 @@ wdi &lt;- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
 ```
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 
@@ -303,12 +305,12 @@ wdi %&gt;%
 ]
 
 .pr[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-12-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 
 ```r
@@ -343,7 +345,22 @@ wdi %&gt;%
 ```
 
 ---
-# Study case on clustering: World Development Indicators
+# Necessary packages for this session
+
+
+```r
+library(tidyverse)
+library(knitr)
+library(magrittr)
+library(factoextra)
+library(cluster)
+library(gridExtra)
+```
+
+
+
+---
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 ## Transformations
@@ -360,11 +377,11 @@ Tip: The build-in function `scale(x)` does the same as the user-defined function
 ]
 
 .pr[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-14-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 ## Distance
@@ -373,8 +390,8 @@ Tip: The build-in function `scale(x)` does the same as the user-defined function
 ```r
 (wdi_case_df &lt;- wdi_case %&gt;%
     tibble::column_to_rownames("country")) %&gt;% 
-  factoextra::get_dist(method = "euclidean") %&gt;% 
-  factoextra::fviz_dist()
+  get_dist(method = "euclidean") %&gt;% 
+  fviz_dist()
 ```
 
 Tip: The package `factoextra`is a good tool to visualize clusters in R.
@@ -382,17 +399,19 @@ Tip: The package `factoextra`is a good tool to visualize clusters in R.
 ]
 
 .pr[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-15-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 
 ```r
+set.seed(123)
 wdi1 &lt;- wdi_case %&gt;%
-    tibble::column_to_rownames("country") # kmeans does not work well with tibbles (for now)
+    sample_n(50) %&gt;% 
+    tibble::column_to_rownames("country")  # kmeans does not work well with tibbles (for now)
 
 (kmeans &lt;- c(2:10) %&gt;% 
     enframe(name = "name", value = "centers") %&gt;% 
@@ -427,45 +446,45 @@ kmeans$k_means[[1]] %&gt;% summary()
 
 ```
 ##              Length Class  Mode   
-## cluster      116    -none- numeric
-## centers       12    -none- numeric
-## totss          1    -none- numeric
-## withinss       2    -none- numeric
-## tot.withinss   1    -none- numeric
-## betweenss      1    -none- numeric
-## size           2    -none- numeric
-## iter           1    -none- numeric
-## ifault         1    -none- numeric
+## cluster      50     -none- numeric
+## centers      12     -none- numeric
+## totss         1     -none- numeric
+## withinss      2     -none- numeric
+## tot.withinss  1     -none- numeric
+## betweenss     1     -none- numeric
+## size          2     -none- numeric
+## iter          1     -none- numeric
+## ifault        1     -none- numeric
 ```
 
 ]
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 
 ```r
 kmeans %&lt;&gt;% 
   mutate(k_graph=map(k_means
-                     , ~factoextra::fviz_cluster(object = .
-                                                 , data = wdi1)+
+                     , ~fviz_cluster(object = .
+                                     , data = wdi1)+
                        labs(title="")
                      )
   )
 ```
 
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-19-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
 .pr[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-20-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-21-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 
@@ -495,10 +514,10 @@ kmeans$tidy[[1]]
 
 ```
 ## # A tibble: 2 x 9
-##        x1     x2     x3     x4     x5     x6  size withinss cluster
-##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1  0.0883  0.528  0.239 -0.554  0.503  0.308    81     292. 1      
-## 2 -0.204  -1.22  -0.552  1.28  -1.16  -0.713    35     130. 2
+##       x1     x2     x3     x4     x5     x6  size withinss cluster
+##    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
+## 1  0.359  0.715  0.410 -0.587  0.548  0.346    30     93.2 1      
+## 2 -0.251 -1.06  -0.421  1.09  -0.842 -0.694    20     74.0 2
 ```
 
 ```r
@@ -507,11 +526,11 @@ kmeans$augment[[1]] %&gt;% head(3)
 
 ```
 ## # A tibble: 3 x 2
-##   .rownames   .cluster
-##   &lt;chr&gt;       &lt;fct&gt;   
-## 1 afghanistan 2       
-## 2 albania     1       
-## 3 argentina   1
+##   .rownames .cluster
+##   &lt;chr&gt;     &lt;fct&gt;   
+## 1 estonia   1       
+## 2 rwanda    2       
+## 3 iceland   1
 ```
 
 ```r
@@ -522,13 +541,13 @@ kmeans$glance[[1]]
 ## # A tibble: 1 x 4
 ##   totss tot.withinss betweenss  iter
 ##   &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
-## 1   690         422.      268.     1
+## 1  288.         167.      121.     1
 ```
 
 ]
 
 ---
-# Study case on clustering: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 .pl[
 ## Optimal number of clusters
@@ -545,38 +564,244 @@ kmeans %&gt;%
   ggplot()+
   geom_line(aes(centers, diff), col="blue")+
   geom_line(aes(centers, tot.withinss), col="red")+
-  scale_x_continuous(breaks = 1:10)
+  scale_x_continuous(breaks = 1:10)+
+  labs(y="Total within variance sum of squares")
+```
+]
+
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Hierarchical clustering: segmentating the countries according to WDI
+
+
+```r
+hclust &lt;- tidyr::expand_grid(aggl=c("ward.D", "ward.D2", "single"
+                                             , "complete", "average", "centroid")
+                   , k=2:5) %&gt;% 
+  mutate(h_clust=map2(.x = aggl, .y = k, .f = ~eclust(x = wdi1, FUNcluster = "hclust"
+                                                      , hc_method = .x
+                                                      , k=.y
+                                                      , hc_metric = "pearson")
+                      )
+         )
 ```
 
+
+
+
+```
+## # A tibble: 24 x 3
+##    aggl        k h_clust     
+##    &lt;chr&gt;   &lt;int&gt; &lt;list&gt;      
+##  1 ward.D      2 &lt;S3: hclust&gt;
+##  2 ward.D      3 &lt;S3: hclust&gt;
+##  3 ward.D      4 &lt;S3: hclust&gt;
+##  4 ward.D      5 &lt;S3: hclust&gt;
+##  5 ward.D2     2 &lt;S3: hclust&gt;
+##  6 ward.D2     3 &lt;S3: hclust&gt;
+##  7 ward.D2     4 &lt;S3: hclust&gt;
+##  8 ward.D2     5 &lt;S3: hclust&gt;
+##  9 single      2 &lt;S3: hclust&gt;
+## 10 single      3 &lt;S3: hclust&gt;
+## # … with 14 more rows
+```
+
+---
+# Hierarchical clustering: segmentating the countries according to WDI
+
+
+```r
+fviz_dend(hclust$h_clust[[4]], horiz = T)
+```
+
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-28-1.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Hierarchical clustering: segmentating the countries according to WDI
+
+.pl[
+### How sensitive are the cluster affinity to the agglomeration measure?
+
+
+```r
+dendextend::tanglegram(hclust$h_clust[[8]], hclust$h_clust[[12]]
+                       , lwd=1
+                       , highlight_distinct_edges = FALSE
+                       , common_subtrees_color_branches = TRUE)
+```
+
+Entanglement measures the correspondency between two trees. It goes from 1 (full entanglement) to 0 (no entanglement).
+
+
+```r
+dlist &lt;- dendextend::dendlist(as.dendrogram(hclust$h_clust[[8]])
+                              , as.dendrogram(hclust$h_clust[[12]]))
+dendextend::entanglement(dlist)
+```
+
+```
+## [1] 0.3239344
+```
 
 ]
 
 .pr[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-23-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-30-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
 
 
+---
+# Unsupervised learning: Principal Components
 
+.pl[
+1. Principal components are a sequence of projections of the data, mutually uncorrelated and ordered in variance.
+1. First it identifies the hyperplane that lies closest to the data, and then it projects the data onto it.
+1. Given a set of data `\(\mathbb{R}^p\)`, a PC provides a linear approximation to the data `\((x_1,\dots, x_N)\)`, of all ranks `\(q \le p\)`.
+    1. `\(f(\lambda)=\mu + V_q\lambda\)`
+    
+where: `\(\mu\)` is a location vector in `\(\mathbb{R}^p\)`, `\(V_q\)` a `\(p \times q\)` matrix with `\(q\)` orthogonal unit vector as columns, and `\(\lambda\)` is a `\(q\)` vector of parameters.
+]
 
+.pr[
+&lt;img src="img/session_6/pca1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
 
-
-
+.footnote[
+Source\: Friedman, J., Hastie, T., &amp; Tibshirani, R. (2001)
+]
 
 ---
+# Unsupervised learning: Principal Components
+
+.pl[
+1. Components are orthogonal to each other, therefore, there is no common variance among the total set.
+1. Typically, one applies Singular Value Decomposition (SVD) to decompose the original data in terms of eigenvalue and eigenvectors.
+
+```r
+(pca &lt;- prcomp(wdi1)) %&gt;% 
+  summary()
+```
+
+```
+## Importance of components:
+##                           PC1    PC2    PC3     PC4     PC5    PC6
+## Standard deviation     1.8336 1.1084 0.8048 0.58128 0.43670 0.3287
+## Proportion of Variance 0.5723 0.2091 0.1103 0.05751 0.03246 0.0184
+## Cumulative Proportion  0.5723 0.7814 0.8916 0.94914 0.98160 1.0000
+```
+
+]
+
+.pr[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-33-1.png" alt="How many factors include?" width="80%" /&gt;
+&lt;p class="caption"&gt;How many factors include?&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+
+```r
+fviz_pca(pca, col.var = "contrib", repel=T)
+```
+
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-34-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pr[
+
+```r
+pheatmap::pheatmap(cor(wdi1))
+```
+
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+## Variables
+
+```r
+(pca_var &lt;- get_pca_var(pca))
+```
+
+```
+## Principal Component Analysis Results for variables
+##  ===================================================
+##   Name       Description                                    
+## 1 "$coord"   "Coordinates for the variables"                
+## 2 "$cor"     "Correlations between variables and dimensions"
+## 3 "$cos2"    "Cos2 for the variables"                       
+## 4 "$contrib" "contributions of the variables"
+```
 
 
+```r
+pca_var$contrib %&gt;% 
+  as.data.frame() %&gt;% 
+  tibble::rownames_to_column("var") %&gt;% 
+  janitor::clean_names() %&gt;% 
+  pivot_longer(cols = dim_1:dim_6) %&gt;% 
+  ggplot(aes(name, value, fill=var))+
+  geom_col()
+```
+]
+
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-37-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Unsupervised learning: Principal Components
+
+.pl[
+## Observations
+
+```r
+(pca_var &lt;- get_pca_ind(pca))
+```
+
+```
+## Principal Component Analysis Results for individuals
+##  ===================================================
+##   Name       Description                       
+## 1 "$coord"   "Coordinates for the individuals" 
+## 2 "$cos2"    "Cos2 for the individuals"        
+## 3 "$contrib" "contributions of the individuals"
+```
 
 
-It is difficult to choose the “right” number of clusters, since a hierarchical clustering algorithm will always create a hierarchy, even if the data is completely random. But, as with choosing K for K-means, there is the hope that there will be a visible “gap” in the lengths of the links in the dendrogram (represent the dissimilarity between merged groups) between natural clusters and unnatural clusters.
+```r
+pca_var$contrib %&gt;% 
+    as.data.frame() %&gt;% 
+    tibble::rownames_to_column("obs") %&gt;% 
+    janitor::clean_names() %&gt;% 
+    pivot_longer(cols = dim_1:dim_6, names_to = "comp") %&gt;% 
+    group_by(comp) %&gt;% 
+    top_n(n = 3, wt = value) %&gt;% 
+    mutate(rank=rank(desc(value))) %&gt;% 
+    ggplot(aes(reorder(obs, value), value))+
+    geom_col(aes(fill=value))+
+    facet_wrap(~comp, scales = "free")+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")+
+    labs(x="", y="Contribution")
+```
+]
 
-
-
-
-
-
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-39-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
 
 
 ---
