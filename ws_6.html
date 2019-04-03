@@ -27,7 +27,13 @@ class: center, middle, inverse, title-slide
 
 # Outline
 
+1. Unsupervised learning
+    1. Types
+    1. Challenges
 1. Clustering
+    1. (Dis)similiarity measures
+        1. Quantitative and non-quantitative
+    1. Algorithms
 1. Dimensionality reduction
 
 
@@ -100,6 +106,7 @@ class: center, middle, inverse, title-slide
     
 ---
 # Unsupervised learning: Clustering (data segmentation)
+## Transformations
 
 .pl[
 1. As stated, clustering algorithms are sensitive to scales. It is a common practice to transforma the features.
@@ -114,13 +121,270 @@ x2=4*rep(1, 100)+rnorm(100)
     
 ]
 
-.pr2[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
 ---
 # Unsupervised learning: Clustering (data segmentation)
+## Measuring (dis)similarity
+
+1. A clustering method attempts to group the objects based on the definition of similarity supplied to it.
+1. Data is defined in terms of proximity between a pair of objects. Proximity can be measure either by affinity (similarities) or lack of it (dissimilarities).
+    1. `\(D\)` of size `\(N \times N\)`, where `\(N\)` is the number of objects.
+    1. Matrix `\(D\)` is used as an input for the algorithm
+    1. Algorithms assumes that the matrix `\(D\)` is simmetric
+1. A dissimilarity matrix `\(D\)` is a matrix where `\(d_{i,i}=0\)` and `\(d_{i,j}\ge0\)`, that is, it measures the distance between elements `\(i\)` and `\(j\)`.
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+## Measuring (dis)similarity based on attributes
+
+1. Most often we have measurements `\(x_{ij}\)` for `\(i = 1, 2, . . . , N\)`, on variables `\(j = 1, 2, . . . , p\)` (also called attributes)
+1. Step 1: construct pairwise dissimilarities between the observations and used as input.
+1. Step 2: We define a dissimilarity `\(d_j(x_{ij}, x_{i'j})\)` between values of the jth attribute.
+1. Step 3: Define the measure according to the type of attribute (feature)
+
+### Quantitative
+
+| Measure | Formula |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| Absolute | `\(d(x_i,x_i')=abs(x_i-x_i')\)` |
+| Squared | `\(d(x_i,x_i')=(x_i-x_i')^2\)` |
+| Correlation | `\(\frac{{}\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})} {\sqrt{\sum_{i=1}^{n} (x_i - \overline{x})^2(y_i - \overline{y})^2}}\)` |
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+## Measuring (dis)similarity based on attributes
+
+### Categorical
+
+1. Ordinal: Ordered set of elements eg likert scales. Error measures for ordinal features are generally defined by replacing their `\(M\)` original values following:
+
+$$
+\frac{i-1/2}{M}, \ i=1,\dots,M
+$$
+
+1. Categorical: With unordered categorical (nomimal) we must assess the degree-of-difference between pairs of values by creating `\(M \times M\)` matrix of distinct elements. Distance is given by `\(L_{rr'}=1\)` if the elements match.
+
+One can create a correlation of categorical variables with **tetrachoric** (binary) and **polychoric** (ordinal) correlations.
+[Nice description](http://www.john-uebersax.com/stat/tetra.htm)
+
+In the [appendix](#appendix) I have included more distance measures.
+
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+## Algorithms
+.middle2[
+1. Combinatorial: work directly on the observed data with no direct reference to an underlying probability model
+    1. Most popular
+    1. Hard to assess the quality of grouping output
+1. Mixture modeling: data is an i.i.d sample from some population described by a probability density function.
+1. Mode seekers (“bump hunters”) take a nonparametric perspective, attempting to directly estimate distinct modes of the probability density function.
+]
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+
+## Combinatorial
+
+1. Each observation is uniquely labeled by an integer `\(i \in \{1, · · ·, N\}\)`.
+1. Prespecified number of clusters `\(K &lt; N\)` is postulated, and each one is labeled by an integer `\(k \in \{1, . . . , K\}\)`
+1. Each observation is assigned to one and only one cluster.
+1. Heuristic procedure
+1. Popular algorithms 
+    1. K-means clustering
+    1. Hierarchical clustering
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+
+.pl[
+## K-means
+&lt;img src="img/session_6/k_means.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pr[
+&lt;img src="img/session_6/k_means2.png" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+.pl[
+## Hierarchical clustering (HC)
+
+1. K-means demand to establish the number of clusters beforehand. In contrast, hierarchical clustering methods do no require such specifications.
+1. With HC the user have to specify a measure of dissimilarity between (disjoint) groups of observations, based on the pairwise dissimilarities among the observations in the two groups.
+1. Produces hierarchical reprentation of the data
+]
+
+.pr[
+&lt;img src="img/session_6/hier1.png" width="1328" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+
+.pl[
+## Hierarchical clustering (HC)
+1. Agglomerative (bottom-up): it starts by merging two set of clusters, then repeat the process in the next level.
+    1. Step 1: Every observation represents a cluster
+    1. Step 2: Cluster merge into a single cluster in the next level
+    1. The dissimilarity at each level could be:
+        1. Single linkage (SL) or nearest-neighbor: closest intergroup similarity (least dissimilar)
+        1. Complete linkage (CL): furthest intergroup dissimilarity (most dissimilar)
+        1. Group average (GA): average dissimilarity between groups.
+]
+
+.pr[
+&lt;img src="img/session_6/hier2.png" width="1047" style="display: block; margin: auto;" /&gt;&lt;img src="img/session_6/hier3.png" width="845" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+## Study case: World Development Indicators
+
+
+```r
+wdi &lt;- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
+                                                , "secon_enrol"="SE.SEC.ENRR"
+                                                , "gov_exp_ed"="SE.XPD.TOTL.GD.ZS"
+                                                , "fert_rate"="SP.DYN.TFRT.IN"
+                                                , "life_exp"="SP.DYN.LE00.MA.IN"
+                                                , "gni_pc"="NY.GNP.PCAP.CD")
+                 , start = 2014
+                 , end = 2018) %&gt;% 
+    as_tibble()
+```
+
+
+```
+## # A tibble: 1,320 x 9
+##    iso2c country  year unemp secon_enrol gov_exp_ed fert_rate life_exp
+##    &lt;chr&gt; &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 1A    Arab W…  2014 10.3         70.2      NA         3.41     69.1
+##  2 1A    Arab W…  2015 10.3         70.6      NA         3.37     69.3
+##  3 1A    Arab W…  2016 10.0         70.9      NA         3.33     69.5
+##  4 1A    Arab W…  2017  9.93        71.1      NA        NA        NA  
+##  5 1A    Arab W…  2018  9.81        NA        NA        NA        NA  
+##  6 1W    World    2014  5.44        76.3       4.72      2.46     69.6
+##  7 1W    World    2015  5.45        76.5       4.81      2.45     69.8
+##  8 1W    World    2016  5.53        76.8      NA         2.44     70.0
+##  9 1W    World    2017  5.49        76.6      NA        NA        NA  
+## 10 1W    World    2018  5.38        NA        NA        NA        NA  
+## # … with 1,310 more rows, and 1 more variable: gni_pc &lt;dbl&gt;
+```
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+## Study case: World Development Indicators
+
+
+```r
+wdi %&gt;% 
+  group_by(country) %&gt;% 
+  summarise_at(.vars = vars(unemp:gni_pc)
+               , .funs = ~mean(., na.rm = T)
+               )
+```
+
+
+```
+## # A tibble: 264 x 7
+##    country           unemp secon_enrol gov_exp_ed fert_rate life_exp gni_pc
+##    &lt;chr&gt;             &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Afghanistan        8.81        53.6       3.76      4.81     62.0   595 
+##  2 Albania           15.8         95.8       3.19      1.71     76.2  4392.
+##  3 Algeria           10.4        NaN       NaN         2.84     74.7  4652.
+##  4 American Samoa   NaN          NaN       NaN       NaN       NaN     NaN 
+##  5 Andorra          NaN          NaN         3.18    NaN       NaN     NaN 
+##  6 Angola             7.80        50.5     NaN         5.77     58.4  4218.
+##  7 Antigua and Bar… NaN           93.6     NaN         2.06     73.7 12815 
+##  8 Arab World        10.1         70.7     NaN         3.37     69.3  6811.
+##  9 Argentina          7.96       107.        5.57      2.31     72.6 12488.
+## 10 Armenia           18.1         86.0       2.60      1.62     71.1  3985 
+## # … with 254 more rows
+```
+
+---
+# Unsupervised learning: Clustering (data segmentation)
+## Study case: World Development Indicators
+
+
+```r
+wdi %&gt;% 
+  group_by(country) %&gt;% 
+  summarise_at(.vars = vars(unemp:gni_pc)
+               , .funs = ~mean(., na.rm = T)
+               ) %&gt;% 
+  filter(complete.cases(.)) # filter and keep complete cases only
+```
+
+
+```
+## # A tibble: 155 x 7
+##    country     unemp secon_enrol gov_exp_ed fert_rate life_exp gni_pc
+##    &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Afghanistan  8.81        53.6       3.76      4.81     62.0   595 
+##  2 Albania     15.8         95.8       3.19      1.71     76.2  4392.
+##  3 Argentina    7.96       107.        5.57      2.31     72.6 12488.
+##  4 Armenia     18.1         86.0       2.60      1.62     71.1  3985 
+##  5 Australia    5.78       156.        5.25      1.81     80.4 57708.
+##  6 Austria      5.65       100.        5.45      1.48     78.8 47335 
+##  7 Azerbaijan   4.99        91.7       2.83      1.95     68.9  5772.
+##  8 Bahrain      1.21       102.        2.60      2.06     75.9 21538.
+##  9 Bangladesh   4.39        66.6       1.54      2.13     70.6  1265 
+## 10 Barbados    10.5        108.        5.33      1.80     73.3 15365 
+## # … with 145 more rows
+```
+
+
+
+
+
+
+
+
+
+
+
+---
+name: references
+# References
+
+1. Everitt, B. S., Landau, S., Leese, M., &amp; Stahl, D. (2011). Cluster Analysis. Wiley.
+1. Géron, A. (2017). Hands-on machine learning with Scikit-Learn and TensorFlow: concepts, tools, and techniques to build intelligent systems. " O'Reilly Media, Inc.".
+1. Friedman, J., Hastie, T., &amp; Tibshirani, R. (2001). The elements of statistical learning (Vol. 1, No. 10). New York: Springer series in statistics.
+1. Murphy, K. P. (2012). Machine learning: a probabilistic perspective. MIT press.
+
+
+
+---
+name: appendix
+# Appendix
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/session_6/binary_dis.png" alt="Counts of binary outcomes for two individuals (source: Everitt et al 2011)" width="50%" /&gt;
+&lt;p class="caption"&gt;Counts of binary outcomes for two individuals (source: Everitt et al 2011)&lt;/p&gt;
+&lt;/div&gt;
+
+---
+# Appendix
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/session_6/measure_bin.png" alt="Similarity measures for binary data (source: Everitt et al 2011)" width="50%" /&gt;
+&lt;p class="caption"&gt;Similarity measures for binary data (source: Everitt et al 2011)&lt;/p&gt;
+&lt;/div&gt;
+
+---
+# Appendix
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/session_6/measure_con.png" alt="Dissimilarity measures for continuous data (source: Everitt et al 2011)" width="50%" /&gt;
+&lt;p class="caption"&gt;Dissimilarity measures for continuous data (source: Everitt et al 2011)&lt;/p&gt;
+&lt;/div&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

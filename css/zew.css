@@ -230,6 +230,7 @@ thead, tfoot, tr:nth-child(even) { background: none; }
 /* Make bold syntax compile to midd-blue */
 strong {
   color: #0D395F;
+  font-size: 22px;
 }
 
 .RUred {
@@ -302,7 +303,7 @@ midd-blockquote {
 }
 
 .remark-slide-content h3 {
-  font-size: 25px;
+  font-size: 28px;
 }
 
 .remark-slide-content {
@@ -365,23 +366,15 @@ midd-blockquote {
   float: left;
   width: 49%;
   height: 98%;
+  vertical-align: middle;
 }
 
 .pr {
   float: right;
   width: 49%;
   height: 98%;
-}
-
-.pr2 {
-  float: right;
-  width: 49%;
-  height: 98%;
   vertical-align: middle;
-  margin-top: 5%;
-
 }
-
 
 .hljs-solarized-dark .hljs {
   color: #ffffff;
@@ -424,4 +417,8 @@ midd-blockquote {
     margin-left: 25%;
     margin-right: 25%;
     margin-top: 15%;
+}
+
+.middle2 {
+    margin-top: 10%;
 }
