@@ -19,6 +19,10 @@ output:
 knitr::opts_chunk$set(fig.align = "center")
 library(tidyverse)
 library(knitr)
+library(magrittr)
+library(factoextra)
+library(cluster)
+library(gridExtra)
 ```
 
 ```{r, echo=FALSE}
@@ -129,7 +133,17 @@ robF <- function(x){
 x1=1*rep(1, 100)+rnorm(100, sd = 2)
 x2=4*rep(1, 100)+rnorm(100)
 ```
-    
+   
+```{r}
+stdF <- function(x){
+    (x-mean(x, na.rm = T))/sd(x, na.rm = T)
+}
+
+normF <- function(x){
+    (x-min(x, na.rm = T))/(max(x, na.rm = T)-min(x, na.rm = T))
+}
+```
+ 
 ]
 
 .pr[
@@ -282,8 +296,7 @@ include_graphics("img/session_6/hier3.png")
 ]
 
 ---
-# Unsupervised learning: Clustering (data segmentation)
-## Study case: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 ```{r, eval=FALSE}
 wdi <- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
@@ -302,41 +315,209 @@ wdi <- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
 ```
 
 ---
-# Unsupervised learning: Clustering (data segmentation)
-## Study case: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
+.pl[
 ```{r step1, eval=FALSE}
 wdi %>% 
   group_by(country) %>% 
   summarise_at(.vars = vars(unemp:gni_pc)
                , .funs = ~mean(., na.rm = T)
-               )
+               ) %>% 
+  naniar::vis_miss()
 ```
+]
 
-```{r ref.label="step1", echo=FALSE}
+.pr[
+```{r ref.label="step1", echo=FALSE, fig.retina=3}
 
 ```
+]
+
 
 ---
-# Unsupervised learning: Clustering (data segmentation)
-## Study case: World Development Indicators
+# K-means clustering: segmentating the countries according to WDI
 
 ```{r step2, eval=FALSE}
-wdi %>% 
+(wdi_case <- wdi %>% 
   group_by(country) %>% 
   summarise_at(.vars = vars(unemp:gni_pc)
                , .funs = ~mean(., na.rm = T)
                ) %>% 
-  filter(complete.cases(.)) # filter and keep complete cases only
+  filter(complete.cases(.)) %>% # filter and keep complete cases only
+  mutate(country=str_to_lower(country)) %>% 
+  filter(!grepl(country, pattern = "asia|euro|america|demographic|countries|income|ida|oecd|small|africa|world")
+         )
+ )
 ```
 
 ```{r ref.label="step2", echo=FALSE}
 
 ```
 
+---
+# K-means clustering: segmentating the countries according to WDI
 
+.pl[
+## Transformations
+```{r g1, eval=FALSE}
+(wdi_case %<>% 
+  mutate_at(.vars = vars(-country), .funs = ~stdF(.))) %>% 
+  pivot_longer(cols = -country) %>% 
+  ggplot(aes(fill=name, value))+
+  geom_density(alpha=.5, col="white")
+```
 
+Tip: The build-in function `scale(x)` does the same as the user-defined function `stdF(x)`
+]
 
+.pr[
+```{r ref.label="g1", echo=FALSE, fig.retina=3}
+
+```
+]
+
+---
+# K-means clustering: segmentating the countries according to WDI
+
+.pl[
+## Distance
+
+```{r g2, eval=FALSE}
+(wdi_case_df <- wdi_case %>%
+    tibble::column_to_rownames("country")) %>% 
+  factoextra::get_dist(method = "euclidean") %>% 
+  factoextra::fviz_dist()
+```
+
+Tip: The package `factoextra`is a good tool to visualize clusters in R.
+
+]
+
+.pr[
+```{r ref.label="g2", echo=FALSE, fig.retina=4}
+
+```
+]
+
+---
+# K-means clustering: segmentating the countries according to WDI
+
+.pl[
+```{r}
+wdi1 <- wdi_case %>%
+    tibble::column_to_rownames("country") # kmeans does not work well with tibbles (for now)
+
+(kmeans <- c(2:10) %>% 
+    enframe(name = "name", value = "centers") %>% 
+    dplyr::select(-name) %>% 
+    mutate(k_means=map(centers, ~kmeans(wdi1, centers = ., nstart=25)
+                       )
+           )
+  )
+```
+]
+
+.pr[
+```{r}
+kmeans$k_means[[1]] %>% summary()
+```
+
+]
+
+---
+# K-means clustering: segmentating the countries according to WDI
+
+.pl[
+```{r}
+kmeans %<>% 
+  mutate(k_graph=map(k_means
+                     , ~factoextra::fviz_cluster(object = .
+                                                 , data = wdi1)+
+                       labs(title="")
+                     )
+  )
+```
+
+```{r, fig.height=4, fig.retina=3, echo=FALSE}
+grid.arrange(kmeans$k_graph[[1]], kmeans$k_graph[[3]], nrow=1)
+```
+
+]
+
+.pr[
+```{r, echo=FALSE, fig.retina=3}
+kmeans$k_graph[[7]]
+```
+
+]
+
+---
+# K-means clustering: segmentating the countries according to WDI
+
+.pl[
+```{r}
+kmeans %<>% 
+  mutate(tidy=map(k_means, ~broom::tidy(.)
+                  )
+         , augment=map(k_means
+                       , ~broom::augment(.
+                                         , data=wdi1) %>% 
+                         dplyr::select(.rownames, .cluster))
+         , glance=map(k_means
+                      , ~broom::glance(.
+                                       , data=wdi1))
+         )
+```
+1. `tidy`: Summarizes the model’s statistical findings (varies across models)
+2. `augment`: Add predictions, residuals, and cluster assignments.
+3. `glance`: construct a concise one-row summary of the model.
+]
+
+.pr[
+```{r}
+kmeans$tidy[[1]]
+kmeans$augment[[1]] %>% head(3)
+kmeans$glance[[1]]
+```
+
+]
+
+---
+# K-means clustering: segmentating the countries according to WDI
+
+.pl[
+## Optimal number of clusters
+1. The rule of thumb (also named Elbow Method) for choosing the $K$ amount of clusters is to visualize gaps in the total within variance inside the cluster. 
+    1. The total within cluster sum of square (wss) measures the closeness (minimum as possible)
+    1. Alternatives method: Gap statistic, Silhouette.
+
+```{r kmeans2, eval=FALSE}
+kmeans %>% 
+  unnest(glance) %>% 
+  mutate(ratio=betweenss/tot.withinss
+         , diff=tsibble::difference(tot.withinss)) %>% 
+  ggplot()+
+  geom_line(aes(centers, diff), col="blue")+
+  geom_line(aes(centers, tot.withinss), col="red")+
+  scale_x_continuous(breaks = 1:10)+
+  labs(y="Total within variance sum of squares")
+```
+]
+
+.pr[
+```{r ref.label="kmeans2", echo=FALSE, warning=FALSE, fig.retina=3}
+
+```
+]
+
+---
+# Hierarchical clustering: segmentating the countries according to WDI
+
+```{r}
+dist_wdi <- factoextra::get_dist(wdi1)
+hclust_avg <- hclust(dist_wdi, method = 'average')
+```
 
 
 

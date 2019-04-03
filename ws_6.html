@@ -118,11 +118,22 @@ class: center, middle, inverse, title-slide
 x1=1*rep(1, 100)+rnorm(100, sd = 2)
 x2=4*rep(1, 100)+rnorm(100)
 ```
-    
+   
+
+```r
+stdF &lt;- function(x){
+    (x-mean(x, na.rm = T))/sd(x, na.rm = T)
+}
+
+normF &lt;- function(x){
+    (x-min(x, na.rm = T))/(max(x, na.rm = T)-min(x, na.rm = T))
+}
+```
+ 
 ]
 
 .pr[
-&lt;img src="ws_6_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -243,8 +254,7 @@ In the [appendix](#appendix) I have included more distance measures.
 ]
 
 ---
-# Unsupervised learning: Clustering (data segmentation)
-## Study case: World Development Indicators
+# Study case on clustering: World Development Indicators
 
 
 ```r
@@ -278,40 +288,9 @@ wdi &lt;- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
 ```
 
 ---
-# Unsupervised learning: Clustering (data segmentation)
-## Study case: World Development Indicators
+# Study case on clustering: World Development Indicators
 
-
-```r
-wdi %&gt;% 
-  group_by(country) %&gt;% 
-  summarise_at(.vars = vars(unemp:gni_pc)
-               , .funs = ~mean(., na.rm = T)
-               )
-```
-
-
-```
-## # A tibble: 264 x 7
-##    country           unemp secon_enrol gov_exp_ed fert_rate life_exp gni_pc
-##    &lt;chr&gt;             &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Afghanistan        8.81        53.6       3.76      4.81     62.0   595 
-##  2 Albania           15.8         95.8       3.19      1.71     76.2  4392.
-##  3 Algeria           10.4        NaN       NaN         2.84     74.7  4652.
-##  4 American Samoa   NaN          NaN       NaN       NaN       NaN     NaN 
-##  5 Andorra          NaN          NaN         3.18    NaN       NaN     NaN 
-##  6 Angola             7.80        50.5     NaN         5.77     58.4  4218.
-##  7 Antigua and Bar… NaN           93.6     NaN         2.06     73.7 12815 
-##  8 Arab World        10.1         70.7     NaN         3.37     69.3  6811.
-##  9 Argentina          7.96       107.        5.57      2.31     72.6 12488.
-## 10 Armenia           18.1         86.0       2.60      1.62     71.1  3985 
-## # … with 254 more rows
-```
-
----
-# Unsupervised learning: Clustering (data segmentation)
-## Study case: World Development Indicators
-
+.pl[
 
 ```r
 wdi %&gt;% 
@@ -319,29 +298,279 @@ wdi %&gt;%
   summarise_at(.vars = vars(unemp:gni_pc)
                , .funs = ~mean(., na.rm = T)
                ) %&gt;% 
-  filter(complete.cases(.)) # filter and keep complete cases only
+  naniar::vis_miss()
+```
+]
+
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-12-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+# Study case on clustering: World Development Indicators
+
+
+```r
+(wdi_case &lt;- wdi %&gt;% 
+  group_by(country) %&gt;% 
+  summarise_at(.vars = vars(unemp:gni_pc)
+               , .funs = ~mean(., na.rm = T)
+               ) %&gt;% 
+  filter(complete.cases(.)) %&gt;% # filter and keep complete cases only
+  mutate(country=str_to_lower(country)) %&gt;% 
+  filter(!grepl(country, pattern = "asia|euro|america|demographic|countries|income|ida|oecd|small|africa|world")
+         )
+ )
 ```
 
 
 ```
-## # A tibble: 155 x 7
+## # A tibble: 116 x 7
 ##    country     unemp secon_enrol gov_exp_ed fert_rate life_exp gni_pc
 ##    &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Afghanistan  8.81        53.6       3.76      4.81     62.0   595 
-##  2 Albania     15.8         95.8       3.19      1.71     76.2  4392.
-##  3 Argentina    7.96       107.        5.57      2.31     72.6 12488.
-##  4 Armenia     18.1         86.0       2.60      1.62     71.1  3985 
-##  5 Australia    5.78       156.        5.25      1.81     80.4 57708.
-##  6 Austria      5.65       100.        5.45      1.48     78.8 47335 
-##  7 Azerbaijan   4.99        91.7       2.83      1.95     68.9  5772.
-##  8 Bahrain      1.21       102.        2.60      2.06     75.9 21538.
-##  9 Bangladesh   4.39        66.6       1.54      2.13     70.6  1265 
-## 10 Barbados    10.5        108.        5.33      1.80     73.3 15365 
-## # … with 145 more rows
+##  1 afghanistan  8.81        53.6       3.76      4.81     62.0   595 
+##  2 albania     15.8         95.8       3.19      1.71     76.2  4392.
+##  3 argentina    7.96       107.        5.57      2.31     72.6 12488.
+##  4 armenia     18.1         86.0       2.60      1.62     71.1  3985 
+##  5 australia    5.78       156.        5.25      1.81     80.4 57708.
+##  6 austria      5.65       100.        5.45      1.48     78.8 47335 
+##  7 azerbaijan   4.99        91.7       2.83      1.95     68.9  5772.
+##  8 bahrain      1.21       102.        2.60      2.06     75.9 21538.
+##  9 bangladesh   4.39        66.6       1.54      2.13     70.6  1265 
+## 10 barbados    10.5        108.        5.33      1.80     73.3 15365 
+## # … with 106 more rows
+```
+
+---
+# Study case on clustering: World Development Indicators
+
+.pl[
+## Transformations
+
+```r
+(wdi_case %&lt;&gt;% 
+  mutate_at(.vars = vars(-country), .funs = ~stdF(.))) %&gt;% 
+  pivot_longer(cols = -country) %&gt;% 
+  ggplot(aes(fill=name, value))+
+  geom_density(alpha=.5, col="white")
+```
+
+Tip: The build-in function `scale(x)` does the same as the user-defined function `stdF(x)`
+]
+
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-14-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Study case on clustering: World Development Indicators
+
+.pl[
+## Distance
+
+
+```r
+(wdi_case_df &lt;- wdi_case %&gt;%
+    tibble::column_to_rownames("country")) %&gt;% 
+  factoextra::get_dist(method = "euclidean") %&gt;% 
+  factoextra::fviz_dist()
+```
+
+Tip: The package `factoextra`is a good tool to visualize clusters in R.
+
+]
+
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-15-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Study case on clustering: World Development Indicators
+
+.pl[
+
+```r
+wdi1 &lt;- wdi_case %&gt;%
+    tibble::column_to_rownames("country") # kmeans does not work well with tibbles (for now)
+
+(kmeans &lt;- c(2:10) %&gt;% 
+    enframe(name = "name", value = "centers") %&gt;% 
+    dplyr::select(-name) %&gt;% 
+    mutate(k_means=map(centers, ~kmeans(wdi1, centers = ., nstart=25)
+                       )
+           )
+  )
+```
+
+```
+## # A tibble: 9 x 2
+##   centers k_means     
+##     &lt;int&gt; &lt;list&gt;      
+## 1       2 &lt;S3: kmeans&gt;
+## 2       3 &lt;S3: kmeans&gt;
+## 3       4 &lt;S3: kmeans&gt;
+## 4       5 &lt;S3: kmeans&gt;
+## 5       6 &lt;S3: kmeans&gt;
+## 6       7 &lt;S3: kmeans&gt;
+## 7       8 &lt;S3: kmeans&gt;
+## 8       9 &lt;S3: kmeans&gt;
+## 9      10 &lt;S3: kmeans&gt;
+```
+]
+
+.pr[
+
+```r
+kmeans$k_means[[1]] %&gt;% summary()
+```
+
+```
+##              Length Class  Mode   
+## cluster      116    -none- numeric
+## centers       12    -none- numeric
+## totss          1    -none- numeric
+## withinss       2    -none- numeric
+## tot.withinss   1    -none- numeric
+## betweenss      1    -none- numeric
+## size           2    -none- numeric
+## iter           1    -none- numeric
+## ifault         1    -none- numeric
+```
+
+]
+
+---
+# Study case on clustering: World Development Indicators
+
+.pl[
+
+```r
+kmeans %&lt;&gt;% 
+  mutate(k_graph=map(k_means
+                     , ~factoextra::fviz_cluster(object = .
+                                                 , data = wdi1)+
+                       labs(title="")
+                     )
+  )
+```
+
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-19-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-20-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Study case on clustering: World Development Indicators
+
+.pl[
+
+```r
+kmeans %&lt;&gt;% 
+  mutate(tidy=map(k_means, ~broom::tidy(.)
+                  )
+         , augment=map(k_means
+                       , ~broom::augment(.
+                                         , data=wdi1) %&gt;% 
+                         dplyr::select(.rownames, .cluster))
+         , glance=map(k_means
+                      , ~broom::glance(.
+                                       , data=wdi1))
+         )
+```
+1. `tidy`: Summarizes the model’s statistical findings (varies across models)
+2. `augment`: Add predictions, residuals, and cluster assignments.
+3. `glance`: construct a concise one-row summary of the model.
+]
+
+.pr[
+
+```r
+kmeans$tidy[[1]]
+```
+
+```
+## # A tibble: 2 x 9
+##        x1     x2     x3     x4     x5     x6  size withinss cluster
+##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
+## 1  0.0883  0.528  0.239 -0.554  0.503  0.308    81     292. 1      
+## 2 -0.204  -1.22  -0.552  1.28  -1.16  -0.713    35     130. 2
+```
+
+```r
+kmeans$augment[[1]] %&gt;% head(3)
+```
+
+```
+## # A tibble: 3 x 2
+##   .rownames   .cluster
+##   &lt;chr&gt;       &lt;fct&gt;   
+## 1 afghanistan 2       
+## 2 albania     1       
+## 3 argentina   1
+```
+
+```r
+kmeans$glance[[1]]
+```
+
+```
+## # A tibble: 1 x 4
+##   totss tot.withinss betweenss  iter
+##   &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
+## 1   690         422.      268.     1
+```
+
+]
+
+---
+# Study case on clustering: World Development Indicators
+
+.pl[
+## Optimal number of clusters
+1. The rule of thumb (also named Elbow Method) for choosing the `\(K\)` amount of clusters is to visualize gaps in the total within variance inside the cluster. 
+    1. The total within cluster sum of square (wss) measures the closeness (minimum as possible)
+    1. Alternatives method: Gap statistic, Silhouette.
+
+
+```r
+kmeans %&gt;% 
+  unnest(glance) %&gt;% 
+  mutate(ratio=betweenss/tot.withinss
+         , diff=tsibble::difference(tot.withinss)) %&gt;% 
+  ggplot()+
+  geom_line(aes(centers, diff), col="blue")+
+  geom_line(aes(centers, tot.withinss), col="red")+
+  scale_x_continuous(breaks = 1:10)
 ```
 
 
+]
 
+.pr[
+&lt;img src="ws_6_files/figure-html/unnamed-chunk-23-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+It is difficult to choose the “right” number of clusters, since a hierarchical clustering algorithm will always create a hierarchy, even if the data is completely random. But, as with choosing K for K-means, there is the hope that there will be a visible “gap” in the lengths of the links in the dendrogram (represent the dissimilarity between merged groups) between natural clusters and unnatural clusters.
 
 
 
