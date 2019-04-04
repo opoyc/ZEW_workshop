@@ -15,4 +15,4 @@ Here I provide the session slides in PDF, Html and Rmd formats. However, you jus
 |4|Reproducible research & Web scraping | [HTML](ws_4.html) [PDF](ws_4.pdf) [Rmd](ws_4.Rmd)           | RMarkdown, Journal Articles, Blogs, Xaringan | |
 |5|Data visualization & sentiment analysis | [HTML](ws_5.html) [PDF](ws_5.pdf) [Rmd](ws_5.Rmd) | ggplot, tidy-sentiment-analsysis |
 |6|Unsupervised learning | [HTML](ws_6.html) [PDF](ws_6.pdf) [Rmd](ws_6.Rmd) | K-means, Hierarchical clustering, Principal Components |
-|7|Supervised learning  | | |
+|7|Supervised learning  | | Prediction vs Inference, classification, regularization (lasso & ridge), parameter optimization |
