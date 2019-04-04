@@ -50,8 +50,10 @@ robF <- function(x){
 1. Clustering
     1. (Dis)similiarity measures
         1. Quantitative and non-quantitative
-    1. Algorithms
+    1. K-means
+    1. Hierarchical clustering
 1. Dimensionality reduction
+    1. Principal components analysis
 
 
 
@@ -81,7 +83,7 @@ robF <- function(x){
 
 ### Types
 
-1. Unsupervised transformations (UT): algorithms that create new representation of high dimensional data, which output is potentially easier for other algorithms as well as human to understand the underlying structure.
+1. Unsupervised transformations (UT): algorithms that create a new representation of high dimensional data, which output is potentially easier for other algorithms as well as human to understand the underlying structure.
     1. Dimensionality reduction is the most common application of UT. It summarises the data by creating a smaller feature space that contains as much as possible the variance of the original representation.
     1. Clustering algorithms: partition of data into different groups according to a similarity rule.
     
@@ -90,7 +92,7 @@ robF <- function(x){
 ### Challenges
 
 1. Evaluate if the algorithm is learning something salient
-1. With unlabeled data is hard to tell if the we have done right.
+1. With unlabeled data is hard to tell if we have done right.
     1. In psychological studies is common to construct factors from a set of features.
 1. Is considered as "pre-processing" the data which is going to be used for supervised learning models.
 1. Unsupervised learning algorithms are **highly sensitive to scales**.
@@ -126,7 +128,7 @@ robF <- function(x){
 ## Transformations
 
 .pl[
-1. As stated, clustering algorithms are sensitive to scales. It is a common practice to transforma the features.
+1. As stated, clustering algorithms are sensitive to scales. It is a common practice to transform the features.
     1. Normalize $x_i \in (0,1)$: $\frac{x_i-min(x_i)}{max(x_i)-min(x_i)}$
     1. Standardize $x_i \sim (0,1)$: $\frac{x_i-E(x_i)}{\sigma_{x_i}}$
     1. Robust scaler: $\frac{x_i-Q_1(x_i)}{Q_3(x_i)-Q_1(x_i)}$
@@ -176,10 +178,10 @@ tibble::tibble(x1=1*rep(1, 100)+rnorm(100, sd = 2)
 ## Measuring (dis)similarity
 
 1. A clustering method attempts to group the objects based on the definition of similarity supplied to it.
-1. Data is defined in terms of proximity between a pair of objects. Proximity can be measure either by affinity (similarities) or lack of it (dissimilarities).
+1. Data is defined in terms of proximity between a pair of objects. Proximity can be measured either by affinity (similarities) or lack of it (dissimilarities).
     1. $D$ of size $N \times N$, where $N$ is the number of objects.
     1. Matrix $D$ is used as an input for the algorithm
-    1. Algorithms assumes that the matrix $D$ is simmetric
+    1. Algorithms assume that the matrix $D$ is symmetric
 1. A dissimilarity matrix $D$ is a matrix where $d_{i,i}=0$ and $d_{i,j}\ge0$, that is, it measures the distance between elements $i$ and $j$.
 
 ---
@@ -205,13 +207,13 @@ tibble::tibble(x1=1*rep(1, 100)+rnorm(100, sd = 2)
 
 ### Categorical
 
-1. Ordinal: Ordered set of elements eg likert scales. Error measures for ordinal features are generally defined by replacing their $M$ original values following:
+1. Ordinal: Ordered set of elements eg Likert scales. Error measures for ordinal features are generally defined by replacing their $M$ original values following:
 
 $$
 \frac{i-1/2}{M}, \ i=1,\dots,M
 $$
 
-1. Categorical: With unordered categorical (nomimal) we must assess the degree-of-difference between pairs of values by creating $M \times M$ matrix of distinct elements. Distance is given by $L_{rr'}=1$ if the elements match.
+1. Categorical: With unordered categorical (nominal) we must assess the degree-of-difference between pairs of values by creating $M \times M$ matrix of distinct elements. Distance is given by $L_{rr'}=1$ if the elements match.
 
 One can create a correlation of categorical variables with **tetrachoric** (binary) and **polychoric** (ordinal) correlations.
 [Nice description](http://www.john-uebersax.com/stat/tetra.htm)
@@ -236,7 +238,7 @@ In the [appendix](#appendix) I have included more distance measures.
 ## Combinatorial
 
 1. Each observation is uniquely labeled by an integer $i \in \{1, · · ·, N\}$.
-1. Prespecified number of clusters $K < N$ is postulated, and each one is labeled by an integer $k \in \{1, . . . , K\}$
+1. The prespecified number of clusters $K < N$ is postulated, and each one is labeled by an integer $k \in \{1, . . . , K\}$
 1. Each observation is assigned to one and only one cluster.
 1. Heuristic procedure
 1. Popular algorithms 
@@ -264,9 +266,9 @@ include_graphics("img/session_6/k_means2.png")
 .pl[
 ## Hierarchical clustering (HC)
 
-1. K-means demand to establish the number of clusters beforehand. In contrast, hierarchical clustering methods do no require such specifications.
-1. With HC the user have to specify a measure of dissimilarity between (disjoint) groups of observations, based on the pairwise dissimilarities among the observations in the two groups.
-1. Produces hierarchical reprentation of the data
+1. K-means demand to establish the number of clusters beforehand. In contrast, hierarchical clustering methods do not require such specifications.
+1. With HC the user has to specify a measure of dissimilarity between (disjoint) groups of observations, based on the pairwise dissimilarities among the observations in the two groups.
+1. Produces hierarchical representation of the data
 ]
 
 .pr[
@@ -280,7 +282,7 @@ include_graphics("img/session_6/hier1.png")
 
 .pl[
 ## Hierarchical clustering (HC)
-1. Agglomerative (bottom-up): it starts by merging two set of clusters, then repeat the process in the next level.
+1. Agglomerative (bottom-up): it starts by merging two sets of clusters, then repeat the process in the next level.
     1. Step 1: Every observation represents a cluster
     1. Step 2: Cluster merge into a single cluster in the next level
     1. The dissimilarity at each level could be:
@@ -299,7 +301,7 @@ include_graphics("img/session_6/hier3.png")
 ]
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 ```{r, eval=FALSE}
 wdi <- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
@@ -318,7 +320,7 @@ wdi <- WDI::WDI(country = "all", indicator = c("unemp"="SL.UEM.TOTL.ZS"
 ```
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ```{r step1, eval=FALSE}
@@ -339,7 +341,7 @@ wdi %>%
 
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 ```{r step2, eval=FALSE}
 (wdi_case <- wdi %>% 
@@ -373,7 +375,7 @@ library(gridExtra)
 
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ## Transformations
@@ -395,7 +397,7 @@ Tip: The build-in function `scale(x)` does the same as the user-defined function
 ]
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ## Distance
@@ -407,7 +409,7 @@ Tip: The build-in function `scale(x)` does the same as the user-defined function
   fviz_dist()
 ```
 
-Tip: The package `factoextra`is a good tool to visualize clusters in R.
+Tip: The package `factoextra` is a good tool to visualize clusters in R.
 
 ]
 
@@ -418,7 +420,7 @@ Tip: The package `factoextra`is a good tool to visualize clusters in R.
 ]
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ```{r}
@@ -445,7 +447,7 @@ kmeans$k_means[[1]] %>% summary()
 ]
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ```{r}
@@ -472,7 +474,7 @@ kmeans$k_graph[[7]]
 ]
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ```{r}
@@ -503,12 +505,12 @@ kmeans$glance[[1]]
 ]
 
 ---
-# K-means clustering: segmentating the countries according to WDI
+# K-means clustering: segmenting the countries according to WDI
 
 .pl[
 ## Optimal number of clusters
 1. The rule of thumb (also named Elbow Method) for choosing the $K$ amount of clusters is to visualize gaps in the total within variance inside the cluster. 
-    1. The total within cluster sum of square (wss) measures the closeness (minimum as possible)
+    1. The total within-cluster sum of square (wss) measures the closeness (minimum as possible)
     1. Alternatives method: Gap statistic, Silhouette.
 
 ```{r kmeans2, eval=FALSE}
@@ -531,7 +533,7 @@ kmeans %>%
 ]
 
 ---
-# Hierarchical clustering: segmentating the countries according to WDI
+# Hierarchical clustering: segmenting the countries according to WDI
 
 ```{r, eval=FALSE}
 hclust <- tidyr::expand_grid(aggl=c("ward.D", "ward.D2", "single"
@@ -554,7 +556,7 @@ write_rds(hclust, "datasets/hclust.rds")
 ```
 
 ---
-# Hierarchical clustering: segmentating the countries according to WDI
+# Hierarchical clustering: segmenting the countries according to WDI
 
 ```{r, warning=FALSE, error=FALSE, fig.retina=4, out.width="45%"}
 fviz_dend(hclust$h_clust[[4]], horiz = T)
@@ -562,7 +564,7 @@ fviz_dend(hclust$h_clust[[4]], horiz = T)
 
 
 ---
-# Hierarchical clustering: segmentating the countries according to WDI
+# Hierarchical clustering: segmenting the countries according to WDI
 
 .pl[
 ### How sensitive are the cluster affinity to the agglomeration measure?
@@ -574,7 +576,7 @@ dendextend::tanglegram(hclust$h_clust[[8]], hclust$h_clust[[12]]
                        , common_subtrees_color_branches = TRUE)
 ```
 
-Entanglement measures the correspondency between two trees. It goes from 1 (full entanglement) to 0 (no entanglement).
+Entanglement measures the correspondence between two trees. It goes from 1 (full entanglement) to 0 (no entanglement).
 
 ```{r}
 dlist <- dendextend::dendlist(as.dendrogram(hclust$h_clust[[8]])
@@ -597,8 +599,8 @@ dendextend::entanglement(dlist)
 # Unsupervised learning: Principal Components
 
 .pl[
-1. Principal components are a sequence of projections of the data, mutually uncorrelated and ordered in variance.
-1. First it identifies the hyperplane that lies closest to the data, and then it projects the data onto it.
+1. Principal components are a sequence of projections of the data, mutually uncorrelated and ordered according to the variance.
+1. First, it identifies the hyperplane that lies closest to the data, and then it projects the data onto it.
 1. Given a set of data $\mathbb{R}^p$, a PC provides a linear approximation to the data $(x_1,\dots, x_N)$, of all ranks $q \le p$.
     1. $f(\lambda)=\mu + V_q\lambda$
     
