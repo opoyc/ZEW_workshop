@@ -9,7 +9,7 @@ Here I provide the session slides in PDF, Html and Rmd formats. However, you jus
 
 | Session |Topic | File | Contents |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|---|-|
-|1|Introduction to R | [HTML](ws_1.html) [PDF](ws_1.pdf) [Rmd](ws_1.Rmd)  [Practice](practice_1.html) | RStudio, Package installation, Projects, Version control with Github, Data types, Subsetting, Functions |
+|1|Introduction to R | [HTML](ws_1.html) [PDF](ws_1.pdf) [Rmd](ws_1.Rmd) | RStudio, Package installation, Projects, Version control with Github, Data types, Subsetting, Functions |
 |2|Data wrangling, control structures and loops | [HTML](ws_2.html) [PDF](ws_2.pdf) [Rmd](ws_2.Rmd)   | Control structures, Loops and apply family, Read and write data, Tidyverse, Intro to manipulation with `dplyr |
 |3|Data wrangling (cont.) | [HTML](ws_3.html) [PDF](ws_3.pdf) [Rmd](ws_3.Rmd)                         | Functional programming, merging data |
 |4|Reproducible research & Web scraping | [HTML](ws_4.html) [PDF](ws_4.pdf) [Rmd](ws_4.Rmd)           | RMarkdown, Journal Articles, Blogs, Xaringan | |
