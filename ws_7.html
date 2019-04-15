@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Workshop: Data science with R (ZEW)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Obryan Poyser" />
+    <meta name="date" content="2019-04-18" />
+    <link rel="stylesheet" href="css/zew-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/zew.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Workshop: Data science with R (ZEW)
+## Session #7: Supervised Learning
+### Obryan Poyser
+### 2019-04-18
+
+---
+
+
+
+
+# What is supervised learning?
+
+1. Broadly speaking the main two subfields of machine learning are supervised learning and unsupervised learning.
+1. Supervised statistical involves building statistical models `\(f()\)` for **predicting** or **estimating** and *output* `\((Y)\)` based on one or more *inputs* `\((X)\)`.
+$$
+\hat{Y}=\hat{f}(X)
+$$
+1. Why `\(f()\)`?
+    1. Prediction/classification
+        1. In classification the goal is to predict a *class label* within a defined set of elements.
+        1. Prediction is mostly associated with continous data.
+        1. `\(\hat{f}\)` could be treated as a *"black box"*, that is, we are not concerned on the form of `\(\hat{f}\)`, instead, how good this function predicts `\(\hat{Y}\)`.
+    1. Inference
+        1. We want to understand the effect of `\(X_1,\dots, X_p\)` on `\(Y\)`.
+        1. By definition it can not be a *"black box"* function, because we need to know the exact form.
+
+.footnote[
+The use of `\(\hat{}\)` denote estiamtes.
+]
+---
+
+# The dilemma `\(\hat{\beta}\)` vs `\(\hat{y}\)`
+
+.pl[
+1. Many economic applications revolve around *parameter estimation*
+    1. Produce good estimates that unveil the true relationship between `\(y\)` and `\(X\)`
+1. Machine learning algorithms are not designed for estimating purposes
+    1. One has to be aware of the properties of the estimators, the typical interpretation of the coefficients is no longer valid
+1. Applications
+    1. New data for traditional questions: measuring the level of economic activity from  satellite maps using light-intensity measures.
+    1. Pre-processing
+        1. Propensity Score Matching, Linear instrumental Variables Regression, Heterogeneous treatment effects, 
+1. ML algorithms are technically easy to use in Python or R
+    1. Threats: naive interpretations
+]
+
+.pr[
+&lt;img src="img/session_7/fight.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+
+# Dataset
+
+Description: Ongoing research on university faculty perceptions and practices of using Wikipedia as a teaching resource. Based on a Technology Acceptance Model, the relationships within the internal and external constructs of the model are analyzed. Both the perception of colleaguesâ€™ opinion about Wikipedia and the perceived quality of the information in Wikipedia play a central role in the obtained model. 
+Link: https://archive.ics.uci.edu/ml/datasets/wiki4HE
+
+
+```r
+data0 &lt;- readr::read_csv2("datasets/session_7/wiki4HE.csv") %&gt;%
+  na_if(y = "?") %&gt;% 
+  mutate_if(.predicate = is.character, .funs = ~as.numeric(.)) %&gt;% 
+  janitor::clean_names()
+```
+
+---
+# Missing values
+
+
+&lt;img src="ws_7_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+# Imputation
+
+.pl[
+
+```r
+(miss &lt;- map_dbl(data0, .f = ~is.na(.x) %&gt;% sum/913) %&gt;% enframe() %&gt;% arrange(desc(value)))
+```
+
+```
+## # A tibble: 53 x 2
+##    name            value
+##    &lt;chr&gt;           &lt;dbl&gt;
+##  1 otherstatus    0.591 
+##  2 other_position 0.286 
+##  3 vis2           0.128 
+##  4 uoc_position   0.124 
+##  5 peu3           0.106 
+##  6 vis1           0.0789
+##  7 im3            0.0624
+##  8 jr2            0.0581
+##  9 bi2            0.0471
+## 10 inc4           0.0460
+## # … with 43 more rows
+```
+]
+
+.pr[
+
+```r
+data &lt;- data0 %&gt;% 
+  dplyr::select(miss$name[-c(1:2)]) %&gt;% 
+  dplyr::select(sort(names(.))) %&gt;% 
+  mice::mice()
+```
+
+
+```r
+# Save the data
+write_rds(data %&gt;% 
+            mice::complete(1) %&gt;% 
+            as_tibble()
+          , path = "datasets/session_7/wiki4HE_imp.rds")
+```
+
+]
+
+---
+# Imputation: final dataset
+
+
+```r
+(wiki &lt;- read_rds("datasets/session_7/wiki4HE_imp.rds")) %&gt;% 
+  naniar::vis_miss()
+```
+
+&lt;img src="ws_7_files/figure-html/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+```r
+wiki %&gt;% select(ph_d, gender, university, userwiki, yearsexp, age, matches(match = "[0-9]"))
+```
+
+```
+## # A tibble: 913 x 49
+##     ph_d gender university userwiki yearsexp   age   bi1   bi2  enj1  enj2
+##    &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1      0          1        0       14    40     2     3     4     4
+##  2     1      0          1        0       18    42     2     2     3     4
+##  3     1      0          1        0       13    37     1     1     3     3
+##  4     0      0          1        0       13    40     3     3     4     3
+##  5     0      0          1        1        8    51     5     5     4     4
+##  6     0      0          1        0       17    47     4     4     3     3
+##  7     0      0          1        0       11    43     3     4     5     5
+##  8     0      0          1        0       12    55     3     4     4     3
+##  9     1      0          1        0       14    54     4     3     5     5
+## 10     1      0          1        0       25    50     5     5     5     4
+## # … with 903 more rows, and 39 more variables: exp1 &lt;dbl&gt;, exp2 &lt;dbl&gt;,
+## #   exp3 &lt;dbl&gt;, exp4 &lt;dbl&gt;, exp5 &lt;dbl&gt;, im1 &lt;dbl&gt;, im2 &lt;dbl&gt;, im3 &lt;dbl&gt;,
+## #   inc1 &lt;dbl&gt;, inc2 &lt;dbl&gt;, inc3 &lt;dbl&gt;, inc4 &lt;dbl&gt;, jr1 &lt;dbl&gt;, jr2 &lt;dbl&gt;,
+## #   peu1 &lt;dbl&gt;, peu2 &lt;dbl&gt;, peu3 &lt;dbl&gt;, pf1 &lt;dbl&gt;, pf2 &lt;dbl&gt;, pf3 &lt;dbl&gt;,
+## #   pu1 &lt;dbl&gt;, pu2 &lt;dbl&gt;, pu3 &lt;dbl&gt;, qu1 &lt;dbl&gt;, qu2 &lt;dbl&gt;, qu3 &lt;dbl&gt;,
+## #   qu4 &lt;dbl&gt;, qu5 &lt;dbl&gt;, sa1 &lt;dbl&gt;, sa2 &lt;dbl&gt;, sa3 &lt;dbl&gt;, use1 &lt;dbl&gt;,
+## #   use2 &lt;dbl&gt;, use3 &lt;dbl&gt;, use4 &lt;dbl&gt;, use5 &lt;dbl&gt;, vis1 &lt;dbl&gt;,
+## #   vis2 &lt;dbl&gt;, vis3 &lt;dbl&gt;
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-dark",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

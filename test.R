@@ -5,7 +5,9 @@ pca_var$contrib %>%
     pivot_longer(cols = dim_1:dim_6, names_to = "comp") %>% 
     group_by(comp) %>% 
     top_n(n = 3, wt = value) %>% 
-    
-    ggplot(aes(reorder(obs, value), value, fill=comp))+
-    geom_col(position = "dodge")+
-    coord_flip()
+    mutate(rank=rank(desc(value))) %>% 
+    ggplot(aes(reorder(obs, value), value))+
+    geom_col()+
+    facet_wrap(~comp, scales = "free")+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(x="", y="Contribution")

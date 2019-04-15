@@ -1,0 +1,136 @@
+---
+title: "Workshop: Data science with R (ZEW)"
+subtitle: "Session #7: Supervised Learning"
+author: "Obryan Poyser"
+date: "2019-04-18"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: solarized-dark
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    css:
+      - "css/zew-fonts.css"
+      - "css/zew.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = "center", fig.retina = 4, out.width = "100%")
+require(knitr)
+```
+
+# What is supervised learning?
+
+1. Broadly speaking the main two subfields of machine learning are supervised learning and unsupervised learning.
+1. Supervised statistical involves building statistical models $f()$ for **predicting** or **estimating** and *output* $(Y)$ based on one or more *inputs* $(X)$.
+$$
+\hat{Y}=\hat{f}(X)
+$$
+1. Why $f()$?
+    1. Prediction/classification
+        1. In classification the goal is to predict a *class label* within a defined set of elements.
+        1. Prediction is mostly associated with continous data.
+        1. $\hat{f}$ could be treated as a *"black box"*, that is, we are not concerned on the form of $\hat{f}$, instead, how good this function predicts $\hat{Y}$.
+    1. Inference
+        1. We want to understand the effect of $X_1,\dots, X_p$ on $Y$.
+        1. By definition it can not be a *"black box"* function, because we need to know the exact form.
+
+.footnote[
+The use of $\hat{}$ denote estiamtes.
+]
+---
+
+# The dilemma $\hat{\beta}$ vs $\hat{y}$
+
+.pl[
+1. Many economic applications revolve around *parameter estimation*
+    1. Produce good estimates that unveil the true relationship between $y$ and $X$
+1. Machine learning algorithms are not designed for estimating purposes
+    1. One has to be aware of the properties of the estimators, the typical interpretation of the coefficients is no longer valid
+1. Applications
+    1. New data for traditional questions: measuring the level of economic activity from  satellite maps using light-intensity measures.
+    1. Pre-processing
+        1. Propensity Score Matching, Linear instrumental Variables Regression, Heterogeneous treatment effects, 
+1. ML algorithms are technically easy to use in Python or R
+    1. Threats: naive interpretations
+]
+
+.pr[
+```{r, echo=FALSE}
+include_graphics("img/session_7/fight.png")
+```
+]
+
+---
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+require(tidyverse)
+```
+
+# Dataset
+
+Description: Ongoing research on university faculty perceptions and practices of using Wikipedia as a teaching resource. Based on a Technology Acceptance Model, the relationships within the internal and external constructs of the model are analyzed. Both the perception of colleaguesâ€™ opinion about Wikipedia and the perceived quality of the information in Wikipedia play a central role in the obtained model. 
+Link: https://archive.ics.uci.edu/ml/datasets/wiki4HE
+
+```{r, echo=T, warning=FALSE, message=FALSE}
+data0 <- readr::read_csv2("datasets/session_7/wiki4HE.csv") %>%
+  na_if(y = "?") %>% 
+  mutate_if(.predicate = is.character, .funs = ~as.numeric(.)) %>% 
+  janitor::clean_names()
+```
+
+---
+# Missing values
+
+
+```{r, echo=F, fig.width=6, fig.height=3.5, fig.retina=3, out.width="80%"}
+naniar::vis_miss(data0, cluster = T)
+```
+
+---
+# Imputation
+
+.pl[
+```{r}
+(miss <- map_dbl(data0, .f = ~is.na(.x) %>% sum/913) %>% enframe() %>% arrange(desc(value)))
+```
+]
+
+.pr[
+```{r, eval=FALSE}
+data <- data0 %>% 
+  dplyr::select(miss$name[-c(1:2)]) %>% 
+  dplyr::select(sort(names(.))) %>% 
+  mice::mice()
+```
+
+```{r, eval=FALSE}
+# Save the data
+write_rds(data %>% 
+            mice::complete(1) %>% 
+            as_tibble()
+          , path = "datasets/session_7/wiki4HE_imp.rds")
+```
+
+]
+
+---
+# Imputation: final dataset
+
+```{r, fig.width=6, fig.height=3.5, fig.retina=3, out.width="80%"}
+(wiki <- read_rds("datasets/session_7/wiki4HE_imp.rds")) %>% 
+  naniar::vis_miss()
+```
+
+---
+
+
+```{r}
+wiki %>% select(ph_d, gender, university, userwiki, yearsexp, age, matches(match = "[0-9]"))
+```
+
+
+
+
+
