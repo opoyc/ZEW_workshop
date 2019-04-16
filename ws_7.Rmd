@@ -19,12 +19,13 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.align = "center", fig.retina = 4, out.width = "100%")
 require(knitr)
+require(tidyverse)
 ```
 
 # What is supervised learning?
 
 1. Broadly speaking the main two subfields of machine learning are supervised learning and unsupervised learning.
-1. Supervised statistical involves building statistical models $f()$ for **predicting** or **estimating** and *output* $(Y)$ based on one or more *inputs* $(X)$.
+1. Supervised statistical involves building statistical models $f()$ for **predicting** or **estimating** and *output* $(Y)$ based on one or more *inputs* given by the design matrix $(X)$.
 $$
 \hat{Y}=\hat{f}(X)
 $$
@@ -41,7 +42,6 @@ $$
 The use of $\hat{}$ denote estiamtes.
 ]
 ---
-
 # The dilemma $\hat{\beta}$ vs $\hat{y}$
 
 .pl[
@@ -52,7 +52,7 @@ The use of $\hat{}$ denote estiamtes.
 1. Applications
     1. New data for traditional questions: measuring the level of economic activity from  satellite maps using light-intensity measures.
     1. Pre-processing
-        1. Propensity Score Matching, Linear instrumental Variables Regression, Heterogeneous treatment effects, 
+        1. Propensity Score Matching, Linear instrumental Variables Regression, Heterogeneous treatment effects.
 1. ML algorithms are technically easy to use in Python or R
     1. Threats: naive interpretations
 ]
@@ -64,10 +64,28 @@ include_graphics("img/session_7/fight.png")
 ]
 
 ---
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-require(tidyverse)
+# Predicting poverty from satellite maps
+
+```{r}
+include_url("https://youtu.be/DafZSeIGLNE?t=92")
 ```
 
+
+
+
+
+
+---
+# Prediction vs inference
+
+1. Estimating
+$$
+\hat{Y}=\hat{f}(X)
+$$
+
+
+
+---
 # Dataset
 
 Description: Ongoing research on university faculty perceptions and practices of using Wikipedia as a teaching resource. Based on a Technology Acceptance Model, the relationships within the internal and external constructs of the model are analyzed. Both the perception of colleaguesâ€™ opinion about Wikipedia and the perceived quality of the information in Wikipedia play a central role in the obtained model. 
@@ -76,13 +94,19 @@ Link: https://archive.ics.uci.edu/ml/datasets/wiki4HE
 ```{r, echo=T, warning=FALSE, message=FALSE}
 data0 <- readr::read_csv2("datasets/session_7/wiki4HE.csv") %>%
   na_if(y = "?") %>% 
-  mutate_if(.predicate = is.character, .funs = ~as.numeric(.)) %>% 
+  mutate_if(.predicate = is.character
+            , .funs = ~as.numeric(.)) %>% 
   janitor::clean_names()
 ```
 
+
+
+
+
+
+
 ---
 # Missing values
-
 
 ```{r, echo=F, fig.width=6, fig.height=3.5, fig.retina=3, out.width="80%"}
 naniar::vis_miss(data0, cluster = T)
@@ -93,7 +117,9 @@ naniar::vis_miss(data0, cluster = T)
 
 .pl[
 ```{r}
-(miss <- map_dbl(data0, .f = ~is.na(.x) %>% sum/913) %>% enframe() %>% arrange(desc(value)))
+(miss <- map_dbl(data0, .f = ~is.na(.x) %>% sum/913) %>% 
+   enframe() %>% 
+   arrange(desc(value)))
 ```
 ]
 
@@ -124,10 +150,14 @@ write_rds(data %>%
 ```
 
 ---
+# Imputation: final dataset
 
-
-```{r}
-wiki %>% select(ph_d, gender, university, userwiki, yearsexp, age, matches(match = "[0-9]"))
+```{r, out.width="70%"}
+wiki %>% 
+  select(ph_d, gender, university, userwiki, yearsexp, age
+         , matches(match = "[0-9]")
+         ) %>% 
+  DT::datatable(options = list(pageLength=10))
 ```
 
 

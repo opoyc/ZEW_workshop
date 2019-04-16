@@ -422,3 +422,7 @@ midd-blockquote {
 .middle2 {
     margin-top: 10%;
 }
+
+#DataTables_Table_0_wrapper {
+    font-size: 0.8rem;
+}
