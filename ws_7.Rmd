@@ -310,6 +310,7 @@ include_graphics("img/session_7/bagging.png")
 
 - There are several algorithms and tweaks to improve prediction accuracy, however, each of them deserves a sessio to be studied.
 - For a more detailed explanation of such techniques see the [references](#references) section.
+
 ---
 # Dataset
 
