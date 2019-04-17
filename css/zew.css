@@ -426,3 +426,30 @@ midd-blockquote {
 #DataTables_Table_0_wrapper {
     font-size: 0.8rem;
 }
+
+iframe {
+    position: relative;
+    margin-top: 3%;
+    margin-left: 15%;
+}
+
+.p1 {
+  float: left;
+  width: 32%;
+  height: 98%;
+  vertical-align: middle;
+}
+
+.p2 {
+  float: none;
+  width: 32%;
+  height: 98%;
+  vertical-align: middle;
+}
+
+.p3 {
+  float: left;
+  width: 32%;
+  height: 98%;
+  vertical-align: middle;
+}
