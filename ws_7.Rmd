@@ -600,7 +600,7 @@ ridge_shrink <- glmnet(X, y, alpha = 0
 
 .pr[
 ```{r, echo=F}
-ridge_shrink$beta %>%
+ridgeg <- ridge_shrink$beta %>%
     as.matrix() %>%
     t() %>% 
     as.data.frame() %>% 
@@ -610,8 +610,8 @@ ridge_shrink$beta %>%
     ggplot(aes(log(lambda), coefficient, col=variable))+
     geom_line()+
     geom_hline(yintercept = 0, linetype=2)
+plotly::ggplotly(ridgeg)
 ```
-
 ]
 
 ---
@@ -651,7 +651,7 @@ lasso_shrink <- glmnet(X, y, alpha = 1
 
 .pr[
 ```{r, echo=FALSE}
-lasso_shrink$beta %>%
+lassog <- lasso_shrink$beta %>%
     as.matrix() %>%
     t() %>% 
     as.data.frame() %>% 
@@ -662,6 +662,8 @@ lasso_shrink$beta %>%
     ggplot(aes(log(lambda), coefficient, col=variable))+
     geom_line()+
     geom_hline(yintercept = 0, linetype=2)
+
+plotly::ggplotly(lassog)
 ```
 ]
 
