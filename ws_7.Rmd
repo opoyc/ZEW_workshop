@@ -395,6 +395,7 @@ wiki %>%
 
 
 ---
+name: references
 # References
 
 - Géron, A. (2017). Hands-On Machine Learning with Scikit-Learn & TensorFlow.
