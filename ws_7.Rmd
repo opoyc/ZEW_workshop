@@ -20,6 +20,9 @@ output:
 knitr::opts_chunk$set(fig.align = "center", fig.retina = 4, out.width = "100%")
 require(knitr)
 require(tidyverse)
+require(rsample)
+require(parsnip)
+require(tidy)
 ```
 
 # Outline
@@ -308,8 +311,149 @@ include_graphics("img/session_7/bagging.png")
 
 ## Considerations
 
-- There are several algorithms and tweaks to improve prediction accuracy, however, each of them deserves a sessio to be studied.
+- There are several algorithms and tweaks to improve prediction accuracy, however, each of them deserves a whole session to be studied.
+  - Boosting
+  - Ensemble
+  - Boosting
+  - SVM
+  - Neural Networks
+  - ...
 - For a more detailed explanation of such techniques see the [references](#references) section.
+
+---
+# Packages
+
+- `broom`: is an attempt to bridge the gap from untidy outputs of predictions and estimations to the tidy data we want to work with.
+    - `tidy`: constructs a data frame that summarizes the model’s statistical findings. This includes coefficients and p-values for each term in a regression, per-cluster information in clustering applications, or per-test information for multtest functions.
+    - `augment`: add columns to the original data that was modeled. This includes predictions, residuals, and cluster assignments.
+    - `glance`: construct a concise one-row summary of the model. This typically contains values such as R^2, adjusted R^2, and residual standard error that are computed once for the entire model.
+
+- [`parsnip`](https://tidymodels.github.io/parsnip/articles/articles/Models.html)
+  - It is designed to solve a specific problem related to model fitting in R, **the interface**. 
+  -  Many functions have different interfaces and arguments names and parsnip standardizes the interface for fitting models as well as the return values
+
+- `tidymodels`: Collection of modeling packages, that aim to create a common structure (similar to sklearn in Python)
+- `rsample`: Classes and functions to create and summarize different types of resampling objects (e.g. bootstrap, cross-validation).
+---
+# Dataset
+
+.pl[
+## World Developing Indicators
+```{r}
+wdi <- readr::read_rds("datasets/session_7/wdi_2.rds")
+glimpse(wdi)
+```
+]
+
+.pr[
+## Online news popularity
+```{r}
+news <- readr::read_rds("datasets/session_7/news.rds") %>% 
+  sample_frac(.20)
+```
+
+## Wine quality
+```{r}
+wine_w <- readr::read_rds("datasets/session_7/wine_white.rds")
+```
+
+]
+
+---
+# Base model
+
+```{r}
+lm1 <- lm(quality~.-quality_b, data = wine_w)
+```
+
+
+
+---
+# Tranining, testing, and cross-validation
+
+```{r, out.width="60%", echo=FALSE}
+include_graphics("img/session_7/split1.png")
+```
+
+---
+# Tranining, testing, and cross-validation
+
+```{r, out.width="60%", echo=FALSE}
+include_graphics("img/session_7/split2.png")
+```
+
+---
+# Tranining, testing, and cross-validation
+
+```{r}
+data_split <- initial_split(wine_w, prop = .7)
+train_data <- training(data_split)
+test_data <- testing(data_split)
+```
+
+---
+# Cross-validation
+
+```{r, warning=FALSE, eval=T}
+(cv_data <- vfold_cv(train_data, v = 10) %>% 
+    mutate(train=map(splits, ~training(.x))
+           , validate=map(splits, ~testing(.x))
+           , lm=map(train, ~lm(quality~.-quality_b, data = .x))
+           , rf=map(train, ~rand_forest(mtry = 5, trees = 200) %>%
+                        set_engine("ranger", importance="impurity") %>%
+                        fit(quality~.-quality_b, data=.x)
+                    )
+    )
+)
+```
+
+---
+# Calculate error
+
+.pl[
+## Linear model
+
+```{r}
+lm_model <- cv_data %>%   
+    mutate(pred=map2(.x=lm, .y=validate, ~predict(.x, .y) %>% 
+                         as_tibble %>% 
+                         set_names("pred"))
+           , mae=map2_dbl(.x=pred, .y=validate
+                          , ~measures::MAE(truth = .y$quality
+                                           , response = .x$pred)
+                          )
+           , mse=map2_dbl(.x=pred, .y=validate
+                          , ~measures::MSE(truth = .y$quality
+                                           , response = .x$pred)
+           ))
+```
+]
+
+.pr[
+## Random forest
+
+```{r}
+rf_model <- cv_data %>%   
+    mutate(pred=map2(.x=rf, .y=validate, ~predict(.x, .y) %>% 
+                         as_tibble %>% 
+                         set_names("pred"))
+           , mae=map2_dbl(.x=pred, .y=validate
+                          , ~measures::MAE(truth = .y$quality
+                                           , response = .x$pred)
+                          )
+           , mse=map2_dbl(.x=pred, .y=validate
+                          , ~measures::MSE(truth = .y$quality
+                                           , response = .x$pred)
+           ))
+```
+]
+
+
+
+
+
+
+
 
 ---
 # Dataset
@@ -325,13 +469,10 @@ data0 <- readr::read_csv2("datasets/session_7/wiki4HE.csv") %>%
   janitor::clean_names()
 ```
 
+```{r}
 
+```
 
-
-
-
-
----
 
 ---
 # Missing values
@@ -387,6 +528,15 @@ wiki %>%
          ) %>% 
   DT::datatable(options = list(pageLength=10))
 ```
+
+
+
+
+
+
+
+---
+# Regression comparison
 
 
 

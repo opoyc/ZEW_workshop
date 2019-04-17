@@ -1,0 +1,37 @@
+country,code,dev_class,region,inc_class,lending_cat,other
+Austria,AUT,developed,Europe & Central Asia,High income,,EMU
+Belgium,BEL,developed,Europe & Central Asia,High income,,EMU
+Denmark,DNK,developed,Europe & Central Asia,High income,,
+Finland,FIN,developed,Europe & Central Asia,High income,,EMU
+France,FRA,developed,Europe & Central Asia,High income,,EMU
+Germany,DEU,developed,Europe & Central Asia,High income,,EMU
+Greece,GRC,developed,Europe & Central Asia,High income,,EMU
+Ireland,IRL,developed,Europe & Central Asia,High income,,EMU
+Italy,ITA,developed,Europe & Central Asia,High income,,EMU
+Luxembourg,LUX,developed,Europe & Central Asia,High income,,EMU
+Netherlands,NLD,developed,Europe & Central Asia,High income,,EMU
+Portugal,PRT,developed,Europe & Central Asia,High income,,EMU
+Spain,ESP,developed,Europe & Central Asia,High income,,EMU
+Sweden,SWE,developed,Europe & Central Asia,High income,,
+United Kingdom,GBR,developed,Europe & Central Asia,High income,,
+Bulgaria,BGR,developed,Europe & Central Asia,Upper middle income,IBRD,
+Croatia,HRV,developed,Europe & Central Asia,High income,IBRD,
+Cyprus,CYP,developed,Europe & Central Asia,High income,,EMU
+Czech Republic,CZE,developed,Europe & Central Asia,High income,,
+Estonia,EST,developed,Europe & Central Asia,High income,,EMU
+Hungary,HUN,developed,Europe & Central Asia,High income,,
+Latvia,LVA,developed,Europe & Central Asia,High income,,EMU
+Lithuania,LTU,developed,Europe & Central Asia,High income,,EMU
+Malta,MLT,developed,Middle East & North Africa,High income,,EMU
+Poland,POL,developed,Europe & Central Asia,High income,IBRD,
+Romania,ROU,developed,Europe & Central Asia,Upper middle income,IBRD,
+Slovakia,SVK,developed,Europe & Central Asia,High income,,EMU
+Slovenia,SVN,developed,Europe & Central Asia,High income,,EMU
+Iceland,ISL,developed,Europe & Central Asia,High income,,
+Norway,NOR,developed,Europe & Central Asia,High income,,
+Switzerland,CHE,developed,Europe & Central Asia,High income,,
+Australia,AUS,developed,East Asia & Pacific,High income,,
+Canada,CAN,developed,North America,High income,,
+Japan,JPN,developed,East Asia & Pacific,High income,,
+New Zealand,NZL,developed,East Asia & Pacific,High income,,
+United States,USA,developed,North America,High income,,

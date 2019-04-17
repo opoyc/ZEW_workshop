@@ -1,0 +1,219 @@
+country,code,region,inc_class,dev_class
+Afghanistan,AFG,South Asia,Low income,non_developed
+Albania,ALB,Europe & Central Asia,Upper middle income,non_developed
+Algeria,DZA,Middle East & North Africa,Upper middle income,non_developed
+American Samoa,ASM,East Asia & Pacific,Upper middle income,non_developed
+Andorra,AND,Europe & Central Asia,High income,non_developed
+Angola,AGO,Sub-Saharan Africa,Lower middle income,non_developed
+Antigua and Barbuda,ATG,Latin America & Caribbean,High income,non_developed
+Argentina,ARG,Latin America & Caribbean,High income,non_developed
+Armenia,ARM,Europe & Central Asia,Upper middle income,non_developed
+Aruba,ABW,Latin America & Caribbean,High income,non_developed
+Australia,AUS,East Asia & Pacific,High income,developed
+Austria,AUT,Europe & Central Asia,High income,developed
+Azerbaijan,AZE,Europe & Central Asia,Upper middle income,non_developed
+"Bahamas, The",BHS,Latin America & Caribbean,High income,non_developed
+Bahrain,BHR,Middle East & North Africa,High income,non_developed
+Bangladesh,BGD,South Asia,Lower middle income,non_developed
+Barbados,BRB,Latin America & Caribbean,High income,non_developed
+Belarus,BLR,Europe & Central Asia,Upper middle income,non_developed
+Belgium,BEL,Europe & Central Asia,High income,developed
+Belize,BLZ,Latin America & Caribbean,Upper middle income,non_developed
+Benin,BEN,Sub-Saharan Africa,Low income,non_developed
+Bermuda,BMU,North America,High income,non_developed
+Bhutan,BTN,South Asia,Lower middle income,non_developed
+Bolivia,BOL,Latin America & Caribbean,Lower middle income,non_developed
+Bosnia and Herzegovina,BIH,Europe & Central Asia,Upper middle income,non_developed
+Botswana,BWA,Sub-Saharan Africa,Upper middle income,non_developed
+Brazil,BRA,Latin America & Caribbean,Upper middle income,non_developed
+British Virgin Islands,VGB,Latin America & Caribbean,High income,non_developed
+Brunei Darussalam,BRN,East Asia & Pacific,High income,non_developed
+Bulgaria,BGR,Europe & Central Asia,Upper middle income,developed
+Burkina Faso,BFA,Sub-Saharan Africa,Low income,non_developed
+Burundi,BDI,Sub-Saharan Africa,Low income,non_developed
+Cabo Verde,CPV,Sub-Saharan Africa,Lower middle income,non_developed
+Cambodia,KHM,East Asia & Pacific,Lower middle income,non_developed
+Cameroon,CMR,Sub-Saharan Africa,Lower middle income,non_developed
+Canada,CAN,North America,High income,developed
+Cayman Islands,CYM,Latin America & Caribbean,High income,non_developed
+Central African Republic,CAF,Sub-Saharan Africa,Low income,non_developed
+Chad,TCD,Sub-Saharan Africa,Low income,non_developed
+Channel Islands,CHI,Europe & Central Asia,High income,non_developed
+Chile,CHL,Latin America & Caribbean,High income,non_developed
+China,CHN,East Asia & Pacific,Upper middle income,non_developed
+Colombia,COL,Latin America & Caribbean,Upper middle income,non_developed
+Comoros,COM,Sub-Saharan Africa,Low income,non_developed
+"Congo, Dem. Rep.",COD,Sub-Saharan Africa,Low income,non_developed
+"Congo, Rep.",COG,Sub-Saharan Africa,Lower middle income,non_developed
+Costa Rica,CRI,Latin America & Caribbean,Upper middle income,non_developed
+Côte d'Ivoire,CIV,Sub-Saharan Africa,Lower middle income,non_developed
+Croatia,HRV,Europe & Central Asia,High income,developed
+Cuba,CUB,Latin America & Caribbean,Upper middle income,non_developed
+Curaçao,CUW,Latin America & Caribbean,High income,non_developed
+Cyprus,CYP,Europe & Central Asia,High income,developed
+Czech Republic,CZE,Europe & Central Asia,High income,developed
+Denmark,DNK,Europe & Central Asia,High income,developed
+Djibouti,DJI,Middle East & North Africa,Lower middle income,non_developed
+Dominica,DMA,Latin America & Caribbean,Upper middle income,non_developed
+Dominican Republic,DOM,Latin America & Caribbean,Upper middle income,non_developed
+Ecuador,ECU,Latin America & Caribbean,Upper middle income,non_developed
+"Egypt, Arab Rep.",EGY,Middle East & North Africa,Lower middle income,non_developed
+El Salvador,SLV,Latin America & Caribbean,Lower middle income,non_developed
+Equatorial Guinea,GNQ,Sub-Saharan Africa,Upper middle income,non_developed
+Eritrea,ERI,Sub-Saharan Africa,Low income,non_developed
+Estonia,EST,Europe & Central Asia,High income,developed
+Ethiopia,ETH,Sub-Saharan Africa,Low income,non_developed
+Faroe Islands,FRO,Europe & Central Asia,High income,non_developed
+Fiji,FJI,East Asia & Pacific,Upper middle income,non_developed
+Finland,FIN,Europe & Central Asia,High income,developed
+France,FRA,Europe & Central Asia,High income,developed
+French Polynesia,PYF,East Asia & Pacific,High income,non_developed
+Gabon,GAB,Sub-Saharan Africa,Upper middle income,non_developed
+"Gambia, The",GMB,Sub-Saharan Africa,Low income,non_developed
+Georgia,GEO,Europe & Central Asia,Lower middle income,non_developed
+Germany,DEU,Europe & Central Asia,High income,developed
+Ghana,GHA,Sub-Saharan Africa,Lower middle income,non_developed
+Gibraltar,GIB,Europe & Central Asia,High income,non_developed
+Greece,GRC,Europe & Central Asia,High income,developed
+Greenland,GRL,Europe & Central Asia,High income,non_developed
+Grenada,GRD,Latin America & Caribbean,Upper middle income,non_developed
+Guam,GUM,East Asia & Pacific,High income,non_developed
+Guatemala,GTM,Latin America & Caribbean,Upper middle income,non_developed
+Guinea,GIN,Sub-Saharan Africa,Low income,non_developed
+Guinea-Bissau,GNB,Sub-Saharan Africa,Low income,non_developed
+Guyana,GUY,Latin America & Caribbean,Upper middle income,non_developed
+Haiti,HTI,Latin America & Caribbean,Low income,non_developed
+Honduras,HND,Latin America & Caribbean,Lower middle income,non_developed
+"Hong Kong SAR, China",HKG,East Asia & Pacific,High income,non_developed
+Hungary,HUN,Europe & Central Asia,High income,developed
+Iceland,ISL,Europe & Central Asia,High income,developed
+India,IND,South Asia,Lower middle income,non_developed
+Indonesia,IDN,East Asia & Pacific,Lower middle income,non_developed
+"Iran, Islamic Rep.",IRN,Middle East & North Africa,Upper middle income,non_developed
+Iraq,IRQ,Middle East & North Africa,Upper middle income,non_developed
+Ireland,IRL,Europe & Central Asia,High income,developed
+Isle of Man,IMN,Europe & Central Asia,High income,non_developed
+Israel,ISR,Middle East & North Africa,High income,non_developed
+Italy,ITA,Europe & Central Asia,High income,developed
+Jamaica,JAM,Latin America & Caribbean,Upper middle income,non_developed
+Japan,JPN,East Asia & Pacific,High income,developed
+Jordan,JOR,Middle East & North Africa,Upper middle income,non_developed
+Kazakhstan,KAZ,Europe & Central Asia,Upper middle income,non_developed
+Kenya,KEN,Sub-Saharan Africa,Lower middle income,non_developed
+Kiribati,KIR,East Asia & Pacific,Lower middle income,non_developed
+"Korea, Dem. People's Rep.",PRK,East Asia & Pacific,Low income,non_developed
+"Korea, Rep.",KOR,East Asia & Pacific,High income,non_developed
+Kosovo,XKX,Europe & Central Asia,Lower middle income,non_developed
+Kuwait,KWT,Middle East & North Africa,High income,non_developed
+Kyrgyz Republic,KGZ,Europe & Central Asia,Lower middle income,non_developed
+Lao PDR,LAO,East Asia & Pacific,Lower middle income,non_developed
+Latvia,LVA,Europe & Central Asia,High income,developed
+Lebanon,LBN,Middle East & North Africa,Upper middle income,non_developed
+Lesotho,LSO,Sub-Saharan Africa,Lower middle income,non_developed
+Liberia,LBR,Sub-Saharan Africa,Low income,non_developed
+Libya,LBY,Middle East & North Africa,Upper middle income,non_developed
+Liechtenstein,LIE,Europe & Central Asia,High income,non_developed
+Lithuania,LTU,Europe & Central Asia,High income,developed
+Luxembourg,LUX,Europe & Central Asia,High income,developed
+"Macao SAR, China",MAC,East Asia & Pacific,High income,non_developed
+"Macedonia, FYR",MKD,Europe & Central Asia,Upper middle income,non_developed
+Madagascar,MDG,Sub-Saharan Africa,Low income,non_developed
+Malawi,MWI,Sub-Saharan Africa,Low income,non_developed
+Malaysia,MYS,East Asia & Pacific,Upper middle income,non_developed
+Maldives,MDV,South Asia,Upper middle income,non_developed
+Mali,MLI,Sub-Saharan Africa,Low income,non_developed
+Malta,MLT,Middle East & North Africa,High income,developed
+Marshall Islands,MHL,East Asia & Pacific,Upper middle income,non_developed
+Mauritania,MRT,Sub-Saharan Africa,Lower middle income,non_developed
+Mauritius,MUS,Sub-Saharan Africa,Upper middle income,non_developed
+Mexico,MEX,Latin America & Caribbean,Upper middle income,non_developed
+"Micronesia, Fed. Sts.",FSM,East Asia & Pacific,Lower middle income,non_developed
+Moldova,MDA,Europe & Central Asia,Lower middle income,non_developed
+Monaco,MCO,Europe & Central Asia,High income,non_developed
+Mongolia,MNG,East Asia & Pacific,Lower middle income,non_developed
+Montenegro,MNE,Europe & Central Asia,Upper middle income,non_developed
+Morocco,MAR,Middle East & North Africa,Lower middle income,non_developed
+Mozambique,MOZ,Sub-Saharan Africa,Low income,non_developed
+Myanmar,MMR,East Asia & Pacific,Lower middle income,non_developed
+Namibia,NAM,Sub-Saharan Africa,Upper middle income,non_developed
+Nauru,NRU,East Asia & Pacific,Upper middle income,non_developed
+Nepal,NPL,South Asia,Low income,non_developed
+Netherlands,NLD,Europe & Central Asia,High income,developed
+New Caledonia,NCL,East Asia & Pacific,High income,non_developed
+New Zealand,NZL,East Asia & Pacific,High income,developed
+Nicaragua,NIC,Latin America & Caribbean,Lower middle income,non_developed
+Niger,NER,Sub-Saharan Africa,Low income,non_developed
+Nigeria,NGA,Sub-Saharan Africa,Lower middle income,non_developed
+Northern Mariana Islands,MNP,East Asia & Pacific,High income,non_developed
+Norway,NOR,Europe & Central Asia,High income,developed
+Oman,OMN,Middle East & North Africa,High income,non_developed
+Pakistan,PAK,South Asia,Lower middle income,non_developed
+Palau,PLW,East Asia & Pacific,High income,non_developed
+Panama,PAN,Latin America & Caribbean,High income,non_developed
+Papua New Guinea,PNG,East Asia & Pacific,Lower middle income,non_developed
+Paraguay,PRY,Latin America & Caribbean,Upper middle income,non_developed
+Peru,PER,Latin America & Caribbean,Upper middle income,non_developed
+Philippines,PHL,East Asia & Pacific,Lower middle income,non_developed
+Poland,POL,Europe & Central Asia,High income,developed
+Portugal,PRT,Europe & Central Asia,High income,developed
+Puerto Rico,PRI,Latin America & Caribbean,High income,non_developed
+Qatar,QAT,Middle East & North Africa,High income,non_developed
+Romania,ROU,Europe & Central Asia,Upper middle income,developed
+Russian Federation,RUS,Europe & Central Asia,Upper middle income,non_developed
+Rwanda,RWA,Sub-Saharan Africa,Low income,non_developed
+Samoa,WSM,East Asia & Pacific,Upper middle income,non_developed
+San Marino,SMR,Europe & Central Asia,High income,non_developed
+São Tomé and Principe,STP,Sub-Saharan Africa,Lower middle income,non_developed
+Saudi Arabia,SAU,Middle East & North Africa,High income,non_developed
+Senegal,SEN,Sub-Saharan Africa,Low income,non_developed
+Serbia,SRB,Europe & Central Asia,Upper middle income,non_developed
+Seychelles,SYC,Sub-Saharan Africa,High income,non_developed
+Sierra Leone,SLE,Sub-Saharan Africa,Low income,non_developed
+Singapore,SGP,East Asia & Pacific,High income,non_developed
+Sint Maarten (Dutch part),SXM,Latin America & Caribbean,High income,non_developed
+Slovak Republic,SVK,Europe & Central Asia,High income,developed
+Slovenia,SVN,Europe & Central Asia,High income,developed
+Solomon Islands,SLB,East Asia & Pacific,Lower middle income,non_developed
+Somalia,SOM,Sub-Saharan Africa,Low income,non_developed
+South Africa,ZAF,Sub-Saharan Africa,Upper middle income,non_developed
+South Sudan,SSD,Sub-Saharan Africa,Low income,non_developed
+Spain,ESP,Europe & Central Asia,High income,developed
+Sri Lanka,LKA,South Asia,Lower middle income,non_developed
+St. Kitts and Nevis,KNA,Latin America & Caribbean,High income,non_developed
+St. Lucia,LCA,Latin America & Caribbean,Upper middle income,non_developed
+St. Martin (French part),MAF,Latin America & Caribbean,High income,non_developed
+St. Vincent and the Grenadines,VCT,Latin America & Caribbean,Upper middle income,non_developed
+Sudan,SDN,Sub-Saharan Africa,Lower middle income,non_developed
+Suriname,SUR,Latin America & Caribbean,Upper middle income,non_developed
+Swaziland,SWZ,Sub-Saharan Africa,Lower middle income,non_developed
+Sweden,SWE,Europe & Central Asia,High income,developed
+Switzerland,CHE,Europe & Central Asia,High income,developed
+Syrian Arab Republic,SYR,Middle East & North Africa,Low income,non_developed
+"Taiwan, China",TWN,East Asia & Pacific,High income,non_developed
+Tajikistan,TJK,Europe & Central Asia,Low income,non_developed
+Tanzania,TZA,Sub-Saharan Africa,Low income,non_developed
+Thailand,THA,East Asia & Pacific,Upper middle income,non_developed
+Timor-Leste,TLS,East Asia & Pacific,Lower middle income,non_developed
+Togo,TGO,Sub-Saharan Africa,Low income,non_developed
+Tonga,TON,East Asia & Pacific,Upper middle income,non_developed
+Trinidad and Tobago,TTO,Latin America & Caribbean,High income,non_developed
+Tunisia,TUN,Middle East & North Africa,Lower middle income,non_developed
+Turkey,TUR,Europe & Central Asia,Upper middle income,non_developed
+Turkmenistan,TKM,Europe & Central Asia,Upper middle income,non_developed
+Turks and Caicos Islands,TCA,Latin America & Caribbean,High income,non_developed
+Tuvalu,TUV,East Asia & Pacific,Upper middle income,non_developed
+Uganda,UGA,Sub-Saharan Africa,Low income,non_developed
+Ukraine,UKR,Europe & Central Asia,Lower middle income,non_developed
+United Arab Emirates,ARE,Middle East & North Africa,High income,non_developed
+United Kingdom,GBR,Europe & Central Asia,High income,developed
+United States,USA,North America,High income,developed
+Uruguay,URY,Latin America & Caribbean,High income,non_developed
+Uzbekistan,UZB,Europe & Central Asia,Lower middle income,non_developed
+Vanuatu,VUT,East Asia & Pacific,Lower middle income,non_developed
+"Venezuela, RB",VEN,Latin America & Caribbean,Upper middle income,non_developed
+Vietnam,VNM,East Asia & Pacific,Lower middle income,non_developed
+Virgin Islands (U.S.),VIR,Latin America & Caribbean,High income,non_developed
+West Bank and Gaza,PSE,Middle East & North Africa,Lower middle income,non_developed
+"Yemen, Rep.",YEM,Middle East & North Africa,Low income,non_developed
+Zambia,ZMB,Sub-Saharan Africa,Lower middle income,non_developed
+Zimbabwe,ZWE,Sub-Saharan Africa,Low income,non_developed
