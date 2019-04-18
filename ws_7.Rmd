@@ -615,7 +615,7 @@ ridgeg <- ridge_shrink$beta %>%
     t() %>% 
     as.data.frame() %>% 
     as_tibble() %>%
-    mutate(lambda=ridge_lambda) %>% 
+    mutate(lambda=rev(ridge_lambda)) %>% 
     pivot_longer(cols = -lambda, names_to = "variable", values_to = "coefficient") %>% 
     ggplot(aes(log(lambda), coefficient, col=variable))+
     geom_line()+
@@ -666,7 +666,7 @@ lassog <- lasso_shrink$beta %>%
     t() %>% 
     as.data.frame() %>% 
     as_tibble() %>%
-    mutate(lambda=lasso_lambda) %>% 
+    mutate(lambda=rev(lasso_lambda)) %>% 
     pivot_longer(cols = -lambda, names_to = "variable"
                  , values_to = "coefficient") %>% 
     ggplot(aes(log(lambda), coefficient, col=variable))+

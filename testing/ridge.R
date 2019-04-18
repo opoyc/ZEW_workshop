@@ -75,7 +75,7 @@ x2 %>%
 ridge_best <- glmnet(x = X, y = y, alpha = 0, lambda = 0.01831564)
 
 
-res <- glmnet(X, y, alpha = 0, lambda = lambdas_to_try, standardize = FALSE)
+res <- glmnet(X, y, alpha = 1, lambda = lambdas_to_try, standardize = FALSE)
 plot(res, xvar = "lambda")
 legend("bottomright", lwd = 1, col = 1:11, legend = colnames(X), cex = .7)
 
