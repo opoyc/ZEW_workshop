@@ -40,14 +40,24 @@ require(glmnet)
     - Sparsity, Ridge, and LASSO regressions
   - Ensemble learning
   - Performance measures
+  
 ---
 # What is supervised learning?
 
+.pl[
 - Broadly speaking the main two subfields of machine learning are supervised learning and unsupervised learning.
 - Supervised statistical involves building statistical models $f()$ for **predicting** or **estimating** and *output* $(Y)$ based on one or more *inputs* given by the design matrix $(X)$.
 $$
 \hat{Y}=\hat{f}(X)
 $$
+]
+
+.pr[
+```{r, echo=FALSE}
+include_graphics("https://aldro61.github.io/microbiome-summer-school-2017/figures/figure.classification.vs.regression.png")
+```
+
+]
 ---
 # Why estimate $f$?
 
@@ -109,7 +119,7 @@ Sustainability and artificial intelligence lab (Stanford University)
 ]
 
 ---
-# How to we estimate $\hat{f}$?
+# How to estimate $\hat{f}$?
 
 .pl[
 ## Parametric methods
@@ -126,7 +136,7 @@ include_graphics("img/session_7/linear.png")
 ]
 
 ---
-# How to we estimate $\hat{f}$?
+# How to estimate $\hat{f}$?
 
 .pl[
 ## Non-parametric methods
